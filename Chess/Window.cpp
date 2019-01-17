@@ -9,7 +9,7 @@ Window::Window(HINSTANCE hInst, wchar_t * pArgs)
 	WNDCLASSEX wc = { sizeof(WNDCLASSEX) };
 	wc.cbSize = sizeof(wc);
 	wc.style = CS_OWNDC;
-	wc.lpfnWndProc = DefWindowProc;
+	wc.lpfnWndProc = HandleMessage;
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
 	wc.hInstance = hInst;
@@ -40,4 +40,35 @@ Window::Window(HINSTANCE hInst, wchar_t * pArgs)
 Window::~Window()
 {
 	UnregisterClass(wClassName, hInst);
+}
+
+bool Window::ProcessMessage()
+{
+	MSG msg;
+	BOOL gResult;
+	while (gResult = GetMessage(&msg, nullptr, 0, 0) > 0)
+	{
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+	}
+
+	if (gResult == -1)
+	{
+		return gResult;
+	}
+	else
+	{
+		return msg.wParam;
+	}
+}
+
+LRESULT CALLBACK WINAPI Window::HandleMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	switch (uMsg)
+	{
+	case WM_CLOSE:
+		PostQuitMessage(0);
+		break;
+	}
+	return DefWindowProc(hWnd, uMsg, wParam, lParam);
 }
