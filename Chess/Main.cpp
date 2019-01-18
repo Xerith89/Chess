@@ -2,16 +2,18 @@
 
 int WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR pArgs, INT)
 {
-	Window wnd(400,300,"Chess");
-
-	while (wnd.ProcessMessage())
+	try 
 	{
-		//enter game loop
+		Window wnd(400, 300, "Chess");
+	
+		while (wnd.ProcessMessage())
+		{
+			//enter game loop
+		}
+	}
+	catch (const std::exception& e) 
+	{
+		MessageBox(nullptr, "Exception Caught in Main Loop", e.what(), MB_OK | MB_ICONEXCLAMATION);
 	}
 	return 0;
 }
-
-/* to do:
-Create keyboard and mouse
-Start gfx class
-*/
