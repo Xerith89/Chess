@@ -4,7 +4,7 @@ int WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR pArgs, INT)
 {
 	try 
 	{
-		Window wnd(400, 300, "Chess");
+		Window wnd(600, 480, "Chess");
 	
 		while (wnd.ProcessMessage())
 		{
