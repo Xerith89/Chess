@@ -2,7 +2,7 @@
 
 int WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR pArgs, INT)
 {
-	Window wnd(hInst, pArgs);
+	Window wnd(400,300,"Chess");
 
 	while (wnd.ProcessMessage())
 	{
@@ -12,7 +12,6 @@ int WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR pArgs, INT)
 }
 
 /* to do:
-Create windows procedure
 Create keyboard and mouse
 Start gfx class
 */
