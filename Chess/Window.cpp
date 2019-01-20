@@ -1,5 +1,6 @@
 #include "Window.h"
 #include <exception>
+#include "resource.h"
 
 Window::RegisterWindow Window::RegisterWindow::regWin;
 
@@ -14,12 +15,12 @@ Window::RegisterWindow::RegisterWindow()noexcept
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
 	wc.hInstance = GetInstance();
-	wc.hIcon = nullptr;
+	wc.hIcon = static_cast<HICON>(LoadImage(hInst, MAKEINTRESOURCE(IDI_ICON3),IMAGE_ICON,16,16,0));
 	wc.hCursor = nullptr;
 	wc.hbrBackground = nullptr;
 	wc.lpszMenuName = nullptr;
 	wc.lpszClassName = GetName();
-	wc.hIconSm = nullptr;
+	wc.hIconSm = static_cast<HICON>(LoadImage(hInst, MAKEINTRESOURCE(IDI_ICON3), IMAGE_ICON, 16, 16, 0));
 
 	RegisterClassEx(&wc);
 	//Filling the class structure and registering it
