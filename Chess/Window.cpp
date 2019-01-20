@@ -51,7 +51,8 @@ Window::Window(int width, int height, const char* title)
 	wr.right = wr.left+width;
 	wr.bottom = wr.top+height;
 	//Readjusts the window to the size we require independently from the non client region
-	AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, false);
+	try { AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, false); }
+	catch (const std::runtime_error& e) {MessageBox(nullptr,"Adjust Window Rect Error",e.what(), MB_OK | MB_ICONEXCLAMATION); }
 	
 	//Note the "this" as the last param. This is an lp Param and we are passing our window class to it.
 	//This is utilised within the Windows procedure and is important to making WinAPI accept our member function wnd proc
@@ -59,6 +60,8 @@ Window::Window(int width, int height, const char* title)
 		RegisterWindow::GetName(), title, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU,
 		wr.left, wr.top, wr.right, wr.bottom, nullptr, nullptr, Window::RegisterWindow::GetInstance(), this
 	);
+
+	if (hWnd == nullptr) { throw std::runtime_error("hWnd is null"); }
 	//Handle to the window is created - some of our static functions from the registration class are utilised
 	ShowWindow(hWnd, SW_SHOW);
 }
