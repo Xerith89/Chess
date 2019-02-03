@@ -1,7 +1,7 @@
 #pragma once
 #include "MyWindows.h"
 #include <string>
-#include "Mouse.h"
+#include "Input.h"
 
 class Window {
 private:
@@ -25,8 +25,8 @@ public:
 	~Window();
 	Window(const Window&) = delete;
 	Window& operator=(const Window&) = delete;
-	Mouse mse;
 	bool ProcessMessage();
+	Input inpt;
 private:
 	//Three message procedures are needed - note that two are static. Further info in .cpp
 	LRESULT HandleMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
