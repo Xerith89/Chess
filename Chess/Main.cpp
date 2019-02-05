@@ -1,15 +1,13 @@
 #include "Window.h"
+#include "Game.h"
 
 int WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR pArgs, INT)
 {
 	try 
 	{
 		Window wnd(600, 400, "Chess");
-	
-		while (wnd.ProcessMessage())
-		{
-			//enter game loop
-		}
+		Game game(wnd);
+		wnd.ProcessMessage();
 	}
 	catch (const std::exception& e) 
 	{

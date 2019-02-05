@@ -56,7 +56,7 @@ Window::Window(int width, int height, const char* title)
 	
 	//Note the "this" as the last param. This is an lp Param and we are passing our window class to it.
 	//This is utilised within the Windows procedure and is important to making WinAPI accept our member function wnd proc
-	HWND hWnd = CreateWindow(
+	 hWnd = CreateWindow(
 		RegisterWindow::GetName(), title, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU,
 		wr.left, wr.top, wr.right, wr.bottom, nullptr, nullptr, Window::RegisterWindow::GetInstance(), this
 	);
@@ -70,21 +70,31 @@ Window::~Window()
 {
 	DestroyWindow(hWnd);
 }
+HWND Window::GetHandle() const
+{
+	return hWnd;
+}
 //Standard Windows message pump
-bool Window::ProcessMessage()
+void Window::ProcessMessage()
 {
 	MSG msg;
-	while (PeekMessageA(&msg, nullptr, 0, 0, PM_REMOVE))
+	while (true)
 	{
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
-
-		if (msg.message == WM_QUIT)
+		if (PeekMessageA(&msg, nullptr, 0, 0, PM_REMOVE))
 		{
-			return msg.wParam;
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+
+			if (msg.message == WM_QUIT)
+			{
+				break;
+			}
+		}
+		else
+		{
+
 		}
 	}
-	return true;
 }
 
 /*This is our non-static member function message handler - WinAPI does not recognise C++ style member functions
@@ -98,11 +108,19 @@ LRESULT Window::HandleMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 		PostQuitMessage(0);
 		return 0;
 		break;
+
+		//Keyboard Messages
 	case WM_KEYDOWN:
 		inpt.OnKeyPress(static_cast<unsigned char>(wParam));
 		break;
 	case WM_KEYUP:
 		inpt.OnKeyRelease(static_cast<unsigned char>(wParam));
+		break;
+
+		//Mouse Messages
+	case WM_MOUSEMOVE:
+		auto points = MAKEPOINTS(lParam);
+		inpt.OnMseMove(points.x, points.y);
 		break;
 	}
 	return DefWindowProc(hWnd, uMsg, wParam, lParam);

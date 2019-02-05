@@ -1,6 +1,12 @@
 #pragma once
 #include "Input.h"
 
+void Input::OnMseMove(int new_x, int new_y)
+{
+	x = new_x;
+	y = new_y;
+}
+
 void Input::OnKeyPress(unsigned int keycode)
 {
 	keyCodes[keycode] = true;
