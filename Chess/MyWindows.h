@@ -1,6 +1,5 @@
 #pragma once
-// target Windows 7 or later
-#define _WIN32_WINNT 0x0601
+
 #include <sdkddkver.h>
 //Macro definitions for disabling unused aspects of the Windows API
 #define WIN32_LEAN_AND_MEAN
@@ -38,6 +37,5 @@
 #define NOIMAGE
 #define NOTAPE
 
-#define STRICT
 
 #include <Windows.h>

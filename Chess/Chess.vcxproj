@@ -81,6 +81,9 @@
       <ConformanceMode>false</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86</AdditionalLibraryDirectories>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -138,6 +141,12 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="chess.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="PixelShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="VertexShader.hlsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
