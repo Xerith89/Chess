@@ -23,13 +23,13 @@ Graphics::Graphics(HWND hWnd)
 		throw std::runtime_error("Could not create a device and/or swapchain: "+hr);
 	}
 	//Get a handle to the backbuffer
-	if (FAILED(hr = pSwapChain->GetBuffer(0, __uuidof(ID3D10Texture2D), (LPVOID*)&pBufferTexture)))
+	if (FAILED(hr = pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBufferTexture)))
 	{
 		throw std::runtime_error("Failed to get handle to back buffer: "+hr);
 	}
 
 	//Create render target view from our backbuffer handle
-	if (FAILED(hr = pDevice->CreateRenderTargetView(pBufferTexture, NULL, NULL)))
+	if (FAILED(hr = pDevice->CreateRenderTargetView(pBufferTexture, NULL, &pBackBuffer)))
 	{
 		throw std::runtime_error("Failed to create render target view: " + hr);
 	}
