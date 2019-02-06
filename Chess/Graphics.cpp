@@ -33,12 +33,36 @@ Graphics::Graphics(HWND hWnd)
 	{
 		throw std::runtime_error("Failed to create render target view: " + hr);
 	}
+
+	pBufferTexture->Release();
+	
+	//Set the render target view to the back buffer that we created above
+	pDeviceCon->OMSetRenderTargets(1, &pBackBuffer, NULL);
+
+	//Create and fill the viewport struct
+	D3D11_VIEWPORT sVP;
+	sVP = {};
+	
+	sVP.Height = ScreenHeight;
+	sVP.Width = ScreenWidth;
+	sVP.TopLeftX = 0;
+	sVP.TopLeftY = 0;
+
+	//Set our viewport using the viewport struct above
+	pDeviceCon->RSSetViewports(1, &sVP);
 }
 
 Graphics::~Graphics()
 {
-	//Release allocated D3D resources
+	//Release allocated resources
+	pBackBuffer->Release();
 	pSwapChain->Release();
 	pDevice->Release();
 	pDeviceCon->Release();
+}
+
+void Graphics::RenderFrame()
+{
+	pDeviceCon->ClearRenderTargetView(pBackBuffer, COLOUR{ 0.0f,0.2f,0.4f,1.0f });
+	pSwapChain->Present(0, 0);
 }

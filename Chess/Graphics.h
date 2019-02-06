@@ -11,6 +11,8 @@ public:
 	~Graphics();
 	Graphics(const Graphics&) = delete;
 	Graphics& operator=(const Graphics&) = delete;
+	void RenderFrame();
+	using COLOUR = float[4];
 private:
 	IDXGISwapChain *pSwapChain;
 	ID3D11DeviceContext *pDeviceCon;

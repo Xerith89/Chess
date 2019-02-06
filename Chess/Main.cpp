@@ -7,7 +7,10 @@ int WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR pArgs, INT)
 	{
 		Window wnd(600, 400, "Chess");
 		Game game(wnd);
-		wnd.ProcessMessage();
+		while (wnd.ProcessMessage())
+		{
+			game.Run();
+		}
 	}
 	catch (const std::exception& e) 
 	{

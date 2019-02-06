@@ -75,7 +75,7 @@ HWND Window::GetHandle() const
 	return hWnd;
 }
 //Standard Windows message pump
-void Window::ProcessMessage()
+bool Window::ProcessMessage()
 {
 	MSG msg;
 	while (true)
@@ -94,7 +94,9 @@ void Window::ProcessMessage()
 		{
 
 		}
+		return true;
 	}
+	return false;
 }
 
 /*This is our non-static member function message handler - WinAPI does not recognise C++ style member functions

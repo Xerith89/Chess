@@ -26,7 +26,7 @@ public:
 	Window(const Window&) = delete;
 	Window& operator=(const Window&) = delete;
 	HWND GetHandle()const;
-	void ProcessMessage();
+	bool ProcessMessage();
 	Input inpt;
 private:
 	//Three message procedures are needed - note that two are static. Further info in .cpp
