@@ -1,8 +1,8 @@
 #include "Graphics.h"
-#include <iostream>
-
+#include <assert.h>
 Graphics::Graphics(HWND hWnd)
 {
+	assert(hWnd != nullptr);
 	//Initialise the swap chain description struct as empty
 	DXGI_SWAP_CHAIN_DESC sSCD = {};
 	
@@ -17,7 +17,7 @@ Graphics::Graphics(HWND hWnd)
 	sSCD.SampleDesc.Count = 4;
 	//Try to create a device and swap chain, pointers to be stored in the variables we have provided
 	if (FAILED(hr = D3D11CreateDeviceAndSwapChain(
-		NULL,D3D_DRIVER_TYPE_HARDWARE,NULL,NULL,
+		NULL,D3D_DRIVER_TYPE_HARDWARE,NULL, D3D11_CREATE_DEVICE_DEBUG,
 		NULL,NULL,D3D11_SDK_VERSION,&sSCD,&pSwapChain,
 		&pDevice,NULL,&pDeviceCon))) 
 	{
@@ -53,30 +53,43 @@ Graphics::Graphics(HWND hWnd)
 	pDeviceCon->RSSetViewports(1, &sVP);
 
 	//Compile our vertex and pixel shaders into bytecode and store it in a D3D blob
-	if (FAILED( hr = D3DX11CompileFromFileA("VertexShader.hlsl",0,0,"main", "vs_4_0",0,0,0,&VertexShaderByteCode,0,0)))
+	if (FAILED(hr = D3DCompileFromFile(L"VertexShader.hlsl", 0, 0, "main", "vs_4_0", 0, 0, &VertexShaderByteCode, NULL)))
 	{
 		throw std::runtime_error("Failed to compile vertex shader: " + hr);
 	}
-	if (FAILED(hr = D3DX11CompileFromFileA("PixelShader.hlsl", 0, 0, "main", "ps_4_0", 0, 0, 0, &PixelShaderByteCode, 0, 0)))
+	
+	if (FAILED(hr = D3DCompileFromFile(L"PixelShader.hlsl", 0, 0, "main", "ps_4_0", 0, 0, &PixelShaderByteCode, NULL)))
 	{
 		throw std::runtime_error("Failed to compile pixel shader: " + hr);
 	}
+	
 	//Use the compiled bytecode to create a pixel and vertex shader in D3D
-	pDevice->CreateVertexShader(VertexShaderByteCode->GetBufferPointer(), VertexShaderByteCode->GetBufferSize(), NULL, &pVertexShader);
-	pDevice->CreatePixelShader(PixelShaderByteCode->GetBufferPointer(), PixelShaderByteCode->GetBufferSize(), NULL, &pPixelShader);
+	if (FAILED(hr = pDevice->CreateVertexShader(VertexShaderByteCode->GetBufferPointer(), VertexShaderByteCode->GetBufferSize(), NULL, &pVertexShader)))
+	{
+		throw std::runtime_error("Failed to create vertex shader: " + hr);
+	}
+	
+	if (FAILED(hr = pDevice->CreatePixelShader(PixelShaderByteCode->GetBufferPointer(), PixelShaderByteCode->GetBufferSize(), NULL, &pPixelShader)))
+	{
+		throw std::runtime_error("Failed to create pixel shader: " + hr);
+	}
 
+	D3D11_BUFFER_DESC sBufferDesc;
 	sBufferDesc = {};
 	sBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
 	sBufferDesc.ByteWidth = sizeof(Vertex)*3;
 	sBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	sBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
-	pDevice->CreateBuffer(&sBufferDesc, NULL, &pVertexBuffer);
+	if (FAILED(hr = pDevice->CreateBuffer(&sBufferDesc, NULL, &pVertexBuffer)))
+	{
+		throw std::runtime_error("Failed to create vertex buffer: " + hr);
+	}
 
 	D3D11_INPUT_ELEMENT_DESC ied[] = 
 	{
 		{"POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0},
-		{"COLOUR",0,DXGI_FORMAT_R32G32B32_FLOAT,0,12,D3D11_INPUT_PER_VERTEX_DATA,0},
+		{"TEXCOORD",0,DXGI_FORMAT_R32G32B32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0},
 	};
 
 
@@ -85,13 +98,30 @@ Graphics::Graphics(HWND hWnd)
 		throw std::runtime_error("Failed to create input layout: " + hr);
 	}
 
+	D3D11_SAMPLER_DESC sSampDesc;
+	sSampDesc = {};
+	sSampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+	sSampDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+	sSampDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+	sSampDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+	sSampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	sSampDesc.MinLOD = 0;
+	sSampDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+	if (FAILED(hr = pDevice->CreateSamplerState(&sSampDesc, &pSampleState)))
+	{
+		throw std::runtime_error("Failed to create sampler state: " + hr);
+	}
+
 }
 
 Graphics::~Graphics()
 {
 	//Release allocated resources
 	VertexShaderByteCode->Release();
+	pSampleState->Release();
 	PixelShaderByteCode->Release();
+	pInputLayout->Release();
 	pVertexBuffer->Release();
 	pVertexShader->Release();
 	pPixelShader->Release();
@@ -104,6 +134,7 @@ Graphics::~Graphics()
 void Graphics::RenderFrame()
 {
 	//Map the vertex buffer and allow the CPU to write to it
+	D3D11_MAPPED_SUBRESOURCE sMapSubResource;
 	if (FAILED(hr = pDeviceCon->Map(pVertexBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &sMapSubResource)))
 	{
 		throw std::runtime_error("Failed to map vertex buffer: " + hr);
@@ -118,11 +149,14 @@ void Graphics::RenderFrame()
 	pDeviceCon->VSSetShader(pVertexShader, 0, 0);
 	pDeviceCon->PSSetShader(pPixelShader, 0, 0);
 	pDeviceCon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	pDeviceCon->PSSetSamplers(0, 1, &pSampleState);
+	pDeviceCon->ClearRenderTargetView(pBackBuffer, COLOUR{ 0.0f,0.0f,0.8f,0.0f });
 	pDeviceCon->Draw(3, 0);
-	//Fill render target buffer with a colour
-	pDeviceCon->ClearRenderTargetView(pBackBuffer, COLOUR{ 0.0f,0.2f,0.4f,1.0f });
 	//Swap the back and front buffers.
-	pSwapChain->Present(0, 0);
+	if (FAILED(hr = pSwapChain->Present(0, 0)))
+	{
+		throw std::runtime_error("Failed to perform swap: " + hr);
+	}
 	
 }
 
