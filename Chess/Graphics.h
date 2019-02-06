@@ -15,6 +15,8 @@ private:
 	IDXGISwapChain *pSwapChain;
 	ID3D11DeviceContext *pDeviceCon;
 	ID3D11Device *pDevice;
+	ID3D11RenderTargetView *pBackBuffer;
+	ID3D11Texture2D *pBufferTexture;
 public:
 	static constexpr int ScreenHeight = 600u;
 	static constexpr int ScreenWidth = 800u;
