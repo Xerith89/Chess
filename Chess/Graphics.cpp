@@ -139,6 +139,15 @@ void Graphics::RenderFrame()
 	{
 		throw std::runtime_error("Failed to map vertex buffer: " + hr);
 	}
+	
+	//Triangle Test Vertices
+	Vertex tri[] =
+	{
+		{-0.5f,0.5f,0.5f,1.0f,0.0f,0.0f,1.0f},
+		{0.5f,0.5f,0.5f,0.0f,1.0f,0.0f,1.0f},
+		{-0.5f,-0.5f,0.5f,0.0f,0.0f,1.0f,1.0f}
+	};
+
 	memcpy(sMapSubResource.pData, tri, sizeof(Vertex));
 	//Unmap and set a number of attributes
 	pDeviceCon->Unmap(pVertexBuffer, NULL);
@@ -150,7 +159,7 @@ void Graphics::RenderFrame()
 	pDeviceCon->PSSetShader(pPixelShader, 0, 0);
 	pDeviceCon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	pDeviceCon->PSSetSamplers(0, 1, &pSampleState);
-	pDeviceCon->ClearRenderTargetView(pBackBuffer, COLOUR{ 0.0f,0.0f,0.8f,0.0f });
+	pDeviceCon->ClearRenderTargetView(pBackBuffer, COLOUR{ 0.0f,0.0f,0.0f,0.0f });
 	pDeviceCon->Draw(3, 0);
 	//Swap the back and front buffers.
 	if (FAILED(hr = pSwapChain->Present(0, 0)))

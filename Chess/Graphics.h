@@ -34,14 +34,6 @@ private:
 		COLOUR col;
 	};
 
-	//Triangle Test Vertices
-	static constexpr Vertex tri[] =
-	{
-		{-0.5f,0.5f,0.5f,1.0f,0.0f,0.0f,1.0f},
-		{0.5f,0.5f,0.5f,0.0f,1.0f,0.0f,1.0f},
-		{-0.5f,-0.5f,0.5f,0.0f,0.0f,1.0f,1.0f}
-	};
-
 private:
 	static constexpr int ScreenHeight = 600u;
 	static constexpr int ScreenWidth = 800u;
