@@ -88,16 +88,36 @@ Graphics::Graphics(HWND hWnd)
 	//Create the vertex buffer
 	Vertex v[] =
 	{
-		{-0.25f, 0.25f, 0.5f,1.0f,0.0f,0.0f,1.0f},
-		{0.25f, 0.25f, 0.5f,0.0f,1.0f,0.0f,1.0f},
-		{0.25f, -0.25f, 0.5f,0.0f,0.0f,1.0f,1.0f},
+		{-0.25f, 0.25f, 0.5f,  1.0f,0.0f,0.0f,1.0f},
+		{0.25f, 0.25f, 0.5f,   0.0f,1.0f,0.0f,1.0f},
+		{0.25f, -0.25f, 0.5f,  0.0f,0.0f,1.0f,1.0f},
+		{-0.25f, -0.25f, 0.5f, 0.5f,0.5f,0.5f,1.0f},
 	};
+
+	int indices[] = {
+	  0, 1, 2,
+	  0, 2, 3,
+	};
+
+	D3D11_BUFFER_DESC sIndBufferDesc;
+	sIndBufferDesc = {};
+
+	sIndBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	sIndBufferDesc.ByteWidth = sizeof(int) * 2 * 3;
+	sIndBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	sIndBufferDesc.CPUAccessFlags = 0;
+	sIndBufferDesc.MiscFlags = 0;
+
+	D3D11_SUBRESOURCE_DATA iinitData;
+	iinitData.pSysMem = indices;
+	pDevice->CreateBuffer(&sIndBufferDesc, &iinitData, &pIndexBuffer);
+	pDeviceCon->IASetIndexBuffer(pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
 	D3D11_BUFFER_DESC sVertexBufferDesc;
 	sVertexBufferDesc = {};
 
 	sVertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	sVertexBufferDesc.ByteWidth = sizeof(Vertex) * 3;
+	sVertexBufferDesc.ByteWidth = sizeof(Vertex) * 4;
 	sVertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	sVertexBufferDesc.CPUAccessFlags = 0;
 	sVertexBufferDesc.MiscFlags = 0;
@@ -152,6 +172,7 @@ Graphics::~Graphics()
 	pDevice->Release();
 	pDeviceCon->Release();
 	pVertBuffer->Release();
+	pIndexBuffer->Release();
 	pInputLayout->Release();
 }
 
@@ -159,7 +180,7 @@ void Graphics::RenderFrame()
 {
 	auto bgCol = COLOR{ 0.0f,0.0f,0.0f,1.0f };
 	pDeviceCon->ClearRenderTargetView(pBackBuffer, bgCol);
-	pDeviceCon->Draw(3, 0);
+	pDeviceCon->DrawIndexed(6, 0, 0);
 	pSwapChain->Present(0, 0);
 }
 
