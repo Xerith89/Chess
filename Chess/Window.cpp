@@ -110,19 +110,63 @@ LRESULT Window::HandleMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 		PostQuitMessage(0);
 		return 0;
 		break;
-
 		//Keyboard Messages
+	case WM_KILLFOCUS:
+		inpt.ResetKeyboard();
+		break;
+	case WM_SYSKEYDOWN:
 	case WM_KEYDOWN:
 		inpt.OnKeyPress(static_cast<unsigned char>(wParam));
 		break;
+	case WM_SYSKEYUP:
 	case WM_KEYUP:
 		inpt.OnKeyRelease(static_cast<unsigned char>(wParam));
 		break;
-
+	case WM_CHAR:
+		inpt.OnCharPress(static_cast<unsigned char>(wParam));
+		break;
 		//Mouse Messages
 	case WM_MOUSEMOVE:
 		auto points = MAKEPOINTS(lParam);
-		inpt.OnMseMove(points.x, points.y);
+		//Check if we're in the window
+		if (points.x >= 0 && points.x <= width && points.y >= 0 && points.y <= height)
+		{
+			//If we're currently set to not in the window then recapture the window handle and set in window to true
+			if (!inpt.InWindow())
+			{
+				SetCapture(hWnd);
+				inpt.OnMseEnter();
+			}
+			inpt.OnMseMove(points.x, points.y);
+		}
+		else
+		{
+			//We're not in the window
+			inpt.OnMseMove(points.x, points.y);
+			ReleaseCapture();
+			inpt.OnMseLeave();
+		}
+		break;
+	case WM_LBUTTONUP:
+		points = MAKEPOINTS(lParam);
+		inpt.OnMseLeftRelease(points.x, points.y);
+		break;
+	case WM_LBUTTONDOWN:
+		points = MAKEPOINTS(lParam);
+		inpt.OnMseLeftClick(points.x, points.y);
+		break;
+	case WM_RBUTTONDOWN:
+		points = MAKEPOINTS(lParam);
+		inpt.OnMseRightClick(points.x, points.y);
+		break;
+	case WM_RBUTTONUP:
+		points = MAKEPOINTS(lParam);
+		inpt.OnMseRightRelease(points.x, points.y);
+		break;
+	case WM_MOUSEWHEEL:
+		points = MAKEPOINTS(lParam);
+		const auto wheelDelta = GET_WHEEL_DELTA_WPARAM(wParam);
+		inpt.OnMseWheel(points.x, points.y, wheelDelta);
 		break;
 	}
 	return DefWindowProc(hWnd, uMsg, wParam, lParam);
