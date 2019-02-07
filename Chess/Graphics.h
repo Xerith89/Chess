@@ -21,7 +21,8 @@ private:
 	ID3D11DeviceContext *pDeviceCon;
 	ID3D11Device *pDevice;
 	ID3D11RenderTargetView *pBackBuffer;
-
+	ID3D11Buffer *pVertBuffer;
+	ID3D11InputLayout *pInputLayout;
 	ID3D11Texture2D *pBufferTexture;
 	ID3DBlob *VertexShaderByteCode, *PixelShaderByteCode;
 	ID3D11VertexShader *pVertexShader;
@@ -29,8 +30,7 @@ private:
 	
 	struct Vertex 
 	{
-		float x, y, z;		// position
-		float u, v;			// texcoords
+		float x, y, z;		
 	};
 
 private:
