@@ -118,7 +118,7 @@ Graphics::Graphics(HWND hWnd)
 	pDeviceCon->IASetVertexBuffers(0, 1, &pVertBuffer, &stride, &offset);
 
 	//Create the Input Layout
-	pDevice->CreateInputLayout(layout, 1, VertexShaderByteCode->GetBufferPointer(),
+	pDevice->CreateInputLayout(layout, 2, VertexShaderByteCode->GetBufferPointer(),
 		VertexShaderByteCode->GetBufferSize(), &pInputLayout);
 
 	//Set the Input Layout
