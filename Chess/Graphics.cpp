@@ -57,6 +57,7 @@ Graphics::Graphics(HWND hWnd)
 	D3D11_INPUT_ELEMENT_DESC layout[] =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,  D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 
 	//Compile our vertex and pixel shaders into bytecode and store it in a D3D blob
@@ -87,9 +88,9 @@ Graphics::Graphics(HWND hWnd)
 	//Create the vertex buffer
 	Vertex v[] =
 	{
-		{0.0f, 0.5f, 0.5f},
-		{0.5f, -0.5f, 0.5f},
-		{-0.5f, -0.5f, 0.5f },
+		{-0.25f, 0.25f, 0.5f,1.0f,0.0f,0.0f,1.0f},
+		{0.25f, 0.25f, 0.5f,0.0f,1.0f,0.0f,1.0f},
+		{0.25f, -0.25f, 0.5f,0.0f,0.0f,1.0f,1.0f},
 	};
 
 	D3D11_BUFFER_DESC sVertexBufferDesc;
@@ -156,7 +157,7 @@ Graphics::~Graphics()
 
 void Graphics::RenderFrame()
 {
-	auto bgCol = COLOUR{ 1.0f,0.0f,0.0f,1.0f };
+	auto bgCol = COLOR{ 0.0f,0.0f,0.0f,1.0f };
 	pDeviceCon->ClearRenderTargetView(pBackBuffer, bgCol);
 	pDeviceCon->Draw(3, 0);
 	pSwapChain->Present(0, 0);

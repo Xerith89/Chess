@@ -13,10 +13,10 @@ public:
 	Graphics(const Graphics&) = delete;
 	Graphics& operator=(const Graphics&) = delete;
 	void RenderFrame();
-	using COLOUR = float[4];
+	using COLOR = float[4];
 private:
 	HRESULT hr;
-
+	//COM object variables
 	IDXGISwapChain *pSwapChain;
 	ID3D11DeviceContext *pDeviceCon;
 	ID3D11Device *pDevice;
@@ -31,6 +31,7 @@ private:
 	struct Vertex 
 	{
 		float x, y, z;		
+		float r, g, b, a;
 	};
 
 private:
