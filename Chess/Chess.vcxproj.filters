@@ -13,48 +13,111 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Engine">
+      <UniqueIdentifier>{0157ffab-810e-4c8d-a175-a3b8c067442d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine">
+      <UniqueIdentifier>{7f8f9f72-4da0-44e2-bc78-bec8fd05f7f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game Files">
+      <UniqueIdentifier>{86edb8a4-507d-44f1-88d8-60c890560a8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Game Files">
+      <UniqueIdentifier>{b2860820-9cbe-48de-bbd3-46f16a257e88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Networking">
+      <UniqueIdentifier>{362471e5-9523-4e12-b8fe-dd8a2ceb5e03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Networking">
+      <UniqueIdentifier>{cd232f14-1804-4acb-b39f-d5ef53700423}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Window.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MyWindows.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Input.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Camera.h">
+      <Filter>Header Files\Engine</Filter>
     </ClInclude>
     <ClInclude Include="Game.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Engine</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Graphics.h">
+      <Filter>Header Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>Header Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="MyWindows.h">
+      <Filter>Header Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>Header Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="King.h">
+      <Filter>Header Files\Game Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Piece.h">
+      <Filter>Header Files\Game Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Queen.h">
+      <Filter>Header Files\Game Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Rook.h">
+      <Filter>Header Files\Game Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Knight.h">
+      <Filter>Header Files\Game Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Pawn.h">
+      <Filter>Header Files\Game Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Bishop.h">
+      <Filter>Header Files\Game Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Header Files\Game Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Board.h">
+      <Filter>Header Files\Game Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Opponent.h">
+      <Filter>Header Files\Game Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Server.h">
+      <Filter>Header Files\Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="Client.h">
+      <Filter>Header Files\Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Header Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Actor.h">
+      <Filter>Header Files\Game Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Window.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Input.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files\Engine</Filter>
     </ClCompile>
     <ClCompile Include="Game.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Graphics.cpp">
+      <Filter>Source Files\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>Source Files\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source Files\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>Source Files\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Piece.cpp">
+      <Filter>Source Files\Game Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -69,10 +132,10 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="PixelShader.hlsl">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Engine</Filter>
     </FxCompile>
     <FxCompile Include="VertexShader.hlsl">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Engine</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

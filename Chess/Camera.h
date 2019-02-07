@@ -1,9 +1,9 @@
 #pragma once
 #include "Graphics.h"
+#include <DirectXMath.h>
 
 class Camera {
 private:
-	Graphics gfx;
 public:
-	Camera(Graphics& gfx);
+	Camera() = default;
 };
