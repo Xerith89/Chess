@@ -1,3 +1,5 @@
+//Simply takes in the vertex data and passes it to the pixel shader
+
 struct VOut
 {
 	float4 position : SV_POSITION;

@@ -135,7 +135,7 @@
     <ClInclude Include="Input.h" />
     <ClInclude Include="King.h" />
     <ClInclude Include="Knight.h" />
-    <ClInclude Include="Model.h" />
+    <ClInclude Include="Sprite.h" />
     <ClInclude Include="Opponent.h" />
     <ClInclude Include="Pawn.h" />
     <ClInclude Include="Piece.h" />
@@ -148,12 +148,14 @@
     <ClInclude Include="MyWindows.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Board.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Piece.cpp" />
+    <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -1,3 +1,5 @@
+//Simple pixel shader that takes the VS output and applies the correct colour to the pixel
+
 Texture2D tex : register(t0);
 SamplerState sam : register(s0);
 

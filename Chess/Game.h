@@ -1,6 +1,7 @@
 #pragma once
 #include "Graphics.h"
 #include "Input.h"
+#include "Sprite.h"
 
 class Game {
 private:
