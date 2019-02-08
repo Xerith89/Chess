@@ -96,6 +96,9 @@
     <ClInclude Include="Actor.h">
       <Filter>Header Files\Game Files</Filter>
     </ClInclude>
+    <ClInclude Include="Color.h">
+      <Filter>Header Files\Engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp">

@@ -51,8 +51,6 @@ Graphics::Graphics(HWND hWnd)
 
 	pBufferTexture->Release();
 	
-	
-
 	D3D11_INPUT_ELEMENT_DESC layout[] =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -87,10 +85,10 @@ Graphics::Graphics(HWND hWnd)
 	//Create the vertex buffer
 	Vertex v[] =
 	{
-		{-0.25f, 0.25f, 1.0f,  1.0f,0.0f,0.0f,1.0f},
-		{0.25f, 0.25f, 0.5f,   0.0f,1.0f,0.0f,1.0f},
-		{0.25f, -0.25f, 0.5f,  0.0f,0.0f,1.0f,1.0f},
-		{-0.25f, -0.25f, 1.5f, 0.5f,0.5f,0.5f,1.0f},
+		{-1.0f, 1.0f, 1.0f,	   0.0f,0.0f,0.0f,1.0f},
+		{1.0f, 1.0f, 1.0f,   0.0f,0.0f,0.0f,1.0f},
+		{1.0f, -1.0f, 1.0f,  0.0f,0.0f,0.0f,1.0f},
+		{-1.0f, -1.0f, 1.0f, 0.0f,0.0f,0.0f,1.0f},
 	};
 
 	int indices[] = {
@@ -131,32 +129,9 @@ Graphics::Graphics(HWND hWnd)
 	sVertexBufferData = {};
 	sVertexBufferData.pSysMem = v;
 
-	D3D11_TEXTURE2D_DESC depthStencilDesc;
-	depthStencilDesc.Width = ScreenWidth;
-	depthStencilDesc.Height = ScreenHeight;
-	depthStencilDesc.MipLevels = 1;
-	depthStencilDesc.ArraySize = 1;
-	depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	depthStencilDesc.SampleDesc.Count = 1;
-	depthStencilDesc.SampleDesc.Quality = 0;
-	depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
-	depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-	depthStencilDesc.CPUAccessFlags = 0;
-	depthStencilDesc.MiscFlags = 0;
-
 	if (FAILED(hr = pDevice->CreateBuffer(&sVertexBufferDesc, &sVertexBufferData, &pVertBuffer)))
 	{
 		throw std::runtime_error("Failed to create vertex buffer: " + hr);
-	}
-
-	if (FAILED(hr = pDevice->CreateTexture2D(&depthStencilDesc, NULL, &pDepthStencilBuffer)))
-	{
-		throw std::runtime_error("Failed to create depth stencil buffer: " + hr);
-	}
-	
-	if (FAILED(hr = pDevice->CreateDepthStencilView(pDepthStencilBuffer, NULL, &pDepthStencilView)))
-	{
-		throw std::runtime_error("Failed to create depth stencil view: " + hr);
 	}
 
 	//Set the vertex buffer
@@ -189,7 +164,7 @@ Graphics::Graphics(HWND hWnd)
 	pDeviceCon->RSSetViewports(1, &sViewport);
 
 	//Set the render target view to the back buffer that we created above
-	pDeviceCon->OMSetRenderTargets(1, &pBackBuffer, pDepthStencilView);
+	pDeviceCon->OMSetRenderTargets(1, &pBackBuffer,NULL);
 }
 
 Graphics::~Graphics()
@@ -206,16 +181,15 @@ Graphics::~Graphics()
 	pVertBuffer->Release();
 	pIndexBuffer->Release();
 	pInputLayout->Release();
-	pDepthStencilBuffer->Release();
-	pDepthStencilView->Release();
 }
 
 void Graphics::RenderFrame()
 {
-	auto bgCol = COLOR{ 0.0f,0.0f,0.0f,1.0f };
-	pDeviceCon->ClearRenderTargetView(pBackBuffer, bgCol);
-	pDeviceCon->ClearDepthStencilView(pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	pDeviceCon->DrawIndexed(6, 0, 0);
 	pSwapChain->Present(0, 0);
+}
+
+void Graphics::PrepareFrame()
+{
 }
 

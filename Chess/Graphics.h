@@ -2,6 +2,7 @@
 #include <d3d11.h>
 #include <d3dcompiler.h>
 #include "Window.h"
+#include "Color.h"
 
 #pragma comment (lib, "d3d11.lib") 
 #pragma comment (lib, "D3DCompiler.lib")
@@ -13,10 +14,10 @@ public:
 	Graphics(const Graphics&) = delete;
 	Graphics& operator=(const Graphics&) = delete;
 	void RenderFrame();
-	using COLOR = float[4];
+	void PrepareFrame();
 private:
 	HRESULT hr;
-	//COM object variables
+	
 	IDXGISwapChain *pSwapChain;
 	ID3D11DeviceContext *pDeviceCon;
 	ID3D11Device *pDevice;
@@ -28,9 +29,7 @@ private:
 	ID3DBlob *VertexShaderByteCode, *PixelShaderByteCode;
 	ID3D11VertexShader *pVertexShader;
 	ID3D11PixelShader *pPixelShader;
-	ID3D11DepthStencilView *pDepthStencilView;
-	ID3D11Texture2D *pDepthStencilBuffer;
-	
+	Color* pColorBuffer;
 	struct Vertex 
 	{
 		float x, y, z;		
