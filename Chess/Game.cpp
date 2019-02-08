@@ -1,13 +1,5 @@
 #include "Game.h"
 
-void Game::Render()
-{
-}
-
-void Game::Update()
-{
-}
-
 Game::Game(Window & wnd)
 	:
 	wnd(wnd),
@@ -15,8 +7,18 @@ Game::Game(Window & wnd)
 {
 }
 
+void Game::Update()
+{
+}
+
+void Game::Render()
+{
+	gfx.SetPixel(200, 200, Color(255, 255, 255, 255));
+}
+
 void Game::Run()
 {
+	gfx.PrepareFrame();
 	Update();
 	Render();
 	gfx.RenderFrame();

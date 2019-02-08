@@ -1,14 +1,15 @@
-struct VS_OUTPUT
+struct VOut
 {
-	float4 Pos : SV_POSITION;
-	float4 Color : COLOR;
+	float4 position : SV_POSITION;
+	float2 texCoord : TEXCOORD0;
 };
 
-VS_OUTPUT main(float4 inPos : POSITION, float4 inCol : COLOR)
+VOut main(float4 position : POSITION, float2 texCoord : TEXCOORD0)
 {
-	VS_OUTPUT output;
-	output.Pos = inPos;
-	output.Color = inCol;
+	VOut output;
+
+	output.position = position;
+	output.texCoord = texCoord;
 
 	return output;
 }
