@@ -18,7 +18,7 @@ private:
 	int wheelDelta = 0;
 	bool leftPressed = false;
 	bool rightPressed = false;
-	bool inWindow = false;
+	bool inWindow = true;
 	unsigned int maxCharBufferSize = 256u;
 	std::stack<char> charBuffer;
 	std::bitset<256> keyCodes;

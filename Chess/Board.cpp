@@ -28,6 +28,18 @@ int Board::GetCellHeight()
 	return cellHeight;
 }
 
+void Board::UpdateBoard(Window & wnd)
+{
+	if (wnd.inpt.RightMsePressed())
+	{
+		testPiece.MoveBy({ 1,1 });
+	}
+	if (wnd.inpt.LeftMsePressed())
+	{
+		testPiece.MoveTo({ 5,5 });
+	}
+}
+
 std::pair<int, int> Board::TranslateCoords(Piece& piece)
 {
 	int x_in = piece.GetCoords().x;

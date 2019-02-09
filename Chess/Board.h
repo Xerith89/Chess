@@ -12,6 +12,7 @@ public:
 	void DrawBoard(Graphics& gfx);
 	int GetCellWidth();
 	int GetCellHeight();
+	void UpdateBoard(Window& wnd);
 private:
 	int x;
 	int y;

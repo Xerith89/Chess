@@ -44,6 +44,9 @@ Window::RegisterWindow::~RegisterWindow()
 
 //We can now use a more C++ based constructor that allows the user to specify some parameters for the window
 Window::Window(int width, int height, const char* title)
+	:
+	width(width),
+	height(height)
 {
 	RECT wr;
 	wr.left = 200;
@@ -146,6 +149,9 @@ LRESULT Window::HandleMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 			ReleaseCapture();
 			inpt.OnMseLeave();
 		}
+		break;
+	case WM_MOUSELEAVE:
+		inpt.OnMseLeave();
 		break;
 	case WM_LBUTTONUP:
 		points = MAKEPOINTS(lParam);
