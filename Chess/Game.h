@@ -3,7 +3,7 @@
 #include "Input.h"
 #include "Sprite.h"
 #include "Board.h"
-#include "Piece.h"
+#include "Pawn.h"
 
 class Game {
 private:
@@ -17,6 +17,6 @@ public:
 	Game(Game&) = delete;
 	Game& operator=(Game&) = delete;
 	Board brd;
-	
+	std::unique_ptr<Piece> pawn; 
 	void Run();
 };

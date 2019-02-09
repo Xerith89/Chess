@@ -2,6 +2,7 @@
 #include "Sprite.h"
 #include "Graphics.h"
 #include "Piece.h"
+#include <map>
 
 class Board {
 public:
@@ -13,10 +14,11 @@ public:
 	int GetCellWidth();
 	int GetCellHeight();
 	void UpdateBoard(Window& wnd);
+	std::map<std::pair<int,int>, std::unique_ptr<Piece>> Pieces;
 private:
 	int x;
 	int y;
-	std::pair<int, int> TranslateCoords(Piece& piece);
+	std::pair<int, int> TranslateCoords(Piece* piece);
 	Sprite BoardSprite = nullptr;
 	static constexpr int cellsPerRow = 8;
 	const int cellWidth;

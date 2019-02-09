@@ -3,7 +3,7 @@
 #include "Graphics.h"
 
 class Piece {
-private:
+protected:
 	Coords coords;
 	Sprite pieceSprite;
 	Coords maxCoord = { 7,7 };
@@ -14,5 +14,5 @@ public:
 	Sprite& GetSprite();
 	void MoveBy(Coords delta);
 	void MoveTo(Coords new_coords);
-	virtual void GetMoves() = 0;
+	//virtual void GetMoves() = 0;
 };
