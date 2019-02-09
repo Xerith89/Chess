@@ -4,7 +4,7 @@ Game::Game(Window & wnd)
 	:
 	wnd(wnd),
 	gfx(wnd.GetHandle()),
-	brd("./Sprites/board.bmp")
+	brd("./Sprites/board.bmp",100,25)
 {
 	
 }
@@ -15,7 +15,7 @@ void Game::Update()
 
 void Game::Render()
 {
-	brd.DrawBoard(100, 25, gfx);
+	brd.DrawBoard(gfx);
 }
 
 void Game::Run()

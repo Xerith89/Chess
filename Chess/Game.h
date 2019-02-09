@@ -3,6 +3,7 @@
 #include "Input.h"
 #include "Sprite.h"
 #include "Board.h"
+#include "Piece.h"
 
 class Game {
 private:
@@ -16,5 +17,6 @@ public:
 	Game(Game&) = delete;
 	Game& operator=(Game&) = delete;
 	Board brd;
+	
 	void Run();
 };
