@@ -19,8 +19,8 @@ Sprite& Piece::GetSprite()
 
 void Piece::MoveBy(Coords delta)
 {
-	if (coords.x+delta.x >= MinCoord.x && coords.x+delta.x <= MaxCoord.x 
-		&& coords.y+delta.y >= MinCoord.y && coords.y+delta.y <= MaxCoord.y)
+	if (coords.x+delta.x >= minCoord.x && coords.x+delta.x <= maxCoord.x 
+		&& coords.y+delta.y >= minCoord.y && coords.y+delta.y <= maxCoord.y)
 	{
 		coords.x += delta.x;
 		coords.y += delta.y;
@@ -30,7 +30,7 @@ void Piece::MoveBy(Coords delta)
 
 void Piece::MoveTo(Coords new_coords)
 {
-	if (new_coords.x >= MinCoord.x && new_coords.x <= MaxCoord.x && new_coords.y >= MinCoord.y && new_coords.y <= MaxCoord.y)
+	if (new_coords.x >= minCoord.x && new_coords.x <= maxCoord.x && new_coords.y >= minCoord.y && new_coords.y <= maxCoord.y)
 	{
 		coords = new_coords;
 	}

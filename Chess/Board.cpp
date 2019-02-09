@@ -6,16 +6,13 @@ Board::Board(const std::string spritename, int x, int y)
 	x(x),
 	y(y),
 	cellWidth(BoardSprite.GetWidth() / cellsPerRow),
-	cellHeight(BoardSprite.GetHeight() / cellsPerRow),
-	testPiece({ 1,1 }, "./Sprites/pawnW.bmp")
+	cellHeight(BoardSprite.GetHeight() / cellsPerRow)
 {
 }
 
 void Board::DrawBoard(Graphics& gfx)
 {
 	gfx.DrawSprite(x, y, BoardSprite);
-	std::pair<int,int> position = TranslateCoords(testPiece);
-	gfx.DrawSprite(position.first, position.second, testPiece.GetSprite());
 }
 
 int Board::GetCellWidth()
@@ -30,14 +27,7 @@ int Board::GetCellHeight()
 
 void Board::UpdateBoard(Window & wnd)
 {
-	if (wnd.inpt.RightMsePressed())
-	{
-		testPiece.MoveBy({ 1,1 });
-	}
-	if (wnd.inpt.LeftMsePressed())
-	{
-		testPiece.MoveTo({ 5,5 });
-	}
+	
 }
 
 std::pair<int, int> Board::TranslateCoords(Piece& piece)

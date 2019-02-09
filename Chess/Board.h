@@ -21,5 +21,4 @@ private:
 	static constexpr int cellsPerRow = 8;
 	const int cellWidth;
 	const int cellHeight;
-	Piece testPiece;
 };
