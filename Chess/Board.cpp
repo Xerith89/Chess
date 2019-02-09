@@ -7,6 +7,7 @@ Board::Board(const std::string spritename)
 	
 }
 
-void Board::DrawBoard(int x, int y) const
+void Board::DrawBoard(int x, int y, Graphics& gfx) const
 {
+	gfx.DrawSprite(x, y, BoardSprite);
 }

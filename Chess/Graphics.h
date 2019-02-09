@@ -3,6 +3,7 @@
 #include <d3dcompiler.h>
 #include "Window.h"
 #include "Color.h"
+#include "Sprite.h"
 
 #pragma comment (lib, "d3d11.lib") 
 #pragma comment (lib, "D3DCompiler.lib")
@@ -16,6 +17,7 @@ public:
 	void RenderFrame();
 	void PrepareFrame();
 	void SetPixel(int x, int y, Color c);
+	void DrawSprite(int x, int y, const Sprite& sprite);
 private:
 	HRESULT hr;
 	//COM object pointers

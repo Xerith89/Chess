@@ -2,6 +2,7 @@
 #include "Graphics.h"
 #include "Input.h"
 #include "Sprite.h"
+#include "Board.h"
 
 class Game {
 private:
@@ -14,5 +15,6 @@ public:
 	~Game() = default;
 	Game(Game&) = delete;
 	Game& operator=(Game&) = delete;
+	Board brd;
 	void Run();
 };

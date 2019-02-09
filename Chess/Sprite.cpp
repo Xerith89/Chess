@@ -8,7 +8,7 @@ Sprite::Sprite(const std::string Filename)
 
 	//Try to load a file using the filename, if not, throw an exception
 	std::ifstream file(Filename, std::ios::binary);
-	if (file.fail()) { throw "Bad File Name"; }
+	if (file.fail()) { throw std::runtime_error("Bad File Name"); }
 
 	//Reintepret as char pointers to fill the structs
 	file.read(reinterpret_cast<char*>(&bmFileHeader), sizeof(bmFileHeader));
@@ -78,5 +78,20 @@ void Sprite::RecordColor(int x, int y, Color c)
 {
 	//index in to the unique pointer color array and set the color
 	pColorPixels.get()[y*width + x] = c;
+}
+
+int Sprite::GetWidth()const
+{
+	return width;
+}
+
+int Sprite::GetHeight() const
+{
+	return height;
+}
+
+Color Sprite::GetColor(int x, int y) const
+{
+	return pColorPixels.get()[y*width + x];
 }
 

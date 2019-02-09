@@ -2,7 +2,7 @@
 #include "MyWindows.h"
 #include <string>
 #include <memory>
-#include "Graphics.h"
+#include "Color.h"
 #include <fstream>
 
 class Sprite {
@@ -13,6 +13,9 @@ public:
 	Sprite(const Sprite& sprite) = delete;
 	Sprite operator=(const Sprite&) = delete;
 	void RecordColor(int x, int y, Color c);
+	int GetWidth()const;
+	int GetHeight()const;
+	Color GetColor(int x, int y)const;
 private:
 	int width;
 	int height;

@@ -242,3 +242,17 @@ void Graphics::SetPixel(int x, int y, Color c)
 	pColorBuffer[Graphics::ScreenWidth * y + x] = c;
 }
 
+void Graphics::DrawSprite(int x, int y, const Sprite & sprite)
+{
+	int width = sprite.GetWidth();
+	int height = sprite.GetHeight();
+
+	for (int i = 0; i <= height; i++)
+	{
+		for (int j = 0; j <= width; j++)
+		{
+			SetPixel(j+x, i+y, sprite.GetColor(j, i));
+		}
+	}
+}
+
