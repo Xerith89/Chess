@@ -14,9 +14,15 @@ void Board::DrawBoard(Graphics& gfx)
 {
 	gfx.DrawSprite(x, y, BoardSprite);
 
-	for (const auto& x : Pieces)
+	for (const auto& x : whitePieces)
 	{
 		std::pair<int,int> position = TranslateCoords(x.second.get());
+		gfx.DrawSprite(position.first, position.second, x.second->GetSprite());
+	}
+
+	for (const auto& x : blackPieces)
+	{
+		std::pair<int, int> position = TranslateCoords(x.second.get());
 		gfx.DrawSprite(position.first, position.second, x.second->GetSprite());
 	}
 }
