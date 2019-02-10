@@ -6,7 +6,12 @@ Game::Game(Window & wnd)
 	gfx(wnd.GetHandle()),
 	brd("./Sprites/board.bmp",100,25)
 {
-	brd.Pieces.emplace(std::make_pair(0,0), std::make_unique<Pawn>(0, 0, "./Sprites/pawnW.bmp"));
+	for (int i = 0; i < 8; i++)
+	{
+		std::unique_ptr<Piece> pawn;
+		brd.whitePieces.emplace(std::make_pair(i,6), std::make_unique<Pawn>(i, 6, "./Sprites/pawnW.bmp"));
+		brd.blackPieces.emplace(std::make_pair(i, 1), std::make_unique<Pawn>(i, 1, "./Sprites/pawnB.bmp"));
+	}
 
 }
 

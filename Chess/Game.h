@@ -17,6 +17,7 @@ public:
 	Game(Game&) = delete;
 	Game& operator=(Game&) = delete;
 	Board brd;
-	std::unique_ptr<Piece> pawn;
+	
+	std::unique_ptr<Piece> pawnBlack;
 	void Run();
 };

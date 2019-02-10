@@ -14,7 +14,8 @@ public:
 	int GetCellWidth();
 	int GetCellHeight();
 	void UpdateBoard(Window& wnd);
-	std::map<std::pair<int,int>, std::unique_ptr<Piece>> Pieces;
+	std::map<std::pair<int,int>, std::unique_ptr<Piece>> whitePieces;
+	std::map<std::pair<int, int>, std::unique_ptr<Piece>> blackPieces;
 private:
 	int x;
 	int y;
