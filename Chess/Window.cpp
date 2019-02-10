@@ -49,10 +49,10 @@ Window::Window(int width, int height, const char* title)
 	height(height)
 {
 	RECT wr;
-	wr.left = 200;
-	wr.top = 200;
-	wr.right = wr.left+width;
-	wr.bottom = wr.top+height;
+	wr.left = 250;
+	wr.top = 50;
+	wr.right = width;
+	wr.bottom = height+wr.top;
 	//Readjusts the window to the size we require independently from the non client region
 	try { AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, false); }
 	catch (const std::runtime_error& e) {MessageBox(nullptr,"Adjust Window Rect Error",e.what(), MB_OK | MB_ICONEXCLAMATION); }
@@ -132,26 +132,19 @@ LRESULT Window::HandleMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 	case WM_MOUSEMOVE:
 		auto points = MAKEPOINTS(lParam);
 		//Check if we're in the window
-		if (points.x >= 0 && points.x <= width && points.y >= 0 && points.y <= height)
+		
+		
+		//If we're currently set to not in the window then recapture the window handle and set in window to true
+		if (!inpt.InWindow())
 		{
-			//If we're currently set to not in the window then recapture the window handle and set in window to true
-			if (!inpt.InWindow())
-			{
-				SetCapture(hWnd);
-				inpt.OnMseEnter();
-			}
-			inpt.OnMseMove(points.x, points.y);
+			SetCapture(hWnd);
+			inpt.OnMseEnter();
 		}
-		else
-		{
-			//We're not in the window
-			inpt.OnMseMove(points.x, points.y);
-			ReleaseCapture();
-			inpt.OnMseLeave();
-		}
+		inpt.OnMseMove(points.x, points.y);
 		break;
 	case WM_MOUSELEAVE:
 		inpt.OnMseLeave();
+		ReleaseCapture();
 		break;
 	case WM_LBUTTONUP:
 		points = MAKEPOINTS(lParam);

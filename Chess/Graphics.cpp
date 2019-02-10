@@ -167,7 +167,7 @@ Graphics::Graphics(HWND hWnd)
 	}
 
 	//Create our colour array that we will access to change pixel colours directly
-	pColorBuffer = reinterpret_cast<Color*>(_aligned_malloc(sizeof(Color) * ScreenWidth * ScreenHeight, 32u));
+	pColorBuffer = reinterpret_cast<Color*>(_aligned_malloc(sizeof(Color) * ScreenWidth * ScreenHeight, 16u));
 }
 
 Graphics::~Graphics()

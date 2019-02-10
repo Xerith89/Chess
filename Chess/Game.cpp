@@ -12,7 +12,7 @@ Game::Game(Window & wnd)
 
 void Game::Update()
 {
-	
+	brd.UpdateBoard(wnd);
 }
 
 void Game::Render()

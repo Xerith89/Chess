@@ -33,7 +33,11 @@ int Board::GetCellHeight()
 
 void Board::UpdateBoard(Window & wnd)
 {
-	
+
+	if (wnd.inpt.LeftMsePressed())
+	{
+		TranslateCoords(wnd.inpt.GetMseX(), wnd.inpt.GetMseY());
+	}
 }
 
 std::pair<int, int> Board::TranslateCoords(Piece* piece)
@@ -54,4 +58,18 @@ std::pair<int, int> Board::TranslateCoords(Piece* piece)
 	int y_out = y + (y_in*cellHeight) + ((cellHeight-sprite_height)/2);
 	
 	return std::make_pair(x_out,y_out);
+}
+
+Coords Board::TranslateCoords(int x_in, int y_in)
+{//Check we're actually clicking inside the board
+	if (x_in >= x && x_in <= x+BoardSprite.GetWidth() && y_in >= y && y_in <= y+BoardSprite.GetHeight())
+	{
+		//Convert from window space to board space
+		int x_coord = (x_in-x) / cellWidth;
+		int y_coord = (y_in-y) / cellHeight;
+		
+		return { x_coord,y_coord };
+	}
+	//If we get here then we clicked outside of the board so we will discard
+	return { -1,-1 };
 }
