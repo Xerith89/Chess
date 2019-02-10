@@ -52,8 +52,8 @@ Sprite::Sprite(const std::string Filename)
 			const unsigned char b = file.get(); //bitmap colour channels are loaded weirdly
 			const unsigned char g = file.get();
 			const unsigned char r = file.get();
-			RecordColor(x, y, Color(r, g, b,255)); //set our pixel in the array by calling our Surface putpixel function
-			
+			RecordColor(x, y, Color(r, g, b)); //set our pixel in the array by calling our Surface putpixel function
+						
 			//Padding is different for 32bit and 24bit
 			if (i32bit) 
 			{
@@ -77,7 +77,7 @@ Sprite::~Sprite()
 void Sprite::RecordColor(int x, int y, Color c)
 {
 	//index in to the unique pointer color array and set the color
-	pColorPixels.get()[y*width + x] = c;
+	pColorPixels.get()[0] = c;
 }
 
 int Sprite::GetWidth()const
@@ -92,6 +92,6 @@ int Sprite::GetHeight() const
 
 Color Sprite::GetColor(int x, int y) const
 {
-	return pColorPixels.get()[y*width + x];
+	return pColorPixels.get()[0];
 }
 
