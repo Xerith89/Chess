@@ -4,6 +4,11 @@
 #include "Sprite.h"
 #include "Board.h"
 #include "Pawn.h"
+#include "King.h"
+#include "Queen.h"
+#include "Rook.h"
+#include "Knight.h"
+#include "Bishop.h"
 
 class Game {
 private:
@@ -11,13 +16,18 @@ private:
 	Graphics gfx;
 	void Render();
 	void Update();
+	enum GameState
+	{
+		MainMenu,
+		LocalGame,
+		MultiplayerGame,
+		MultiplayerFind
+	};
 public:
 	Game(Window& wnd);
 	~Game() = default;
 	Game(Game&) = delete;
 	Game& operator=(Game&) = delete;
 	Board brd;
-	
-	std::unique_ptr<Piece> pawnBlack;
 	void Run();
 };

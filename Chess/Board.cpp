@@ -69,6 +69,8 @@ void Board::UpdateBoard(Window & wnd)
 		}
 		else
 		{
+			//Need to add a check for pieces of the same colour occupying a position in the possible moves list
+			//Maybe also colour red underneath if there is an opposing piece at the position
 			selectedTarget = TranslateCoords(wnd.inpt.GetMseX(), wnd.inpt.GetMseY());
 			if (whitePieces.count({ selectedPiece.x,selectedPiece.y }) > 0)
 			{
@@ -78,7 +80,7 @@ void Board::UpdateBoard(Window & wnd)
 				if (i != selectedMoves.end())
 				{
 					piece->second.get()->MoveTo({ selectedTarget.x, selectedTarget.y });
-					whitePieces.insert_or_assign(std::make_pair(selectedTarget.x, selectedTarget.y), std::move(whitePieces.find({ selectedPiece.x,selectedPiece.y })->second));
+					whitePieces.insert_or_assign({ selectedTarget.x, selectedTarget.y }, std::move(whitePieces.find({ selectedPiece.x,selectedPiece.y })->second));
 					whitePieces.erase({ selectedPiece.x,selectedPiece.y });
 					pieceSelected = false;
 					selectedPiece.x = 0;

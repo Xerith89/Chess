@@ -128,14 +128,26 @@
     <ClCompile Include="Sprite.cpp">
       <Filter>Source Files\Engine</Filter>
     </ClCompile>
+    <ClCompile Include="King.cpp">
+      <Filter>Source Files\Game Files</Filter>
+    </ClCompile>
     <ClCompile Include="Board.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Game Files</Filter>
     </ClCompile>
     <ClCompile Include="Pawn.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Game Files</Filter>
     </ClCompile>
-    <ClCompile Include="King.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Queen.cpp">
+      <Filter>Source Files\Game Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Knight.cpp">
+      <Filter>Source Files\Game Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Rook.cpp">
+      <Filter>Source Files\Game Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Bishop.cpp">
+      <Filter>Source Files\Game Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

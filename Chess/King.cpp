@@ -21,3 +21,7 @@ King::King(int x, int y, const std::string spritename)
 	//diagonal upleft
 	movesTemplate.push_back({ -1,-1 });	
 }
+
+void King::GetMoves()
+{
+}
