@@ -77,7 +77,7 @@ Sprite::~Sprite()
 void Sprite::RecordColor(int x, int y, Color c)
 {
 	//index in to the unique pointer color array and set the color
-	pColorPixels.get()[0] = c;
+	pColorPixels.get()[y*width + x] = c;
 }
 
 int Sprite::GetWidth()const
@@ -92,6 +92,6 @@ int Sprite::GetHeight() const
 
 Color Sprite::GetColor(int x, int y) const
 {
-	return pColorPixels.get()[0];
+	return pColorPixels.get()[y*width + x];
 }
 

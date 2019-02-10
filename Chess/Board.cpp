@@ -17,7 +17,7 @@ void Board::DrawBoard(Graphics& gfx)
 	for (const auto& x : Pieces)
 	{
 		std::pair<int,int> position = TranslateCoords(x.second.get());
-		//gfx.DrawSprite(position.first, position.second, x.second->GetSprite());
+		gfx.DrawSprite(position.first, position.second, x.second->GetSprite());
 	}
 }
 

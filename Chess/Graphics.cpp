@@ -251,7 +251,10 @@ void Graphics::DrawSprite(int x, int y, const Sprite & sprite)
 	{
 		for (int j = 0; j <= width; j++)
 		{
-			SetPixel(j+x, i+y, sprite.GetColor(j, i));
+			if (sprite.GetColor(j, i) != chroma)
+			{
+				SetPixel(j + x, i + y, sprite.GetColor(j, i));
+			}
 		}
 	}
 }

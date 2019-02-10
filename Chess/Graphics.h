@@ -38,6 +38,7 @@ private:
 	D3D11_MAPPED_SUBRESOURCE	mappedSysBufferTexture;
 	//We will use this to create an array of colours the size of the screen
 	Color*                      pColorBuffer = nullptr;
+	Color chroma{ 34,177,76 };
 
 	//We'll use this to create a textured quad which is what we will draw onto rather than the screen directly
 	struct Vertex 

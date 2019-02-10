@@ -17,17 +17,15 @@ public:
 		:
 		packedCol((r << 16u | g << 8 | b))
 	{}
-	constexpr unsigned char GetR() const
+
+	bool operator==(const Color& rhs)
 	{
-		return (packedCol >> 16u) & 0xFFu;
+		return packedCol == rhs.packedCol;
 	}
-	constexpr unsigned char GetG() const
+
+	bool operator!=(const Color& rhs)
 	{
-		return (packedCol >> 8u) & 0xFFu;
-	}
-	constexpr unsigned char GetB() const
-	{
-		return packedCol & 0xFFu;
+		return !(*this == rhs);
 	}
 
 };
