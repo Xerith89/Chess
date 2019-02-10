@@ -10,7 +10,7 @@ protected:
 	Coords maxCoord = { 7,7 };
 	Coords minCoord = { 0,0 };
 	bool selected = false;
-	std::vector<Coords> moveRules;
+	std::vector<Coords> movesTemplate;
 public:
 	Coords GetCoords()const;
 	Piece(Coords coords, const std::string spritename);

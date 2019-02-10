@@ -10,7 +10,7 @@ Game::Game(Window & wnd)
 	{
 		std::unique_ptr<Piece> pawn;
 		brd.whitePieces.emplace(std::make_pair(i,6), std::make_unique<Pawn>(i, 6, "./Sprites/pawnW.bmp"));
-		brd.blackPieces.emplace(std::make_pair(i, 1), std::make_unique<Pawn>(i, 1, "./Sprites/pawnB.bmp"));
+		brd.blackPieces.emplace(std::make_pair(i,1), std::make_unique<Pawn>(i, 1, "./Sprites/pawnB.bmp"));
 	}
 
 }
