@@ -8,6 +8,7 @@ Coords Piece::GetCoords()const
 Piece::Piece(Coords coords, const std::string spritename)
 	:
 	coords(coords),
+	startCoords(coords),
 	pieceSprite(spritename)
 {
 }
@@ -44,5 +45,10 @@ void Piece::SetSelected(bool status)
 bool Piece::GetSelected() const
 {
 	return selected;
+}
+
+std::vector<Coords> Piece::MoveList() const
+{
+	return moves;
 }
 

@@ -4,4 +4,12 @@ struct Coords
 {
 	int x;
 	int y;
+	bool operator==(const Coords& rhs)
+	{
+		return x == rhs.x && y == rhs.y;
+	}
+	bool operator!=(const Coords& rhs)
+	{
+		return !operator==(rhs);
+	}
 };
