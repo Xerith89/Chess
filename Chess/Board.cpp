@@ -63,7 +63,7 @@ void Board::UpdateBoard(Window & wnd)
 				auto piece = whitePieces.find({ selectedPiece.x,selectedPiece.y });
 				pieceSelected = true;
 				piece->second->SetSelected(true);
-				piece->second->GetMoves();
+				piece->second->GetMoves(&whitePieces,&blackPieces);
 				selectedMoves = piece->second->MoveList();
 			}
 		}

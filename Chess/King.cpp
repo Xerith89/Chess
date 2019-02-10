@@ -22,6 +22,6 @@ King::King(int x, int y, const std::string spritename)
 	movesTemplate.push_back({ -1,-1 });	
 }
 
-void King::GetMoves()
+void King::GetMoves(Map* white, Map* black)
 {
 }

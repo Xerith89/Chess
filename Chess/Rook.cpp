@@ -6,6 +6,6 @@ Rook::Rook(int x, int y, const std::string spritename)
 {
 }
 
-void Rook::GetMoves()
+void Rook::GetMoves(Map* white, Map* black)
 {
 }

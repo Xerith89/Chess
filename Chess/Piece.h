@@ -2,6 +2,7 @@
 #include "Coords.h"
 #include "Graphics.h"
 #include <vector>
+#include <map>
 
 class Piece {
 protected:
@@ -13,6 +14,7 @@ protected:
 	bool selected = false;
 	std::vector<Coords> movesTemplate;
 	std::vector<Coords> moves;
+	using Map = std::map<std::pair<int,int>, std::unique_ptr<Piece>>;
 public:
 	Coords GetCoords()const;
 	Piece(Coords coords, const std::string spritename);
@@ -21,6 +23,6 @@ public:
 	void MoveTo(Coords new_coords);
 	void SetSelected(bool status);
 	bool GetSelected()const;
-	virtual void GetMoves() = 0;
+	virtual void GetMoves(Map* white, Map* black) = 0;
 	std::vector<Coords> MoveList()const;
 };

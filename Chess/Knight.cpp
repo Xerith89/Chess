@@ -6,6 +6,6 @@ Knight::Knight(int x, int y, const std::string spritename)
 {
 }
 
-void Knight::GetMoves()
+void Knight::GetMoves(Map* white, Map* black)
 {
 }

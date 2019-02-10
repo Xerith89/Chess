@@ -6,6 +6,6 @@ Bishop::Bishop(int x, int y, const std::string spritename)
 {
 }
 
-void Bishop::GetMoves()
+void Bishop::GetMoves(Map* white, Map* black)
 {
 }

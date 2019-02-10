@@ -6,6 +6,6 @@ Queen::Queen(int x, int y, const std::string spritename)
 {
 }
 
-void Queen::GetMoves()
+void Queen::GetMoves(Map* white, Map* black)
 {
 }
