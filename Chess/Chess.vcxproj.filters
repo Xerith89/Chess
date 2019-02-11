@@ -90,9 +90,6 @@
     <ClInclude Include="Client.h">
       <Filter>Header Files\Networking</Filter>
     </ClInclude>
-    <ClInclude Include="Actor.h">
-      <Filter>Header Files\Game Files</Filter>
-    </ClInclude>
     <ClInclude Include="Color.h">
       <Filter>Header Files\Engine</Filter>
     </ClInclude>
@@ -147,6 +144,9 @@
       <Filter>Source Files\Game Files</Filter>
     </ClCompile>
     <ClCompile Include="Bishop.cpp">
+      <Filter>Source Files\Game Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
       <Filter>Source Files\Game Files</Filter>
     </ClCompile>
   </ItemGroup>

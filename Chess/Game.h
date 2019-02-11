@@ -9,6 +9,7 @@
 #include "Rook.h"
 #include "Knight.h"
 #include "Bishop.h"
+#include "Player.h"
 
 class Game {
 private:
@@ -29,5 +30,6 @@ public:
 	Game(Game&) = delete;
 	Game& operator=(Game&) = delete;
 	Board brd;
+	Player player;
 	void Run();
 };

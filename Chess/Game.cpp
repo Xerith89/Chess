@@ -4,7 +4,8 @@ Game::Game(Window & wnd)
 	:
 	wnd(wnd),
 	gfx(wnd.GetHandle()),
-	brd("./Sprites/board.bmp",100,25)
+	brd("./Sprites/board.bmp",100,25),
+	player(wnd,brd)
 {
 	//Kings
 	brd.whitePieces.emplace(std::make_pair(4, 7), std::make_unique<King>(4, 7, "./Sprites/kingW.bmp"));
@@ -18,7 +19,6 @@ Game::Game(Window & wnd)
 	
 	brd.blackPieces.emplace(std::make_pair(2, 0), std::make_unique<Knight>(2, 0, "./Sprites/bishopB.bmp"));
 	brd.blackPieces.emplace(std::make_pair(5, 0), std::make_unique<Knight>(5, 0, "./Sprites/bishopb.bmp"));
-
 	//Knights
 	brd.whitePieces.emplace(std::make_pair(1, 7), std::make_unique<Knight>(1, 7, "./Sprites/knightW.bmp"));
 	brd.whitePieces.emplace(std::make_pair(6, 7), std::make_unique<Knight>(6, 7, "./Sprites/knightW.bmp"));
@@ -42,12 +42,13 @@ Game::Game(Window & wnd)
 
 void Game::Update()
 {
-	brd.UpdateBoard(wnd);
+	player.DoTurn();
 }
 
 void Game::Render()
 {
 	brd.DrawBoard(gfx);
+	player.DrawPossibleMoves(gfx);
 }
 
 void Game::Run()

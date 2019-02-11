@@ -6,8 +6,7 @@ Board::Board(const std::string spritename, int x, int y)
 	x(x),
 	y(y),
 	cellWidth(BoardSprite.GetWidth() / cellsPerRow),
-	cellHeight(BoardSprite.GetHeight() / cellsPerRow),
-	target("./Sprites/target.bmp")
+	cellHeight(BoardSprite.GetHeight() / cellsPerRow)
 {
 }
 
@@ -19,18 +18,6 @@ void Board::DrawBoard(Graphics& gfx)
 	{
 		auto position = TranslateCoords(x.second.get());
 		gfx.DrawSprite(position.first, position.second, x.second->GetSprite());
-	}
-
-	if (whitePieces.count({ selectedPiece.x, selectedPiece.y }) > 0)
-	{
-		const auto moves = whitePieces.find({ selectedPiece.x, selectedPiece.y })->second.get()->MoveList();
-
-		for (const auto& m : moves)
-		{
-			auto position = TranslateCoords({ m });
-
-			gfx.DrawSprite(position.first, position.second, target);
-		}
 	}
 
 	for (const auto& x : blackPieces)
@@ -53,53 +40,6 @@ int Board::GetCellHeight()
 void Board::UpdateBoard(Window & wnd)
 {
 
-	if (wnd.inpt.LeftMsePressed())
-	{
-		if (!pieceSelected)
-		{
-			selectedPiece = TranslateCoords(wnd.inpt.GetMseX(), wnd.inpt.GetMseY());
-			if (whitePieces.count({ selectedPiece.x,selectedPiece.y }) > 0)
-			{
-				auto piece = whitePieces.find({ selectedPiece.x,selectedPiece.y });
-				pieceSelected = true;
-				piece->second->SetSelected(true);
-				piece->second->GetMoves(&whitePieces,&blackPieces);
-				selectedMoves = piece->second->MoveList();
-			}
-		}
-		else
-		{
-			//Need to add a check for pieces of the same colour occupying a position in the possible moves list
-			//Maybe also colour red underneath if there is an opposing piece at the position
-			selectedTarget = TranslateCoords(wnd.inpt.GetMseX(), wnd.inpt.GetMseY());
-			if (whitePieces.count({ selectedPiece.x,selectedPiece.y }) > 0)
-			{
-				auto piece = whitePieces.find({ selectedPiece.x,selectedPiece.y });
-				
-				auto i = (std::find(selectedMoves.begin(), selectedMoves.end(), selectedTarget));
-				if (i != selectedMoves.end())
-				{
-					piece->second.get()->MoveTo({ selectedTarget.x, selectedTarget.y });
-					whitePieces.insert_or_assign({ selectedTarget.x, selectedTarget.y }, std::move(whitePieces.find({ selectedPiece.x,selectedPiece.y })->second));
-					whitePieces.erase({ selectedPiece.x,selectedPiece.y });
-					pieceSelected = false;
-					selectedPiece.x = 0;
-					selectedPiece.y = 0;
-				}
-			}
-		}
-	}
-
-	if (wnd.inpt.RightMsePressed())
-	{
-		if (whitePieces.count({ selectedPiece.x,selectedPiece.y }) > 0)
-		{
-			whitePieces.find({ selectedPiece.x,selectedPiece.y })->second->SetSelected(false);
-			pieceSelected = false;
-			selectedPiece.x = 0;
-			selectedPiece.y = 0;
-		}
-	}
 }
 
 std::pair<int, int> Board::TranslateCoords(Piece* piece)

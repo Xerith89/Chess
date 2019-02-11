@@ -3,6 +3,7 @@
 #include "Graphics.h"
 #include <vector>
 #include <map>
+#include <algorithm>
 
 class Piece {
 protected:

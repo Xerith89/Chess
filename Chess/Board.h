@@ -17,17 +17,12 @@ public:
 	void UpdateBoard(Window& wnd);
 	std::map<std::pair<int,int>, std::unique_ptr<Piece>> whitePieces;
 	std::map<std::pair<int, int>, std::unique_ptr<Piece>> blackPieces;
-private:
-	Coords selectedPiece;
-	Coords selectedTarget;
-	Sprite target;
-	int x;
-	int y;
 	std::pair<int, int> TranslateCoords(Piece* piece);
 	Coords TranslateCoords(int x_in, int y_in);
 	std::pair<int, int> TranslateCoords(Coords coords_in);
-	std::vector<Coords> selectedMoves;
-	bool pieceSelected = false;
+private:
+	int x;
+	int y;
 	Sprite BoardSprite = nullptr;
 	static constexpr int cellsPerRow = 8;
 	const int cellWidth;

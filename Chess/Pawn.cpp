@@ -22,27 +22,27 @@ void Pawn::GetMoves(Map* white, Map* black)
 	//If we haven't moved then we want to check if the place is free up to two times
 	if (firstMove)
 	{
-		int new_x = 1;
-		while (white->count({ coords.x,coords.y - new_x }) == 0 && new_x != 3)
+		int new_y = 1;
+		while (white->count({ coords.x,coords.y - new_y }) == 0 && new_y != 3)
 		{
-			if (black->count({ coords.x,coords.y - new_x }) == 0)
+			if (black->count({ coords.x,coords.y - new_y }) == 0)
 			{
-				moves.push_back({ coords.x,coords.y - new_x });
-				new_x++;
+				moves.push_back({ coords.x,coords.y - new_y });
+				new_y++;
 			}
 		}
 	}
 	else
 	{
 		//If we have moved then just check the next 
-		int new_x = 1;
-		while (white->count({ coords.x,coords.y - new_x }) == 0 && new_x < 2)
+		int new_y = 1;
+		while (white->count({ coords.x,coords.y - new_y }) == 0 && new_y < 2)
 		{
-			if (black->count({ coords.x,coords.y - new_x }) == 0)
+			if (black->count({ coords.x,coords.y - new_y }) == 0)
 			{
-				moves.push_back({ coords.x,coords.y - new_x });
+				moves.push_back({ coords.x,coords.y - new_y });
 			}
-			new_x++;
+			new_y++;
 		}
 	}
 

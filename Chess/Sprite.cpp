@@ -34,7 +34,7 @@ Sprite::Sprite(const std::string Filename)
 	else
 	{
 		height = bmInfoHeader.biHeight;
-		yStart = height - 1;
+		yStart = height-1;
 		yEnd = -1;
 		yDir = -1;
 	}
