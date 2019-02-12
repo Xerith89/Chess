@@ -1,8 +1,9 @@
 #include "Pawn.h"
 
-Pawn::Pawn(int x, int y, const std::string spritename)
+Pawn::Pawn(int x, int y, const std::string spritename, bool white)
 	:
-	Piece({ x,y }, spritename)
+	Piece({ x,y }, spritename),
+	whitePiece(white)
 {
 	movesTemplate.push_back({ 0,2 });
 	movesTemplate.push_back({ 0,1 });
@@ -19,42 +20,85 @@ void Pawn::GetMoves(Map* white, Map* black)
 	}
 	int moveCount = 0;
 	
-	//If we haven't moved then we want to check if the place is free up to two times
-	if (firstMove)
+	switch (whitePiece)
 	{
-		int new_y = 1;
-		while (white->count({ coords.x,coords.y - new_y }) == 0 && new_y != 3)
+	case true:
+		//If we haven't moved then we want to check if the place is free up to two times
+		if (firstMove)
 		{
-			if (black->count({ coords.x,coords.y - new_y }) == 0)
+			int new_y = 1;
+			while (white->count({ coords.x,coords.y - new_y }) == 0 && new_y != 3)
 			{
-				moves.push_back({ coords.x,coords.y - new_y });
+				if (black->count({ coords.x,coords.y - new_y }) == 0)
+				{
+					moves.push_back({ coords.x,coords.y - new_y });
+					new_y++;
+				}
+			}
+		}
+		else
+		{
+			//If we have moved then just check the next 
+			int new_y = 1;
+			while (white->count({ coords.x,coords.y - new_y }) == 0 && new_y < 2)
+			{
+				if (black->count({ coords.x,coords.y - new_y }) == 0)
+				{
+					moves.push_back({ coords.x,coords.y - new_y });
+				}
 				new_y++;
 			}
 		}
-	}
-	else
-	{
-		//If we have moved then just check the next 
-		int new_y = 1;
-		while (white->count({ coords.x,coords.y - new_y }) == 0 && new_y < 2)
+
+		//Check if we have any diagonal black pieces at our current space - they  can be taken and are a possible move
+		if (black->count({ coords.x - 1,coords.y - 1 }) == 1)
 		{
-			if (black->count({ coords.x,coords.y - new_y }) == 0)
-			{
-				moves.push_back({ coords.x,coords.y - new_y });
-			}
-			new_y++;
+			moves.push_back({ coords.x - 1,coords.y - 1 });
 		}
-	}
 
-	//Check if we have any diagonal black pieces at our current space - they  can be taken and are a possible move
-	if (black->count({ coords.x - 1,coords.y - 1 }) == 1)
-	{
-		moves.push_back({ coords.x-1,coords.y - 1 });
-	}
+		if (black->count({ coords.x + 1,coords.y - 1 }) == 1)
+		{
+			moves.push_back({ coords.x + 1,coords.y - 1 });
+		}
+		break;
+	case false:
+		if (firstMove)
+		{
+			int new_y = 1;
+			while (black->count({ coords.x,coords.y + new_y }) == 0 && new_y != 3)
+			{
+				if (white->count({ coords.x,coords.y + new_y }) == 0)
+				{
+					moves.push_back({ coords.x,coords.y + new_y });
+					new_y++;
+				}
+			}
+		}
+		else
+		{
+			//If we have moved then just check the next 
+			int new_y = 1;
+			while (black->count({ coords.x,coords.y + new_y }) == 0 && new_y < 2)
+			{
+				if (white->count({ coords.x,coords.y + new_y }) == 0)
+				{
+					moves.push_back({ coords.x,coords.y + new_y });
+				}
+				new_y++;
+			}
+		}
 
-	if (black->count({ coords.x + 1,coords.y - 1 }) == 1)
-	{
-		moves.push_back({ coords.x + 1,coords.y - 1 });
+		//Check if we have any diagonal black pieces at our current space - they  can be taken and are a possible move
+		if (white->count({ coords.x - 1,coords.y + 1 }) == 1)
+		{
+			moves.push_back({ coords.x - 1,coords.y + 1 });
+		}
+
+		if (white->count({ coords.x + 1,coords.y + 1 }) == 1)
+		{
+			moves.push_back({ coords.x + 1,coords.y + 1 });
+		}
+		break;
 	}
 }
 
