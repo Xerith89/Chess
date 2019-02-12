@@ -14,14 +14,21 @@ void Rook::GetMoves(Map* white, Map* black)
 	while (white->count({ coords.x - new_x,coords.y }) == 0 && (coords.x - new_x) >= minCoord.x)
 	{
 		moves.push_back({ coords.x - new_x,coords.y});
+		if (black->count({ coords.x - new_x, coords.y }) > 0)
+		{break;}
 		new_x++;
+
 	}
 	//Reset x and check right
 	new_x = 1;
 	while (white->count({ coords.x + new_x,coords.y }) == 0 && (coords.x + new_x) <= maxCoord.x)
 	{
 		moves.push_back({ coords.x + new_x,coords.y });
+		if (black->count({ coords.x + new_x, coords.y }) > 0)
+		{break;}
 		new_x++;
+	
+		
 	}
 	
 	//check up
@@ -29,6 +36,8 @@ void Rook::GetMoves(Map* white, Map* black)
 	while (white->count({ coords.x,coords.y - new_y}) == 0 && (coords.y-new_y) >= minCoord.y)
 	{
 		moves.push_back({ coords.x,coords.y-new_y});
+		if (black->count({ coords.x,coords.y - new_y }) > 0)
+		{break;}
 		new_y++;
 	}
 	//Check down
@@ -36,6 +45,8 @@ void Rook::GetMoves(Map* white, Map* black)
 	while (white->count({ coords.x,coords.y + new_y }) == 0 && (coords.y +new_y) <= maxCoord.y)
 	{
 		moves.push_back({ coords.x,coords.y + new_y });
+		if (black->count({ coords.x,coords.y + new_y }) > 0)
+		{break;}
 		new_y++;
 	}
 	

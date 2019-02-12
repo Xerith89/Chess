@@ -27,8 +27,6 @@ void Player::DoTurn()
 		}
 		else
 		{
-			//Need to add a check for pieces of the same colour occupying a position in the possible moves list
-			//Maybe also colour red underneath if there is an opposing piece at the position
 			selectedTarget = brd.TranslateCoords(wnd.inpt.GetMseX(), wnd.inpt.GetMseY());
 			if (brd.whitePieces.count({ selectedPiece.x,selectedPiece.y }) > 0)
 			{
