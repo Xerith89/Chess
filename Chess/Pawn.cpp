@@ -4,10 +4,7 @@ Pawn::Pawn(int x, int y, const std::string spritename, bool white)
 	:
 	Piece({ x,y }, spritename),
 	whitePiece(white)
-{
-	movesTemplate.push_back({ 0,2 });
-	movesTemplate.push_back({ 0,1 });
-}
+{}
 
 void Pawn::GetMoves(Map* mypieces, Map* opponentpieces)
 {

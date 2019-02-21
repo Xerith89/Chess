@@ -13,7 +13,6 @@ protected:
 	Coords minCoord = { 0,0 };
 	Coords startCoords;
 	bool selected = false;
-	std::vector<Coords> movesTemplate;
 	std::vector<Coords> moves;
 	using Map = std::map<std::pair<int,int>, std::unique_ptr<Piece>>;
 public:
