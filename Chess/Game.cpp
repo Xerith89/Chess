@@ -10,7 +10,7 @@ Game::Game(Window & wnd)
 	//Kings
 	brd.whitePieces.emplace(std::make_pair(4, 7), std::make_unique<King>(4, 7, "./Sprites/kingW.bmp"));
 	brd.blackPieces.emplace(std::make_pair(4, 0), std::make_unique<King>(4, 0, "./Sprites/kingB.bmp"));
-	//Queens
+	//Queens test jenking
 	brd.whitePieces.emplace(std::make_pair(3,7), std::make_unique<Queen>(3, 7, "./Sprites/queenW.bmp"));
 	brd.blackPieces.emplace(std::make_pair(3,0), std::make_unique<Queen>(3, 0, "./Sprites/queenB.bmp"));
 	//Bishops
