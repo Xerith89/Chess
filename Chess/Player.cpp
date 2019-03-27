@@ -13,7 +13,7 @@ void Player::DoTurn()
 
 	if (wnd.inpt.LeftMsePressed())
 	{
-		if (!pieceSelected)
+		if (!pieceSelected || selectedMoves.size() == 0)
 		{
 			selectedPiece = brd.TranslateCoords(wnd.inpt.GetMseX(), wnd.inpt.GetMseY());
 			if (brd.whitePieces.count({ selectedPiece.x,selectedPiece.y }) > 0)
@@ -41,13 +41,16 @@ void Player::DoTurn()
 					pieceSelected = false;
 					selectedPiece.x = 0;
 					selectedPiece.y = 0;
+					playerTurn = false;
 				}
 				if (brd.blackPieces.count({ selectedTarget.x, selectedTarget.y }) > 0)
 				{
 					brd.blackPieces.erase({ selectedTarget.x,selectedTarget.y });
 				}
 			}
+			
 		}
+		
 	}
 
 	if (wnd.inpt.RightMsePressed())
@@ -75,4 +78,14 @@ void Player::DrawPossibleMoves(Graphics& gfx)
 			gfx.DrawSprite(position.first, position.second, target);
 		}
 	}
+}
+
+bool Player::PlayerTurn()
+{
+	return playerTurn;
+}
+
+void Player::SetPlayerTurn()
+{
+	playerTurn = true;
 }

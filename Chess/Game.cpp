@@ -5,7 +5,8 @@ Game::Game(Window & wnd)
 	wnd(wnd),
 	gfx(wnd.GetHandle()),
 	brd("./Sprites/board.bmp",100,25),
-	player(wnd,brd)
+	player(wnd,brd),
+	opponent(brd)
 {
 	//Kings
 	brd.whitePieces.emplace(std::make_pair(4, 7), std::make_unique<King>(4, 7, "./Sprites/kingW.bmp"));
@@ -42,7 +43,15 @@ Game::Game(Window & wnd)
 
 void Game::Update()
 {
-	player.DoTurn();
+	if (player.PlayerTurn())
+	{
+		player.DoTurn();
+	}
+	if (!player.PlayerTurn())
+	{
+		opponent.DoTurn();
+		player.SetPlayerTurn();
+	}
 }
 
 void Game::Render()
@@ -58,3 +67,4 @@ void Game::Run()
 	Render();
 	gfx.RenderFrame();
 }
+

@@ -91,8 +91,17 @@ void Queen::GetMoves(const Map* mypieces, const Map* opponentpieces)
 			break;
 		}
 		new_x++;
-
-
+	}
+	
+	new_x = 1;
+	while (mypieces->count({ coords.x - new_x,coords.y }) == 0 && (coords.x - new_x) >= minCoord.x)
+	{
+		moves.push_back({ coords.x - new_x,coords.y });
+		if (opponentpieces->count({ coords.x - new_x, coords.y }) > 0)
+		{
+			break;
+		}
+		new_x++;
 	}
 
 	//check up

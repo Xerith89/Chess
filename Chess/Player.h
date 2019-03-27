@@ -8,6 +8,8 @@ public:
 	Player(Window& wnd, Board& brd);
 	void DoTurn();
 	void DrawPossibleMoves(Graphics& gfx);
+	bool PlayerTurn();
+	void SetPlayerTurn();
 private:
 	Sprite target;
 	Window& wnd;
@@ -16,4 +18,5 @@ private:
 	Coords selectedTarget;
 	bool pieceSelected = false;
 	std::vector<Coords> selectedMoves;
+	bool playerTurn = true;
 };

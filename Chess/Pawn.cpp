@@ -4,7 +4,9 @@ Pawn::Pawn(int x, int y, const std::string spritename, bool white)
 	:
 	Piece({ x,y }, spritename),
 	whitePiece(white)
-{}
+{
+	startCoords = { x,y };
+}
 
 void Pawn::GetMoves(const Map* mypieces, const Map* opponentpieces)
 {
@@ -31,8 +33,14 @@ void Pawn::GetMoves(const Map* mypieces, const Map* opponentpieces)
 		{
 			if (opponentpieces->count({ coords.x,coords.y - y_offset }) == 0)
 			{
+				assert(coords.x >= 0 && coords.x <= 7);
+				assert(coords.y >= 0 && coords.y <= 7);
 				moves.push_back({ coords.x,coords.y - y_offset});
 				y_offset+=y_offset;
+			}
+			else
+			{
+				break;
 			}
 		}
 	}

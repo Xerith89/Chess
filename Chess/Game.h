@@ -10,6 +10,7 @@
 #include "Knight.h"
 #include "Bishop.h"
 #include "Player.h"
+#include "Opponent.h"
 
 class Game {
 private:
@@ -24,6 +25,8 @@ private:
 		MultiplayerGame,
 		MultiplayerFind
 	};
+	bool playerTurn = true;
+	bool opponentTurn = false;
 public:
 	Game(Window& wnd);
 	~Game() = default;
@@ -31,5 +34,6 @@ public:
 	Game& operator=(Game&) = delete;
 	Board brd;
 	Player player;
+	Opponent opponent;
 	void Run();
 };
