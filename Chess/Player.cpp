@@ -42,6 +42,10 @@ void Player::DoTurn()
 					selectedPiece.x = 0;
 					selectedPiece.y = 0;
 				}
+				if (brd.blackPieces.count({ selectedTarget.x, selectedTarget.y }) > 0)
+				{
+					brd.blackPieces.erase({ selectedTarget.x,selectedTarget.y });
+				}
 			}
 		}
 	}
