@@ -6,6 +6,6 @@ King::King(int x, int y, const std::string spritename)
 {
 }
 
-void King::GetMoves(Map* mypieces, Map* opponentpieces)
+void King::GetMoves(const Map* mypieces,const Map* opponentpieces)
 {
 }

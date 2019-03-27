@@ -6,7 +6,7 @@ Rook::Rook(int x, int y, const std::string spritename)
 {
 }
 
-void Rook::GetMoves(Map* mypieces, Map* opponentpieces)
+void Rook::GetMoves(const Map* mypieces, const Map* opponentpieces)
 {
 	moves.clear();
 	int new_x = 1;

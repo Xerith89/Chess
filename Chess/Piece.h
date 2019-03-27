@@ -23,6 +23,6 @@ public:
 	void MoveTo(Coords new_coords);
 	void SetSelected(bool status);
 	bool GetSelected()const;
-	virtual void GetMoves(Map* mypieces, Map* opponentpieces) = 0;
+	virtual void GetMoves(const Map* mypieces, const Map* opponentpieces) = 0;
 	std::vector<Coords> MoveList()const;
 };

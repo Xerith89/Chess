@@ -6,7 +6,7 @@ Pawn::Pawn(int x, int y, const std::string spritename, bool white)
 	whitePiece(white)
 {}
 
-void Pawn::GetMoves(Map* mypieces, Map* opponentpieces)
+void Pawn::GetMoves(const Map* mypieces, const Map* opponentpieces)
 {
 	//Empty out the moves list from the previous piece
 	moves.clear();

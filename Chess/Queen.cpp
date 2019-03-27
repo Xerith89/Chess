@@ -6,6 +6,6 @@ Queen::Queen(int x, int y, const std::string spritename)
 {
 }
 
-void Queen::GetMoves(Map* mypieces, Map* opponentpieces)
+void Queen::GetMoves(const Map* mypieces, const Map* opponentpieces)
 {
 }
