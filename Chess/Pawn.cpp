@@ -33,8 +33,8 @@ void Pawn::GetMoves(const Map* mypieces, const Map* opponentpieces)
 		{
 			if (opponentpieces->count({ coords.x,coords.y - y_offset }) == 0)
 			{
-				assert(coords.x >= 0 && coords.x <= 7);
-				assert(coords.y >= 0 && coords.y <= 7);
+				
+				assert(y_offset < 10);
 				moves.push_back({ coords.x,coords.y - y_offset});
 				y_offset+=y_offset;
 			}
@@ -53,20 +53,23 @@ void Pawn::GetMoves(const Map* mypieces, const Map* opponentpieces)
 		{
 			if (opponentpieces->count({ coords.x,coords.y - y_offset }) == 0)
 			{
+				assert(y_offset < 10);
 				moves.push_back({ coords.x,coords.y - y_offset });
 			}
-			y_offset+=y_offset;
+			y_offset++;
 		}
 	}
 	
 	//Check if we have any diagonal black pieces at our current space - they  can be taken and are a possible move
 	if (opponentpieces->count({ coords.x - 1,coords.y - attackOffset }) == 1)
 	{
+		assert(y_offset < 10);
 		moves.push_back({ coords.x - 1,coords.y - attackOffset });
 	}
 
 	if (opponentpieces->count({ coords.x + 1,coords.y - attackOffset }) == 1)
 	{
+		assert(y_offset < 10);
 		moves.push_back({ coords.x + 1,coords.y - attackOffset });
 	}		
 }
