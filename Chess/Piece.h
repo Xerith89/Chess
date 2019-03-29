@@ -14,7 +14,7 @@ protected:
 	Coords minCoord = { 0,0 };
 	Coords startCoords;
 	bool selected = false;
-	std::vector<Coords> moves;
+	std::vector<std::pair<Coords, Coords>>  moves;
 	using Map = std::map<std::pair<int,int>, std::unique_ptr<Piece>>;
 public:
 	Coords GetCoords()const;
@@ -25,5 +25,5 @@ public:
 	void SetSelected(bool status);
 	bool GetSelected()const;
 	virtual void GetMoves(const Map* mypieces, const Map* opponentpieces) = 0;
-	std::vector<Coords> MoveList()const;
+	std::vector<std::pair<Coords,Coords>> MoveList()const;
 };

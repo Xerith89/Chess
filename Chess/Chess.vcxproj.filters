@@ -96,6 +96,9 @@
     <ClInclude Include="Game.h">
       <Filter>Header Files\Game Files</Filter>
     </ClInclude>
+    <ClInclude Include="Graph.h">
+      <Filter>Header Files\Game Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Graphics.cpp">

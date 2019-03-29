@@ -35,7 +35,7 @@ void Pawn::GetMoves(const Map* mypieces, const Map* opponentpieces)
 			{
 				
 				assert(y_offset < 10);
-				moves.push_back({ coords.x,coords.y - y_offset});
+				moves.push_back(std::make_pair(coords, Coords{ coords.x,coords.y - y_offset}));
 				y_offset+=y_offset;
 			}
 			else
@@ -54,7 +54,7 @@ void Pawn::GetMoves(const Map* mypieces, const Map* opponentpieces)
 			if (opponentpieces->count({ coords.x,coords.y - y_offset }) == 0)
 			{
 				assert(y_offset < 10);
-				moves.push_back({ coords.x,coords.y - y_offset });
+				moves.push_back(std::make_pair(coords, Coords{ coords.x,coords.y - y_offset }));
 			}
 			y_offset++;
 		}
@@ -64,13 +64,13 @@ void Pawn::GetMoves(const Map* mypieces, const Map* opponentpieces)
 	if (opponentpieces->count({ coords.x - 1,coords.y - attackOffset }) == 1)
 	{
 		assert(y_offset < 10);
-		moves.push_back({ coords.x - 1,coords.y - attackOffset });
+		moves.push_back(std::make_pair(coords, Coords{ coords.x - 1,coords.y - attackOffset }));
 	}
 
 	if (opponentpieces->count({ coords.x + 1,coords.y - attackOffset }) == 1)
 	{
 		assert(y_offset < 10);
-		moves.push_back({ coords.x + 1,coords.y - attackOffset });
+		moves.push_back(std::make_pair(coords, Coords{ coords.x + 1,coords.y - attackOffset }));
 	}		
 }
 

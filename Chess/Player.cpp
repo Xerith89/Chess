@@ -27,7 +27,10 @@ void Player::DoTurn()
 				pieceSelected = true;
 				piece->second->SetSelected(true);
 				piece->second->GetMoves(&brd.whitePieces, &brd.blackPieces);
-				selectedMoves = piece->second->MoveList();
+				for (const auto& p : piece->second->MoveList())
+				{
+					selectedMoves.push_back(p.second);
+				}
 			}
 		}
 		else
@@ -90,7 +93,7 @@ void Player::DrawPossibleMoves(Graphics& gfx)
 
 		for (const auto& m : moves)
 		{
-			auto position = brd.TranslateCoords({ m });
+			auto position = brd.TranslateCoords({ m.second });
 
 			gfx.DrawSprite(position.first, position.second, target);
 		}

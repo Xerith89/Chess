@@ -41,9 +41,9 @@ void Opponent::GenerationZero()
 	int move_roll = movepick(rng);
 
 	//Index into the moves list
-	brd.blackPieces.find({ x_roll,y_roll })->second->MoveTo(brd.blackPieces.find({ x_roll,y_roll })->second->MoveList().at(move_roll));
+	brd.blackPieces.find({ x_roll,y_roll })->second->MoveTo(brd.blackPieces.find({ x_roll,y_roll })->second->MoveList().at(move_roll).second);
 	//Set the new position
-	auto newloc = brd.blackPieces.find({ x_roll,y_roll })->second->MoveList().at(move_roll);
+	auto newloc = brd.blackPieces.find({ x_roll,y_roll })->second->MoveList().at(move_roll).second;
 	//Reinsert into the map at the new position, remove the old entry
 	brd.blackPieces.insert_or_assign({ newloc.x, newloc.y }, std::move(brd.blackPieces.find({ x_roll,y_roll })->second));
 	brd.blackPieces.erase({ x_roll,y_roll });

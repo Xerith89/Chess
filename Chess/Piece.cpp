@@ -47,7 +47,7 @@ bool Piece::GetSelected() const
 	return selected;
 }
 
-std::vector<Coords> Piece::MoveList() const
+std::vector<std::pair<Coords,Coords>> Piece::MoveList() const
 {
 	return moves;
 }
