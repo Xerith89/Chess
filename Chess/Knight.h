@@ -4,6 +4,6 @@
 class Knight : public Piece {
 public:
 	Knight(int x, int y, const std::string spritename);
-	void GetMoves(Map* mypieces, Map* opponentpieces)override;
+	void GetMoves(const Map* mypieces, const Map* opponentpieces)override;
 private:
 };

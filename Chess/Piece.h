@@ -4,6 +4,7 @@
 #include <vector>
 #include <map>
 #include <algorithm>
+#include <assert.h>
 
 class Piece {
 protected:
@@ -13,7 +14,7 @@ protected:
 	Coords minCoord = { 0,0 };
 	Coords startCoords;
 	bool selected = false;
-	std::vector<Coords> moves;
+	std::vector<std::pair<Coords, Coords>>  moves;
 	using Map = std::map<std::pair<int,int>, std::unique_ptr<Piece>>;
 public:
 	Coords GetCoords()const;
@@ -23,6 +24,6 @@ public:
 	void MoveTo(Coords new_coords);
 	void SetSelected(bool status);
 	bool GetSelected()const;
-	virtual void GetMoves(Map* mypieces, Map* opponentpieces) = 0;
-	std::vector<Coords> MoveList()const;
+	virtual void GetMoves(const Map* mypieces, const Map* opponentpieces) = 0;
+	std::vector<std::pair<Coords,Coords>> MoveList()const;
 };

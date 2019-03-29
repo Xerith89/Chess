@@ -4,9 +4,11 @@ Pawn::Pawn(int x, int y, const std::string spritename, bool white)
 	:
 	Piece({ x,y }, spritename),
 	whitePiece(white)
-{}
+{
+	startCoords = { x,y };
+}
 
-void Pawn::GetMoves(Map* mypieces, Map* opponentpieces)
+void Pawn::GetMoves(const Map* mypieces, const Map* opponentpieces)
 {
 	//Empty out the moves list from the previous piece
 	moves.clear();
@@ -31,8 +33,14 @@ void Pawn::GetMoves(Map* mypieces, Map* opponentpieces)
 		{
 			if (opponentpieces->count({ coords.x,coords.y - y_offset }) == 0)
 			{
-				moves.push_back({ coords.x,coords.y - y_offset});
+				
+				assert(y_offset < 10);
+				moves.push_back(std::make_pair(coords, Coords{ coords.x,coords.y - y_offset}));
 				y_offset+=y_offset;
+			}
+			else
+			{
+				break;
 			}
 		}
 	}
@@ -45,21 +53,24 @@ void Pawn::GetMoves(Map* mypieces, Map* opponentpieces)
 		{
 			if (opponentpieces->count({ coords.x,coords.y - y_offset }) == 0)
 			{
-				moves.push_back({ coords.x,coords.y - y_offset });
+				assert(y_offset < 10);
+				moves.push_back(std::make_pair(coords, Coords{ coords.x,coords.y - y_offset }));
 			}
-			y_offset+=y_offset;
+			y_offset++;
 		}
 	}
 	
 	//Check if we have any diagonal black pieces at our current space - they  can be taken and are a possible move
 	if (opponentpieces->count({ coords.x - 1,coords.y - attackOffset }) == 1)
 	{
-		moves.push_back({ coords.x - 1,coords.y - attackOffset });
+		assert(y_offset < 10);
+		moves.push_back(std::make_pair(coords, Coords{ coords.x - 1,coords.y - attackOffset }));
 	}
 
 	if (opponentpieces->count({ coords.x + 1,coords.y - attackOffset }) == 1)
 	{
-		moves.push_back({ coords.x + 1,coords.y - attackOffset });
+		assert(y_offset < 10);
+		moves.push_back(std::make_pair(coords, Coords{ coords.x + 1,coords.y - attackOffset }));
 	}		
 }
 

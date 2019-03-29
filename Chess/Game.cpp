@@ -5,7 +5,8 @@ Game::Game(Window & wnd)
 	wnd(wnd),
 	gfx(wnd.GetHandle()),
 	brd("./Sprites/board.bmp",100,25),
-	player(wnd,brd)
+	player(wnd,brd),
+	opponent(brd)
 {
 	//Kings
 	brd.whitePieces.emplace(std::make_pair(4, 7), std::make_unique<King>(4, 7, "./Sprites/kingW.bmp"));
@@ -14,11 +15,11 @@ Game::Game(Window & wnd)
 	brd.whitePieces.emplace(std::make_pair(3,7), std::make_unique<Queen>(3, 7, "./Sprites/queenW.bmp"));
 	brd.blackPieces.emplace(std::make_pair(3,0), std::make_unique<Queen>(3, 0, "./Sprites/queenB.bmp"));
 	//Bishops
-	brd.whitePieces.emplace(std::make_pair(2, 7), std::make_unique<Knight>(2, 7, "./Sprites/bishopW.bmp"));
-	brd.whitePieces.emplace(std::make_pair(5, 7), std::make_unique<Knight>(5, 7, "./Sprites/bishopW.bmp"));
+	brd.whitePieces.emplace(std::make_pair(2, 7), std::make_unique<Bishop>(2, 7, "./Sprites/bishopW.bmp"));
+	brd.whitePieces.emplace(std::make_pair(5, 7), std::make_unique<Bishop>(5, 7, "./Sprites/bishopW.bmp"));
 	
-	brd.blackPieces.emplace(std::make_pair(2, 0), std::make_unique<Knight>(2, 0, "./Sprites/bishopB.bmp"));
-	brd.blackPieces.emplace(std::make_pair(5, 0), std::make_unique<Knight>(5, 0, "./Sprites/bishopb.bmp"));
+	brd.blackPieces.emplace(std::make_pair(2, 0), std::make_unique<Bishop>(2, 0, "./Sprites/bishopB.bmp"));
+	brd.blackPieces.emplace(std::make_pair(5, 0), std::make_unique<Bishop>(5, 0, "./Sprites/bishopb.bmp"));
 	//Knights
 	brd.whitePieces.emplace(std::make_pair(1, 7), std::make_unique<Knight>(1, 7, "./Sprites/knightW.bmp"));
 	brd.whitePieces.emplace(std::make_pair(6, 7), std::make_unique<Knight>(6, 7, "./Sprites/knightW.bmp"));
@@ -42,7 +43,15 @@ Game::Game(Window & wnd)
 
 void Game::Update()
 {
-	player.DoTurn();
+	if (player.PlayerTurn())
+	{
+		player.DoTurn();
+	}
+	if (!player.PlayerTurn())
+	{
+		opponent.DoTurn();
+		player.SetPlayerTurn();
+	}
 }
 
 void Game::Render()
@@ -58,3 +67,4 @@ void Game::Run()
 	Render();
 	gfx.RenderFrame();
 }
+
