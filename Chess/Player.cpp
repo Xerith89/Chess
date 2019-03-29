@@ -22,6 +22,7 @@ void Player::DoTurn()
 
 			if (brd.whitePieces.count({ selectedPiece.x,selectedPiece.y }) > 0)
 			{
+				TestForCheck();
 				//If the piece exists then store it and get the moves for it
 				auto piece = brd.whitePieces.find({ selectedPiece.x,selectedPiece.y });
 				pieceSelected = true;
@@ -113,4 +114,21 @@ void Player::SetPlayerTurn()
 Coords Player::GetKingPosition() const
 {
 	return kingLoc;
+}
+
+void Player::TestForCheck()
+{
+	//Go through each piece and check if its target is our king,
+	//if any target equals our king location then we're in check
+	for (Map::iterator it = brd.blackPieces.begin(); it != brd.blackPieces.end(); it++)
+	{
+		it->second->GetMoves(&brd.blackPieces,&brd.whitePieces);
+		for (const auto& m : it->second->MoveList())
+			if (m.second == kingLoc)
+			{
+				checked = true;
+				return;
+			}
+	}
+	checked = false;
 }

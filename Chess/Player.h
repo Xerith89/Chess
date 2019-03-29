@@ -5,6 +5,7 @@
 #include "King.h"
 
 class Player {
+	using Map = std::map<std::pair<int, int>, std::unique_ptr<Piece>>;
 public:
 	Player(Window& wnd, Board& brd);
 	void DoTurn();
@@ -15,6 +16,8 @@ public:
 private:
 	King* kingInstance = nullptr;
 	Coords kingLoc = { 4, 7 };
+	bool checked = false;
+	void TestForCheck();
 	Sprite target;
 	Window& wnd;
 	Board& brd;
