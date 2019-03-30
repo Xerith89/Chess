@@ -43,7 +43,7 @@ void Player::DoTurn()
 				auto piece = brd.whitePieces.find({ selectedPiece.x,selectedPiece.y });
 
 				auto i = (std::find(selectedMoves.begin(), selectedMoves.end(), selectedTarget));
-				if (i != selectedMoves.end())
+				if (i != selectedMoves.end() && selectedTarget != selectedPiece)
 				{
 					//Insert at new position and delete old one
 					piece->second.get()->MoveTo({ selectedTarget.x, selectedTarget.y });
