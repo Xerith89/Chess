@@ -9,7 +9,7 @@ King::King(int x, int y, const std::string spritename)
 void King::GetMoves(const Map* mypieces,const Map* opponentpieces)
 {
 	moves.clear();
-
+	
 	int new_x = 1;
 	int new_y = 1;
 	//Check pieces left up - we don't want to go past our white pieces or the end of the board

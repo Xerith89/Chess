@@ -14,10 +14,7 @@ public:
 	void SetPlayerTurn();
 	Coords GetKingPosition()const;
 private:
-	King* kingInstance = nullptr;
-	Coords kingLoc = { 4, 7 };
 	bool checked = false;
-	void TestForCheck();
 	Sprite target;
 	Window& wnd;
 	Board& brd;
