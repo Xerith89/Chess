@@ -21,8 +21,6 @@ public:
 	Coords TranslateCoords(int x_in, int y_in);
 	std::pair<int, int> TranslateCoords(Coords coords_in);
 private:
-	Coords whiteKingLoc = { 4,7 };
-	Coords blackKingLoc = { 4,0 };
 	int x;
 	int y;
 	Sprite BoardSprite = nullptr;
