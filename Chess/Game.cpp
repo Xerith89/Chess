@@ -18,7 +18,7 @@ Game::Game(Window & wnd)
 	opponent(brd)
 {
 	//Kings
-	brd.whitePieces.emplace(std::make_pair(4, 3), std::make_unique<King>(4, 3, "./Sprites/kingW.bmp",brd));
+	brd.whitePieces.emplace(std::make_pair(4, 7), std::make_unique<King>(4, 7, "./Sprites/kingW.bmp",brd));
 	brd.blackPieces.emplace(std::make_pair(4, 0), std::make_unique<King>(4, 0, "./Sprites/kingB.bmp",brd));
 	//Queens
 	brd.whitePieces.emplace(std::make_pair(3,7), std::make_unique<Queen>(3, 7, "./Sprites/queenW.bmp",brd));
