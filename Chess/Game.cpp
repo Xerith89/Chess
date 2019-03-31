@@ -1,5 +1,14 @@
 #include "Game.h"
 
+
+/*
+BUG LIST
+.You can take Kings
+.You can move into check positions
+.If you click a piece with no moves available, select a pawn then deselect it - you can't get the moves back for the pawn
+.Check doesn't acknowledge pawn take semantics
+*/
+
 Game::Game(Window & wnd)
 	:
 	wnd(wnd),

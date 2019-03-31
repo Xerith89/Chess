@@ -17,21 +17,21 @@ void Player::DoTurn()
 		//Check for an unselected piece or a piece with no available moves - we can then select a new piece
 		if (!pieceSelected)
 		{
+			selectedMoves.clear();
 			//Translate the mouse position to board coords
 			selectedPiece = brd.TranslateCoords(wnd.inpt.GetMseX(), wnd.inpt.GetMseY());
-
-			if (brd.whitePieces.count({ selectedPiece.x,selectedPiece.y }) > 0)
+			auto piece = brd.whitePieces.find({ selectedPiece.x,selectedPiece.y });
+			if (piece != brd.whitePieces.end())
 			{
 				TestForCheck();
 				//If the piece exists then store it and get the moves for it
-				auto piece = brd.whitePieces.find({ selectedPiece.x,selectedPiece.y });
 				pieceSelected = true;
-				piece->second->SetSelected(true);
 				piece->second->GetMoves(&brd.whitePieces, &brd.blackPieces);
 				for (const auto& p : piece->second->MoveList())
 				{
 					selectedMoves.push_back(p.second);
 				}
+				//We didn't click something with valid moves
 				if (selectedMoves.empty())
 				{
 					pieceSelected = false;
@@ -43,10 +43,9 @@ void Player::DoTurn()
 		{
 			//We already have a target so we're clicking on a new position - do the usual translate
 			selectedTarget = brd.TranslateCoords(wnd.inpt.GetMseX(), wnd.inpt.GetMseY());
-			if (brd.whitePieces.count({ selectedPiece.x,selectedPiece.y }) > 0)
+			auto piece = brd.whitePieces.find({ selectedPiece.x,selectedPiece.y });
+			if (piece != brd.whitePieces.end())
 			{
-				auto piece = brd.whitePieces.find({ selectedPiece.x,selectedPiece.y });
-
 				auto i = (std::find(selectedMoves.begin(), selectedMoves.end(), selectedTarget));
 				if (i != selectedMoves.end() && selectedTarget != selectedPiece)
 				{
@@ -54,6 +53,7 @@ void Player::DoTurn()
 					piece->second.get()->MoveTo({ selectedTarget.x, selectedTarget.y });
 					brd.whitePieces.insert_or_assign({ selectedTarget.x, selectedTarget.y }, std::move(brd.whitePieces.find({ selectedPiece.x,selectedPiece.y })->second));
 					brd.whitePieces.erase({ selectedPiece.x,selectedPiece.y });
+					
 					//Check if we're moving our king, if so then update the king's position
 					kingInstance = dynamic_cast<King*>(brd.whitePieces.find({ selectedTarget.x, selectedTarget.y })->second.get());
 					if (kingInstance != nullptr)
@@ -61,12 +61,10 @@ void Player::DoTurn()
 						kingLoc = { selectedTarget.x,selectedTarget.y };
 						kingInstance = nullptr;
 					}
-					pieceSelected = false;
-					selectedPiece.x = 0;
-					selectedPiece.y = 0;
-					playerTurn = false;
-					selectedMoves.clear();
 					
+					//end of turn cleanup
+					pieceSelected = false;
+					playerTurn = false;					
 				}
 				//Check for taking pieces
 				if (brd.blackPieces.count({ selectedTarget.x, selectedTarget.y }) > 0)
@@ -81,13 +79,8 @@ void Player::DoTurn()
 	//Remove any selected pieces
 	if (wnd.inpt.RightMsePressed())
 	{
-		if (brd.whitePieces.count({ selectedPiece.x,selectedPiece.y }) > 0)
-		{
-			brd.whitePieces.find({ selectedPiece.x,selectedPiece.y })->second->SetSelected(false);
 			pieceSelected = false;
-			selectedPiece.x = 0;
-			selectedPiece.y = 0;
-		}
+			selectedPiece = { 0,0 };
 	}
 }
 
