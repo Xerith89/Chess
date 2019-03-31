@@ -15,6 +15,10 @@ struct Coords
 	{
 		return !operator==(rhs);
 	}
+	bool operator<(const Coords& rhs)const
+	{
+		return x < rhs.x;
+	}
 	bool InbetweenTwoCoords(const Coords& origin, const Coords& dest, const Coords& intersection)const
 	{
 		

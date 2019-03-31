@@ -6,7 +6,7 @@ Knight::Knight(int x, int y, const std::string spritename, const Board& brd)
 {
 }
 
-void Knight::GetMoves(const Map* mypieces, const Map* opponentpieces, std::vector<Coords>& myTargetList, const Coords& enemyKingPos, std::vector<Coords>& EnemyTargetList)
+void Knight::GetMoves(const Map* mypieces, const Map* opponentpieces, std::set<Coords>& myTargetList, const Coords& enemyKingPos, std::set<Coords>& EnemyTargetList)
 {
 	moves.clear();
 
@@ -21,7 +21,7 @@ void Knight::GetMoves(const Map* mypieces, const Map* opponentpieces, std::vecto
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x - new_x,coords.y - new_y }));
 		}
-		myTargetList.push_back({ coords.x - new_x,coords.y - new_y });
+		myTargetList.insert(Coords{ coords.x - new_x,coords.y - new_y });
 	}
 
 	if (mypieces->count({ coords.x + new_x,coords.y - new_y }) == 0 && (coords.y - new_y) >= minCoord.y
@@ -31,7 +31,7 @@ void Knight::GetMoves(const Map* mypieces, const Map* opponentpieces, std::vecto
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x + new_x,coords.y - new_y }));
 		}
-		myTargetList.push_back({ coords.x + new_x,coords.y - new_y });		
+		myTargetList.insert(Coords{ coords.x + new_x,coords.y - new_y });
 	}
 
 	//check down
@@ -42,7 +42,7 @@ void Knight::GetMoves(const Map* mypieces, const Map* opponentpieces, std::vecto
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x - new_x,coords.y + new_y }));
 		}
-		myTargetList.push_back({ coords.x - new_x,coords.y + new_y });
+		myTargetList.insert(Coords{ coords.x - new_x,coords.y + new_y });
 	}
 
 	if (mypieces->count({ coords.x + new_x,coords.y + new_y }) == 0 && (coords.y + new_y) <= maxCoord.y
@@ -52,7 +52,7 @@ void Knight::GetMoves(const Map* mypieces, const Map* opponentpieces, std::vecto
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x + new_x,coords.y + new_y }));
 		}
-		myTargetList.push_back({ coords.x + new_x,coords.y + new_y });
+		myTargetList.insert(Coords{ coords.x + new_x,coords.y + new_y });
 	}
 
 	//check left
@@ -66,7 +66,7 @@ void Knight::GetMoves(const Map* mypieces, const Map* opponentpieces, std::vecto
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x - new_x,coords.y + new_y }));
 		}
-		myTargetList.push_back({ coords.x - new_x,coords.y + new_y });
+		myTargetList.insert(Coords{ coords.x - new_x,coords.y + new_y });
 	}
 
 	if (mypieces->count({ coords.x - new_x,coords.y - new_y }) == 0 && (coords.y - new_y) >= minCoord.y
@@ -76,7 +76,7 @@ void Knight::GetMoves(const Map* mypieces, const Map* opponentpieces, std::vecto
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x - new_x,coords.y - new_y }));
 		}
-		myTargetList.push_back({ coords.x - new_x,coords.y - new_y });
+		myTargetList.insert(Coords{ coords.x - new_x,coords.y - new_y });
 	}
 
 	if (mypieces->count({ coords.x + new_x,coords.y + new_y }) == 0 && (coords.y + new_y) <= maxCoord.y
@@ -86,7 +86,7 @@ void Knight::GetMoves(const Map* mypieces, const Map* opponentpieces, std::vecto
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x + new_x,coords.y + new_y }));
 		}
-		myTargetList.push_back({ coords.x + new_x,coords.y + new_y });
+		myTargetList.insert(Coords{ coords.x + new_x,coords.y + new_y });
 	}
 
 	if (mypieces->count({ coords.x + new_x,coords.y - new_y }) == 0 && (coords.y - new_y) >= minCoord.y
@@ -96,6 +96,6 @@ void Knight::GetMoves(const Map* mypieces, const Map* opponentpieces, std::vecto
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x + new_x,coords.y - new_y }));
 		}
-		myTargetList.push_back({ coords.x + new_x,coords.y - new_y });
+		myTargetList.insert(Coords{ coords.x + new_x,coords.y - new_y });
 	}
 }

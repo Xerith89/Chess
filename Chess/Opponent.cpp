@@ -55,6 +55,7 @@ void Opponent::GenerationZero()
 		brd.UpdateBlackKingLoc( { newloc.x,newloc.y });
 		kingInstance = nullptr;
 	}
+	
 	//If we take a piece then update that too
 	if (brd.whitePieces.count({ newloc.x, newloc.y }) > 0)
 	{

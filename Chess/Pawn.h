@@ -4,7 +4,7 @@
 class Pawn : public Piece {
 public:
 	Pawn(int x, int y, const std::string spritename, bool white, const Board& brd);
-	void GetMoves(const Map* mypieces,const Map* opponentpieces, std::vector<Coords>& myTargetList, const Coords& enemyKingPos, std::vector<Coords>& EnemyTargetList)override;
+	void GetMoves(const Map* mypieces,const Map* opponentpieces, std::set<Coords>& myTargetList, const Coords& enemyKingPos, std::set<Coords>& EnemyTargetList)override;
 private:
 	//Pawns can go two spaces in their first move so this will be used to populate move list each selection
 	bool firstMove = true;

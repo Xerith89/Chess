@@ -16,7 +16,16 @@ void Player::DoTurn()
 		//Check for an unselected piece or a piece with no available moves - we can then select a new piece
 		if (!pieceSelected)
 		{
+			//new move so clear out our move buffers
+			brd.blackPieceTargets.clear();
 			selectedMoves.clear();
+
+			//call this for each black piece to get the most updated black targets
+			for (const auto& p : brd.blackPieces)
+			{
+				p.second->GetMoves(&brd.blackPieces, &brd.whitePieces, brd.blackPieceTargets, brd.GetWhiteKingLoc(), brd.whitePieceTargets);
+			}
+
 			//Translate the mouse position to board coords
 			selectedPiece = brd.TranslateCoords(wnd.inpt.GetMseX(), wnd.inpt.GetMseY());
 			auto piece = brd.whitePieces.find({ selectedPiece.x,selectedPiece.y });
@@ -61,6 +70,10 @@ void Player::DoTurn()
 						brd.UpdateWhiteKingLoc({ selectedTarget.x,selectedTarget.y });
 						kingInstance = nullptr;
 					}
+
+					//end of turn cleanup
+					pieceSelected = false;
+					playerTurn = false;
 				}
 								
 			}
@@ -70,9 +83,6 @@ void Player::DoTurn()
 			{
 				brd.blackPieces.erase({ selectedTarget.x,selectedTarget.y });
 			}
-			//end of turn cleanup
-			pieceSelected = false;
-			playerTurn = false;
 		}	
 	}
 		

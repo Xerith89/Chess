@@ -3,6 +3,7 @@
 #include "Graphics.h"
 #include <vector>
 #include <map>
+#include <set>
 #include <algorithm>
 #include <assert.h>
 
@@ -26,6 +27,6 @@ public:
 	void MoveTo(Coords new_coords);
 	void SetSelected(bool status);
 	bool GetSelected()const;
-	virtual void GetMoves(const Map* mypieces, const Map* opponentpieces, std::vector<Coords>& myTargetList, const Coords& enemyKingPos, std::vector<Coords>& EnemyTargetList) = 0;
+	virtual void GetMoves(const Map* mypieces, const Map* opponentpieces, std::set<Coords>& myTargetList, const Coords& enemyKingPos, std::set<Coords>& EnemyTargetList) = 0;
 	std::vector<std::pair<Coords,Coords>> MoveList()const;
 };

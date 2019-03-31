@@ -8,7 +8,7 @@ Pawn::Pawn(int x, int y, const std::string spritename, bool white, const Board& 
 	startCoords = { x,y };
 }
 
-void Pawn::GetMoves(const Map* mypieces, const Map* opponentpieces, std::vector<Coords>& myTargetList, const Coords& enemyKingPos, std::vector<Coords>& EnemyTargetList)
+void Pawn::GetMoves(const Map* mypieces, const Map* opponentpieces, std::set<Coords>& myTargetList, const Coords& enemyKingPos, std::set<Coords>& EnemyTargetList)
 {
 	//Empty out the moves list from the previous piece
 	moves.clear();
@@ -68,8 +68,11 @@ void Pawn::GetMoves(const Map* mypieces, const Map* opponentpieces, std::vector<
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x - 1,coords.y - attackOffset }));
 		}
-		myTargetList.push_back({ coords.x - 1,coords.y - attackOffset });
+		
 	}
+
+	myTargetList.insert(Coords{ coords.x - 1,coords.y - attackOffset });
+	myTargetList.insert(Coords{ coords.x + 1,coords.y - attackOffset });
 
 	if (opponentpieces->count({ coords.x + 1,coords.y - attackOffset }) == 1)
 	{
@@ -78,7 +81,7 @@ void Pawn::GetMoves(const Map* mypieces, const Map* opponentpieces, std::vector<
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x + 1,coords.y - attackOffset }));
 		}
-		myTargetList.push_back({ coords.x + 1,coords.y - attackOffset });
+		
 	}
 }
 

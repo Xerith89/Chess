@@ -6,7 +6,7 @@ Queen::Queen(int x, int y, const std::string spritename, const Board& brd)
 {
 }
 
-void Queen::GetMoves(const Map* mypieces, const Map* opponentpieces, std::vector<Coords>& myTargetList, const Coords& enemyKingPos, std::vector<Coords>& EnemyTargetList)
+void Queen::GetMoves(const Map* mypieces, const Map* opponentpieces, std::set<Coords>& myTargetList, const Coords& enemyKingPos, std::set<Coords>& EnemyTargetList)
 {
 
 	moves.clear();
@@ -21,7 +21,7 @@ void Queen::GetMoves(const Map* mypieces, const Map* opponentpieces, std::vector
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x - new_x,coords.y - new_y }));
 		}
-		myTargetList.push_back({ coords.x - new_x,coords.y - new_y });
+		myTargetList.insert(Coords{ coords.x - new_x,coords.y - new_y });
 
 		if (opponentpieces->count({ coords.x - new_x, coords.y - new_y }) > 0)
 		{
@@ -41,7 +41,7 @@ void Queen::GetMoves(const Map* mypieces, const Map* opponentpieces, std::vector
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x + new_x,coords.y - new_y }));
 		}
-		myTargetList.push_back({ coords.x + new_x,coords.y - new_y });
+		myTargetList.insert(Coords{ coords.x + new_x,coords.y - new_y });
 		
 		if (opponentpieces->count({ coords.x + new_x, coords.y - new_y }) > 0)
 		{
@@ -61,7 +61,7 @@ void Queen::GetMoves(const Map* mypieces, const Map* opponentpieces, std::vector
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x + new_x,coords.y + new_y }));
 		}
-		myTargetList.push_back({ coords.x + new_x,coords.y + new_y });
+		myTargetList.insert(Coords{ coords.x + new_x,coords.y + new_y });
 	
 		if (opponentpieces->count({ coords.x + new_x, coords.y + new_y }) > 0)
 		{
@@ -81,7 +81,7 @@ void Queen::GetMoves(const Map* mypieces, const Map* opponentpieces, std::vector
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x - new_x,coords.y + new_y }));
 		}
-		myTargetList.push_back({ coords.x - new_x,coords.y + new_y });
+		myTargetList.insert(Coords{ coords.x - new_x,coords.y + new_y });
 		
 		if (opponentpieces->count({ coords.x - new_x, coords.y + new_y }) > 0)
 		{
@@ -97,7 +97,7 @@ void Queen::GetMoves(const Map* mypieces, const Map* opponentpieces, std::vector
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x - new_x,coords.y }));
 		}
-		myTargetList.push_back({ coords.x - new_x,coords.y });
+		myTargetList.insert(Coords{ coords.x - new_x,coords.y });
 		
 		if (opponentpieces->count({ coords.x - new_x, coords.y }) > 0)
 		{
@@ -114,7 +114,7 @@ void Queen::GetMoves(const Map* mypieces, const Map* opponentpieces, std::vector
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x + new_x,coords.y }));
 		}
-		myTargetList.push_back({ coords.x + new_x,coords.y });
+		myTargetList.insert(Coords{ coords.x + new_x,coords.y });
 		
 		if (opponentpieces->count({ coords.x + new_x, coords.y }) > 0)
 		{
@@ -130,7 +130,7 @@ void Queen::GetMoves(const Map* mypieces, const Map* opponentpieces, std::vector
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x - new_x,coords.y }));
 		}
-		myTargetList.push_back({ coords.x - new_x,coords.y });
+		myTargetList.insert(Coords{ coords.x - new_x,coords.y });
 		
 		if (opponentpieces->count({ coords.x - new_x, coords.y }) > 0)
 		{
@@ -146,7 +146,7 @@ void Queen::GetMoves(const Map* mypieces, const Map* opponentpieces, std::vector
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x,coords.y - new_y }));
 		}
-		myTargetList.push_back({ coords.x,coords.y - new_y });
+		myTargetList.insert({ coords.x,coords.y - new_y });
 		
 		if (opponentpieces->count({ coords.x,coords.y - new_y }) > 0)
 		{
@@ -162,7 +162,7 @@ void Queen::GetMoves(const Map* mypieces, const Map* opponentpieces, std::vector
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x,coords.y + new_y }));
 		}
-		myTargetList.push_back({ coords.x,coords.y + new_y });
+		myTargetList.insert(Coords{ coords.x,coords.y + new_y });
 		
 		if (opponentpieces->count({ coords.x,coords.y + new_y }) > 0)
 		{

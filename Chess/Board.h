@@ -4,6 +4,7 @@
 #include "Piece.h"
 #include <map>
 #include <algorithm>
+#include <set>
 
 class Board {
 public:
@@ -17,8 +18,8 @@ public:
 	void UpdateBoard(Window& wnd);
 	std::map<std::pair<int,int>, std::unique_ptr<Piece>> whitePieces;
 	std::map<std::pair<int,int>, std::unique_ptr<Piece>> blackPieces;
-	std::vector<Coords> whitePieceTargets;
-	std::vector<Coords> blackPieceTargets;
+	std::set<Coords> whitePieceTargets;
+	std::set<Coords> blackPieceTargets;
 	std::pair<int, int> TranslateCoords(Piece* piece);
 	Coords TranslateCoords(int x_in, int y_in);
 	std::pair<int, int> TranslateCoords(Coords coords_in);

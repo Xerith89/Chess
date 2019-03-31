@@ -7,7 +7,7 @@ King::King(int x, int y, const std::string spritename, const Board& brd)
 {
 }
 
-void King::GetMoves(const Map* mypieces,const Map* opponentpieces, std::vector<Coords>& myTargetList,const Coords& enemyKingPos, std::vector<Coords>& EnemyTargetList)
+void King::GetMoves(const Map* mypieces,const Map* opponentpieces, std::set<Coords>& myTargetList,const Coords& enemyKingPos, std::set<Coords>& EnemyTargetList)
 {
 	moves.clear();
 
@@ -17,12 +17,12 @@ void King::GetMoves(const Map* mypieces,const Map* opponentpieces, std::vector<C
 	if (mypieces->count({ coords.x - new_x,coords.y - new_y }) == 0 && (coords.x - new_x) >= minCoord.x
 		&& (coords.y - new_y) >= minCoord.y)
 	{
-		if (std::any_of(EnemyTargetList.begin(), EnemyTargetList.end(), [&](const Coords rhs) {
-			return rhs != Coords{ coords.x - new_x,coords.y - new_y }; }))
+		if (std::none_of(EnemyTargetList.begin(), EnemyTargetList.end(), [&](const Coords rhs) {
+			return rhs == Coords{ coords.x - new_x,coords.y - new_y }; }))
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x - new_x,coords.y - new_y }));
-			myTargetList.push_back({ coords.x - new_x,coords.y - new_y });
-		}	
+			myTargetList.insert(Coords{ coords.x - new_x,coords.y - new_y });
+		}
 	}
 
 	
@@ -30,11 +30,11 @@ void King::GetMoves(const Map* mypieces,const Map* opponentpieces, std::vector<C
 	if (mypieces->count({ coords.x + new_x,coords.y - new_y }) == 0 && (coords.x + new_x) <= maxCoord.x
 		&& (coords.y - new_y) >= minCoord.y)
 	{
-		if (std::any_of(EnemyTargetList.begin(), EnemyTargetList.end(), [&](const Coords rhs) {
-			return rhs != Coords{ coords.x + new_x,coords.y - new_y }; }))
+		if (std::none_of(EnemyTargetList.begin(), EnemyTargetList.end(), [&](const Coords rhs) {
+			return rhs == Coords{ coords.x + new_x,coords.y - new_y }; }))
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x + new_x,coords.y - new_y }));
-			myTargetList.push_back({ coords.x + new_x,coords.y - new_y });
+			myTargetList.insert(Coords{ coords.x + new_x,coords.y - new_y });
 		}
 	}
 
@@ -42,11 +42,11 @@ void King::GetMoves(const Map* mypieces,const Map* opponentpieces, std::vector<C
 	if (mypieces->count({ coords.x + new_x,coords.y + new_y }) == 0 && (coords.x + new_x) <= maxCoord.x
 		&& (coords.y + new_y) <= maxCoord.y)
 	{
-		if (std::any_of(EnemyTargetList.begin(), EnemyTargetList.end(), [&](const Coords rhs) {
-		return rhs != Coords{ coords.x + new_x,coords.y + new_y }; }))
+		if (std::none_of(EnemyTargetList.begin(), EnemyTargetList.end(), [&](const Coords rhs) {
+		return rhs == Coords{ coords.x + new_x,coords.y + new_y }; }))
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x + new_x,coords.y + new_y }));
-			myTargetList.push_back({ coords.x + new_x,coords.y + new_y });
+			myTargetList.insert(Coords{ coords.x + new_x,coords.y + new_y });
 		}
 		
 	}
@@ -55,31 +55,31 @@ void King::GetMoves(const Map* mypieces,const Map* opponentpieces, std::vector<C
 	if (mypieces->count({ coords.x - new_x,coords.y + new_y }) == 0 && (coords.x - new_x) >= minCoord.x
 		&& (coords.y + new_y) <= maxCoord.y)
 	{
-		if (std::any_of(EnemyTargetList.begin(), EnemyTargetList.end(), [&](const Coords rhs) {
-			return rhs != Coords{ coords.x - new_x,coords.y + new_y }; }))
+		if (std::none_of(EnemyTargetList.begin(), EnemyTargetList.end(), [&](const Coords rhs) {
+			return rhs == Coords{ coords.x - new_x,coords.y + new_y }; }))
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x - new_x,coords.y + new_y }));
-			myTargetList.push_back({ coords.x - new_x,coords.y + new_y });
+			myTargetList.insert(Coords{ coords.x - new_x,coords.y + new_y });
 		}
 	}
 
 	if (mypieces->count({ coords.x - new_x,coords.y }) == 0 && (coords.x - new_x) >= minCoord.x)
 	{
-		if (std::any_of(EnemyTargetList.begin(), EnemyTargetList.end(), [&](const Coords rhs) {
-			return rhs != Coords{ coords.x - new_x,coords.y }; }))
+		if (std::none_of(EnemyTargetList.begin(), EnemyTargetList.end(), [&](const Coords rhs) {
+			return rhs == Coords{ coords.x - new_x,coords.y }; }))
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x - new_x,coords.y }));
-			myTargetList.push_back({ coords.x - new_x,coords.y });
+			myTargetList.insert(Coords{ coords.x - new_x,coords.y });
 		}
 	}
 	//check right
 	if (mypieces->count({ coords.x + new_x,coords.y }) == 0 && (coords.x + new_x) <= maxCoord.x)
 	{
-		if (std::any_of(EnemyTargetList.begin(), EnemyTargetList.end(), [&](const Coords rhs) {
-		return rhs != Coords{ coords.x + new_x,coords.y }; }))
+		if (std::none_of(EnemyTargetList.begin(), EnemyTargetList.end(), [&](const Coords rhs) {
+		return rhs == Coords{ coords.x + new_x,coords.y }; }))
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x + new_x,coords.y }));
-			myTargetList.push_back({ coords.x + new_x,coords.y });
+			myTargetList.insert(Coords{ coords.x + new_x,coords.y });
 		}
 		
 	}
@@ -88,11 +88,11 @@ void King::GetMoves(const Map* mypieces,const Map* opponentpieces, std::vector<C
 	if (mypieces->count({ coords.x,coords.y - new_y }) == 0 && (coords.y - new_y) >= minCoord.y)
 	{
 		
-		if (std::any_of(EnemyTargetList.begin(), EnemyTargetList.end(), [&](const Coords rhs) {
-			return rhs != Coords{coords.x, coords.y - new_y }; }))
+		if (std::none_of(EnemyTargetList.begin(), EnemyTargetList.end(), [&](const Coords rhs) {
+			return rhs == Coords{coords.x, coords.y - new_y }; }))
 			{
 				moves.push_back(std::make_pair(coords, Coords{ coords.x,coords.y - new_y }));
-				myTargetList.push_back({ coords.x,coords.y - new_y });
+				myTargetList.insert(Coords{ coords.x,coords.y - new_y });
 			}
 		
 	}
@@ -100,14 +100,11 @@ void King::GetMoves(const Map* mypieces,const Map* opponentpieces, std::vector<C
 	//Check down
 	if (mypieces->count({ coords.x,coords.y + new_y }) == 0 && (coords.y + new_y) <= maxCoord.y)
 	{
-		for (const auto& m : EnemyTargetList)
+		if (std::none_of(EnemyTargetList.begin(), EnemyTargetList.end(), [&](const Coords rhs) {
+			return rhs == Coords{coords.x, coords.y + new_y}; }))
 		{
-			if (std::any_of(EnemyTargetList.begin(), EnemyTargetList.end(), [&](const Coords rhs) {
-				return rhs != Coords{coords.x, coords.y + new_y}; }))
-			{
 				moves.push_back(std::make_pair(coords, Coords{ coords.x,coords.y + new_y }));
-				myTargetList.push_back({ coords.x,coords.y + new_y });
-			}
+				myTargetList.insert(Coords{ coords.x,coords.y + new_y });
 		}
 	}
 }
