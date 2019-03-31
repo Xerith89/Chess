@@ -22,6 +22,7 @@ void Player::DoTurn()
 
 			if (brd.whitePieces.count({ selectedPiece.x,selectedPiece.y }) > 0)
 			{
+				TestForCheck();
 				//If the piece exists then store it and get the moves for it
 				auto piece = brd.whitePieces.find({ selectedPiece.x,selectedPiece.y });
 				pieceSelected = true;
@@ -41,15 +42,23 @@ void Player::DoTurn()
 			{
 				auto piece = brd.whitePieces.find({ selectedPiece.x,selectedPiece.y });
 
-				if (std::find(selectedMoves.begin(), selectedMoves.end(), selectedTarget) != selectedMoves.end() && selectedTarget != selectedPiece)
+				auto i = (std::find(selectedMoves.begin(), selectedMoves.end(), selectedTarget));
+				if (i != selectedMoves.end() && selectedTarget != selectedPiece)
 				{
 					//Insert at new position and delete old one
 					piece->second.get()->MoveTo({ selectedTarget.x, selectedTarget.y });
 					brd.whitePieces.insert_or_assign({ selectedTarget.x, selectedTarget.y }, std::move(brd.whitePieces.find({ selectedPiece.x,selectedPiece.y })->second));
 					brd.whitePieces.erase({ selectedPiece.x,selectedPiece.y });
+					//Check if we're moving our king, if so then update the king's position
+					kingInstance = dynamic_cast<King*>(brd.whitePieces.find({ selectedTarget.x, selectedTarget.y })->second.get());
+					if (kingInstance != nullptr)
+					{
+						kingLoc = { selectedTarget.x,selectedTarget.y };
+						kingInstance = nullptr;
+					}
 					pieceSelected = false;
-					selectedPiece = { 0,0 };
-					selectedTarget = { 0,0 };
+					selectedPiece.x = 0;
+					selectedPiece.y = 0;
 					playerTurn = false;
 					
 				}
@@ -102,3 +111,24 @@ void Player::SetPlayerTurn()
 	playerTurn = true;
 }
 
+Coords Player::GetKingPosition() const
+{
+	return kingLoc;
+}
+
+void Player::TestForCheck()
+{
+	//Go through each piece and check if its target is our king,
+	//if any target equals our king location then we're in check
+	for (Map::iterator it = brd.blackPieces.begin(); it != brd.blackPieces.end(); it++)
+	{
+		it->second->GetMoves(&brd.blackPieces,&brd.whitePieces);
+		for (const auto& m : it->second->MoveList())
+			if (m.second == kingLoc)
+			{
+				checked = true;
+				return;
+			}
+	}
+	checked = false;
+}
