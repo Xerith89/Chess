@@ -30,8 +30,8 @@ Game::Game(Window & wnd)
 	brd.whitePieces.emplace(std::make_pair(0, 7), std::make_unique<Rook>(0, 7, "./Sprites/rookW.bmp"));
 	brd.whitePieces.emplace(std::make_pair(7, 7), std::make_unique<Rook>(7, 7, "./Sprites/rookW.bmp"));
 
-	brd.blackPieces.emplace(std::make_pair(0, 0), std::make_unique<Knight>(0, 0, "./Sprites/rookB.bmp"));
-	brd.blackPieces.emplace(std::make_pair(7, 0), std::make_unique<Knight>(7, 0, "./Sprites/rookB.bmp"));
+	brd.blackPieces.emplace(std::make_pair(0, 0), std::make_unique<Rook>(0, 0, "./Sprites/rookB.bmp"));
+	brd.blackPieces.emplace(std::make_pair(7, 0), std::make_unique<Rook>(7, 0, "./Sprites/rookB.bmp"));
 	//Pawns
 	for (int i = 0; i < 8; i++)
 	{

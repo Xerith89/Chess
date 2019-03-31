@@ -15,7 +15,7 @@ void Player::DoTurn()
 	if (wnd.inpt.LeftMsePressed())
 	{
 		//Check for an unselected piece or a piece with no available moves - we can then select a new piece
-		if (!pieceSelected || selectedMoves.size() == 0)
+		if (!pieceSelected)
 		{
 			//Translate the mouse position to board coords
 			selectedPiece = brd.TranslateCoords(wnd.inpt.GetMseX(), wnd.inpt.GetMseY());
@@ -31,6 +31,11 @@ void Player::DoTurn()
 				for (const auto& p : piece->second->MoveList())
 				{
 					selectedMoves.push_back(p.second);
+				}
+				if (selectedMoves.empty())
+				{
+					pieceSelected = false;
+					return;
 				}
 			}
 		}
@@ -60,6 +65,7 @@ void Player::DoTurn()
 					selectedPiece.x = 0;
 					selectedPiece.y = 0;
 					playerTurn = false;
+					selectedMoves.clear();
 					
 				}
 				//Check for taking pieces
@@ -67,8 +73,7 @@ void Player::DoTurn()
 				{
 					brd.blackPieces.erase({ selectedTarget.x,selectedTarget.y });
 				}
-			}
-			
+			}	
 		}
 		
 	}
