@@ -23,6 +23,6 @@ private:
 	Coords selectedPiece;
 	Coords selectedTarget;
 	bool pieceSelected = false;
-	std::vector<Coords> selectedMoves;
+	std::vector<std::pair<Coords, Coords>> selectedMoves;
 	bool playerTurn = true;
 };

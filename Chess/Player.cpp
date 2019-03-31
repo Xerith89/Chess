@@ -34,12 +34,8 @@ void Player::DoTurn()
 				TestForCheck();
 				//If the piece exists then store it and get the moves for it
 				pieceSelected = true;
-				piece->second->GetMoves(&brd.whitePieces, &brd.blackPieces, brd.whitePieceTargets, brd.GetBlackKingLoc(),brd.blackPieceTargets);
+				selectedMoves = piece->second->GetMoves(&brd.whitePieces, &brd.blackPieces, brd.whitePieceTargets, brd.GetBlackKingLoc(),brd.blackPieceTargets);
 
-				for (const auto& m : piece->second->MoveList())
-				{
-					selectedMoves.push_back(m.second);
-				}
 				//We didn't click something with valid moves
 				if (selectedMoves.empty())
 				{
@@ -53,36 +49,31 @@ void Player::DoTurn()
 			//We already have a target so we're clicking on a new position - do the usual translate
 			selectedTarget = brd.TranslateCoords(wnd.inpt.GetMseX(), wnd.inpt.GetMseY());
 			auto piece = brd.whitePieces.find({ selectedPiece.x,selectedPiece.y });
-			if (piece != brd.whitePieces.end())
+			if (piece != brd.whitePieces.end() && selectedTarget != selectedPiece)
 			{
-				auto i = (std::find(selectedMoves.begin(), selectedMoves.end(), selectedTarget));
-				if (i != selectedMoves.end() && selectedTarget != selectedPiece)
+				//Insert at new position and delete old one
+				piece->second.get()->MoveTo({ selectedTarget.x, selectedTarget.y });
+				brd.whitePieces.insert_or_assign({ selectedTarget.x, selectedTarget.y }, std::move(brd.whitePieces.find({ selectedPiece.x,selectedPiece.y })->second));
+				brd.whitePieces.erase({ selectedPiece.x,selectedPiece.y });
+				
+				//Check if we're moving our king, if so then update the king's position
+				kingInstance = dynamic_cast<King*>(brd.whitePieces.find({ selectedTarget.x, selectedTarget.y })->second.get());
+				if (kingInstance != nullptr)
 				{
-					//Insert at new position and delete old one
-					piece->second.get()->MoveTo({ selectedTarget.x, selectedTarget.y });
-					brd.whitePieces.insert_or_assign({ selectedTarget.x, selectedTarget.y }, std::move(brd.whitePieces.find({ selectedPiece.x,selectedPiece.y })->second));
-					brd.whitePieces.erase({ selectedPiece.x,selectedPiece.y });
-
-					//Check if we're moving our king, if so then update the king's position
-					kingInstance = dynamic_cast<King*>(brd.whitePieces.find({ selectedTarget.x, selectedTarget.y })->second.get());
-					if (kingInstance != nullptr)
-					{
-						brd.UpdateWhiteKingLoc({ selectedTarget.x,selectedTarget.y });
-						kingInstance = nullptr;
-					}
-
-					//end of turn cleanup
-					pieceSelected = false;
-					playerTurn = false;
+					brd.UpdateWhiteKingLoc({ selectedTarget.x,selectedTarget.y });
+					kingInstance = nullptr;
 				}
-								
-			}
-			//Check for taking pieces
-			if (std::find(selectedMoves.begin(), selectedMoves.end(), selectedTarget) != selectedMoves.end() 
-				&& brd.blackPieces.count({ selectedTarget.x, selectedTarget.y }) > 0)
-			{
-				brd.blackPieces.erase({ selectedTarget.x,selectedTarget.y });
-			}
+
+				//Check for taking pieces
+				if (brd.blackPieces.count({ selectedTarget.x, selectedTarget.y }) > 0)
+				{
+					brd.blackPieces.erase({ selectedTarget.x,selectedTarget.y });
+				}
+						
+				//end of turn cleanup
+				pieceSelected = false;
+				playerTurn = false;
+			}					
 		}	
 	}
 		
@@ -100,9 +91,7 @@ void Player::DrawPossibleMoves(Graphics& gfx)
 	const auto moves = brd.whitePieces.find({ selectedPiece.x, selectedPiece.y });
 	if (moves != brd.whitePieces.end())
 	{
-		moves->second.get()->MoveList();
-
-		for (const auto& m : moves->second->MoveList())
+		for (const auto& m : selectedMoves)
 		{
 			auto position = brd.TranslateCoords({ m.second });
 			gfx.DrawSprite(position.first, position.second, target);

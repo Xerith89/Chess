@@ -48,8 +48,4 @@ bool Piece::GetSelected() const
 	return selected;
 }
 
-std::vector<std::pair<Coords,Coords>> Piece::MoveList() const
-{
-	return moves;
-}
 

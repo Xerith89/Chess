@@ -8,10 +8,10 @@ Pawn::Pawn(int x, int y, const std::string spritename, bool white, const Board& 
 	startCoords = { x,y };
 }
 
-void Pawn::GetMoves(const Map* mypieces, const Map* opponentpieces, std::set<Coords>& myTargetList, const Coords& enemyKingPos, std::set<Coords>& EnemyTargetList)
+std::vector<std::pair<Coords, Coords>> Pawn::GetMoves(const Map* mypieces, const Map* opponentpieces, std::set<Coords>& myTargetList, const Coords& enemyKingPos, std::set<Coords>& EnemyTargetList)
 {
 	//Empty out the moves list from the previous piece
-	moves.clear();
+	std::vector<std::pair<Coords, Coords>> moves;
 	
 	//If we are a black piece we need to invert our variables for movement and attack to result in a positive when put into our checking functions
 	if (!whitePiece)
@@ -83,6 +83,7 @@ void Pawn::GetMoves(const Map* mypieces, const Map* opponentpieces, std::set<Coo
 		}
 		
 	}
+	return moves;
 }
 
 std::vector<Coords> Pawn::GetCheckedMoves(const Map * mypieces, const Map * opponentpieces)

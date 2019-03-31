@@ -15,6 +15,7 @@ public:
 	Opponent(Board& brd);
 	void DoTurn();
 private:
+	std::vector<std::pair<Coords, Coords>> movelist;
 	bool checked = false;
 	void TestForCheck();
 	void GenerationZero();

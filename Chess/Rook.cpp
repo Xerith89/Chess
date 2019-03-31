@@ -6,9 +6,9 @@ Rook::Rook(int x, int y, const std::string spritename, const Board& brd)
 {
 }
 
-void Rook::GetMoves(const Map* mypieces, const Map* opponentpieces, std::set<Coords>& myTargetList, const Coords& enemyKingPos, std::set<Coords>& EnemyTargetList)
+std::vector<std::pair<Coords, Coords>> Rook::GetMoves(const Map* mypieces, const Map* opponentpieces, std::set<Coords>& myTargetList, const Coords& enemyKingPos, std::set<Coords>& EnemyTargetList)
 {
-	moves.clear();
+	std::vector<std::pair<Coords, Coords>> moves;
 	int new_x = 1;
 	//Check pieces to our left - we don't want to go past our white pieces or the end of the board
 	while (mypieces->count({ coords.x - new_x,coords.y }) == 0 && (coords.x - new_x) >= minCoord.x)
@@ -69,6 +69,7 @@ void Rook::GetMoves(const Map* mypieces, const Map* opponentpieces, std::set<Coo
 		{break;}
 		new_y++;
 	}
+	return moves;
 }
 
 std::vector<Coords> Rook::GetCheckedMoves(const Map * mypieces, const Map * opponentpieces)

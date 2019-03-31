@@ -6,9 +6,9 @@ Bishop::Bishop(int x, int y, const std::string spritename, const Board& brd)
 {
 }
 
-void Bishop::GetMoves(const Map* mypieces, const Map* opponentpieces, std::set<Coords>& myTargetList,const Coords& enemyKingPos, std::set<Coords>& EnemyTargetList)
+std::vector<std::pair<Coords, Coords>> Bishop::GetMoves(const Map* mypieces, const Map* opponentpieces, std::set<Coords>& myTargetList,const Coords& enemyKingPos, std::set<Coords>& EnemyTargetList)
 {
-	moves.clear();
+	std::vector<std::pair<Coords, Coords>> moves;
 
 	int new_x = 1;
 	int new_y = 1;
@@ -88,6 +88,7 @@ void Bishop::GetMoves(const Map* mypieces, const Map* opponentpieces, std::set<C
 		new_x++;
 		new_y++;
 	}
+	return moves;
 }
 
 std::vector<Coords> Bishop::GetCheckedMoves(const Map * mypieces, const Map * opponentpieces)

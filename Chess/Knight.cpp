@@ -6,9 +6,9 @@ Knight::Knight(int x, int y, const std::string spritename, const Board& brd)
 {
 }
 
-void Knight::GetMoves(const Map* mypieces, const Map* opponentpieces, std::set<Coords>& myTargetList, const Coords& enemyKingPos, std::set<Coords>& EnemyTargetList)
+std::vector<std::pair<Coords, Coords>> Knight::GetMoves(const Map* mypieces, const Map* opponentpieces, std::set<Coords>& myTargetList, const Coords& enemyKingPos, std::set<Coords>& EnemyTargetList)
 {
-	moves.clear();
+	std::vector<std::pair<Coords, Coords>> moves;
 
 	int new_x = 1;
 	int new_y = 2;
@@ -98,6 +98,7 @@ void Knight::GetMoves(const Map* mypieces, const Map* opponentpieces, std::set<C
 		}
 		myTargetList.insert(Coords{ coords.x + new_x,coords.y - new_y });
 	}
+	return moves;
 }
 
 std::vector<Coords> Knight::GetCheckedMoves(const Map * mypieces, const Map * opponentpieces)

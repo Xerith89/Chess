@@ -34,7 +34,7 @@ void Opponent::GenerationZero()
 	int maximum = 0;
 	int x_roll;
 	int y_roll;
-
+	
 	//Maximum starts as 0 so this loop triggers at least once
 	while (maximum < 1)
 	{
@@ -44,11 +44,12 @@ void Opponent::GenerationZero()
 		TestForCheck();
 		//If we find a piece with the random X and Y, get the moves for it.
 		auto piece = brd.blackPieces.find({ x_roll,y_roll });
+		
 		if (piece != brd.blackPieces.end())
 		{
-			piece->second->GetMoves(&brd.blackPieces, &brd.whitePieces, brd.blackPieceTargets, brd.GetWhiteKingLoc(),brd.whitePieceTargets);
+			movelist = piece->second->GetMoves(&brd.blackPieces, &brd.whitePieces, brd.blackPieceTargets, brd.GetWhiteKingLoc(), brd.whitePieceTargets);
+			maximum = movelist.size() - 1;
 			//Set maximum to be the amount of moves in the list. If its 0 then we run the loop again
-			maximum = piece->second->MoveList().size() - 1;
 		}
 	}
 	
@@ -57,9 +58,9 @@ void Opponent::GenerationZero()
 	int move_roll = movepick(rng);
 	auto piece = brd.blackPieces.find({ x_roll,y_roll });
 	//Index into the moves list
-	piece->second->MoveTo(piece->second->MoveList().at(move_roll).second);
+	piece->second->MoveTo(movelist.at(move_roll).second);
 	//Set the new position
-	auto newloc = piece->second->MoveList().at(move_roll).second;
+	auto newloc = movelist.at(move_roll).second;
 	//Reinsert into the map at the new position, remove the old entry
 	brd.blackPieces.insert_or_assign({ newloc.x, newloc.y }, std::move(piece->second));
 	brd.blackPieces.erase({ x_roll,y_roll });

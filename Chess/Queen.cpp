@@ -6,10 +6,10 @@ Queen::Queen(int x, int y, const std::string spritename, const Board& brd)
 {
 }
 
-void Queen::GetMoves(const Map* mypieces, const Map* opponentpieces, std::set<Coords>& myTargetList, const Coords& enemyKingPos, std::set<Coords>& EnemyTargetList)
+std::vector<std::pair<Coords, Coords>> Queen::GetMoves(const Map* mypieces, const Map* opponentpieces, std::set<Coords>& myTargetList, const Coords& enemyKingPos, std::set<Coords>& EnemyTargetList)
 {
 
-	moves.clear();
+	std::vector<std::pair<Coords, Coords>> moves;
 
 	int new_x = 1;
 	int new_y = 1;
@@ -170,6 +170,7 @@ void Queen::GetMoves(const Map* mypieces, const Map* opponentpieces, std::set<Co
 		}
 		new_y++;
 	}
+	return moves;
 }
 
 std::vector<Coords> Queen::GetCheckedMoves(const Map * mypieces, const Map * opponentpieces)
