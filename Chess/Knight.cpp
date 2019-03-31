@@ -99,3 +99,8 @@ void Knight::GetMoves(const Map* mypieces, const Map* opponentpieces, std::set<C
 		myTargetList.insert(Coords{ coords.x + new_x,coords.y - new_y });
 	}
 }
+
+std::vector<Coords> Knight::GetCheckedMoves(const Map * mypieces, const Map * opponentpieces)
+{
+	return std::vector<Coords>();
+}

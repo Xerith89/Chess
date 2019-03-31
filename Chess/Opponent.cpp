@@ -13,6 +13,20 @@ void Opponent::DoTurn()
 	GenerationZero();
 }
 
+void Opponent::TestForCheck()
+{
+	//Go through the possible targets of the white pieces and see if we're checked.
+	for (const auto& m : brd.whitePieceTargets)
+	{
+		if (m == brd.GetBlackKingLoc())
+		{
+			checked = true;
+			return;
+		}
+	}
+	checked = false;
+}
+
 void Opponent::GenerationZero()
 {
 	//Our board positions range between 0 and 7
@@ -27,6 +41,7 @@ void Opponent::GenerationZero()
 		x_roll = distribution(rng);
 		y_roll = distribution(rng);
 
+		TestForCheck();
 		//If we find a piece with the random X and Y, get the moves for it.
 		auto piece = brd.blackPieces.find({ x_roll,y_roll });
 		if (piece != brd.blackPieces.end())

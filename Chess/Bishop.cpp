@@ -89,3 +89,8 @@ void Bishop::GetMoves(const Map* mypieces, const Map* opponentpieces, std::set<C
 		new_y++;
 	}
 }
+
+std::vector<Coords> Bishop::GetCheckedMoves(const Map * mypieces, const Map * opponentpieces)
+{
+	return std::vector<Coords>();
+}

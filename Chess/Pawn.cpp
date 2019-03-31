@@ -85,3 +85,8 @@ void Pawn::GetMoves(const Map* mypieces, const Map* opponentpieces, std::set<Coo
 	}
 }
 
+std::vector<Coords> Pawn::GetCheckedMoves(const Map * mypieces, const Map * opponentpieces)
+{
+	return std::vector<Coords>();
+}
+

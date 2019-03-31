@@ -15,6 +15,8 @@ public:
 	Opponent(Board& brd);
 	void DoTurn();
 private:
+	bool checked = false;
+	void TestForCheck();
 	void GenerationZero();
 	bool humanOpponent;
 	Board& brd;

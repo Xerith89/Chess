@@ -28,5 +28,6 @@ public:
 	void SetSelected(bool status);
 	bool GetSelected()const;
 	virtual void GetMoves(const Map* mypieces, const Map* opponentpieces, std::set<Coords>& myTargetList, const Coords& enemyKingPos, std::set<Coords>& EnemyTargetList) = 0;
+	virtual std::vector<Coords> GetCheckedMoves(const Map* mypieces, const Map* opponentpieces) = 0;
 	std::vector<std::pair<Coords,Coords>> MoveList()const;
 };

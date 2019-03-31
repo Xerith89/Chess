@@ -171,3 +171,8 @@ void Queen::GetMoves(const Map* mypieces, const Map* opponentpieces, std::set<Co
 		new_y++;
 	}
 }
+
+std::vector<Coords> Queen::GetCheckedMoves(const Map * mypieces, const Map * opponentpieces)
+{
+	return std::vector<Coords>();
+}

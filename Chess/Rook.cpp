@@ -70,3 +70,8 @@ void Rook::GetMoves(const Map* mypieces, const Map* opponentpieces, std::set<Coo
 		new_y++;
 	}
 }
+
+std::vector<Coords> Rook::GetCheckedMoves(const Map * mypieces, const Map * opponentpieces)
+{
+	return std::vector<Coords>();
+}

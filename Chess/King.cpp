@@ -108,3 +108,8 @@ void King::GetMoves(const Map* mypieces,const Map* opponentpieces, std::set<Coor
 		}
 	}
 }
+
+std::vector<Coords> King::GetCheckedMoves(const Map * mypieces, const Map * opponentpieces)
+{
+	return std::vector<Coords>();
+}
