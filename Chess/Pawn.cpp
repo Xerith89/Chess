@@ -1,14 +1,14 @@
 #include "Pawn.h"
 
-Pawn::Pawn(int x, int y, const std::string spritename, bool white)
+Pawn::Pawn(int x, int y, const std::string spritename, bool white, const Board& brd)
 	:
-	Piece({ x,y }, spritename),
+	Piece({ x,y }, spritename, brd),
 	whitePiece(white)
 {
 	startCoords = { x,y };
 }
 
-void Pawn::GetMoves(const Map* mypieces, const Map* opponentpieces)
+void Pawn::GetMoves(const Map* mypieces, const Map* opponentpieces, std::vector<Coords>& myTargetList, const Coords& enemyKingPos, std::vector<Coords>& EnemyTargetList)
 {
 	//Empty out the moves list from the previous piece
 	moves.clear();
@@ -64,13 +64,21 @@ void Pawn::GetMoves(const Map* mypieces, const Map* opponentpieces)
 	if (opponentpieces->count({ coords.x - 1,coords.y - attackOffset }) == 1)
 	{
 		assert(y_offset < 10);
-		moves.push_back(std::make_pair(coords, Coords{ coords.x - 1,coords.y - attackOffset }));
+		if (Coords{ coords.x - 1,coords.y - attackOffset } != enemyKingPos)
+		{
+			moves.push_back(std::make_pair(coords, Coords{ coords.x - 1,coords.y - attackOffset }));
+		}
+		myTargetList.push_back({ coords.x - 1,coords.y - attackOffset });
 	}
 
 	if (opponentpieces->count({ coords.x + 1,coords.y - attackOffset }) == 1)
 	{
 		assert(y_offset < 10);
-		moves.push_back(std::make_pair(coords, Coords{ coords.x + 1,coords.y - attackOffset }));
-	}		
+		if (Coords{ coords.x + 1,coords.y - attackOffset } != enemyKingPos)
+		{
+			moves.push_back(std::make_pair(coords, Coords{ coords.x + 1,coords.y - attackOffset }));
+		}
+		myTargetList.push_back({ coords.x + 1,coords.y - attackOffset });
+	}
 }
 

@@ -1,12 +1,12 @@
 #include "Queen.h"
 
-Queen::Queen(int x, int y, const std::string spritename)
+Queen::Queen(int x, int y, const std::string spritename, const Board& brd)
 	:
-	Piece({ x,y }, spritename)
+	Piece({ x,y }, spritename, brd)
 {
 }
 
-void Queen::GetMoves(const Map* mypieces, const Map* opponentpieces)
+void Queen::GetMoves(const Map* mypieces, const Map* opponentpieces, std::vector<Coords>& myTargetList, const Coords& enemyKingPos, std::vector<Coords>& EnemyTargetList)
 {
 
 	moves.clear();
@@ -17,7 +17,12 @@ void Queen::GetMoves(const Map* mypieces, const Map* opponentpieces)
 	while (mypieces->count({ coords.x - new_x,coords.y - new_y }) == 0 && (coords.x - new_x) >= minCoord.x
 		&& (coords.y - new_y) >= minCoord.y)
 	{
-		moves.push_back(std::make_pair(coords, Coords{ coords.x - new_x,coords.y - new_y }));
+		if (Coords{ coords.x - new_x,coords.y - new_y } != enemyKingPos)
+		{
+			moves.push_back(std::make_pair(coords, Coords{ coords.x - new_x,coords.y - new_y }));
+		}
+		myTargetList.push_back({ coords.x - new_x,coords.y - new_y });
+
 		if (opponentpieces->count({ coords.x - new_x, coords.y - new_y }) > 0)
 		{
 			break;
@@ -32,7 +37,12 @@ void Queen::GetMoves(const Map* mypieces, const Map* opponentpieces)
 	while (mypieces->count({ coords.x + new_x,coords.y - new_y }) == 0 && (coords.x + new_x) <= maxCoord.x
 		&& (coords.y - new_y) >= minCoord.y)
 	{
-		moves.push_back(std::make_pair(coords, Coords{ coords.x + new_x,coords.y - new_y }));
+		if (Coords{ coords.x + new_x,coords.y - new_y } != enemyKingPos)
+		{
+			moves.push_back(std::make_pair(coords, Coords{ coords.x + new_x,coords.y - new_y }));
+		}
+		myTargetList.push_back({ coords.x + new_x,coords.y - new_y });
+		
 		if (opponentpieces->count({ coords.x + new_x, coords.y - new_y }) > 0)
 		{
 			break;
@@ -47,7 +57,12 @@ void Queen::GetMoves(const Map* mypieces, const Map* opponentpieces)
 	while (mypieces->count({ coords.x + new_x,coords.y + new_y }) == 0 && (coords.x + new_x) <= maxCoord.x
 		&& (coords.y + new_y) <= maxCoord.y)
 	{
-		moves.push_back(std::make_pair(coords, Coords{ coords.x + new_x,coords.y + new_y }));
+		if (Coords{ coords.x + new_x,coords.y + new_y } != enemyKingPos)
+		{
+			moves.push_back(std::make_pair(coords, Coords{ coords.x + new_x,coords.y + new_y }));
+		}
+		myTargetList.push_back({ coords.x + new_x,coords.y + new_y });
+	
 		if (opponentpieces->count({ coords.x + new_x, coords.y + new_y }) > 0)
 		{
 			break;
@@ -62,7 +77,12 @@ void Queen::GetMoves(const Map* mypieces, const Map* opponentpieces)
 	while (mypieces->count({ coords.x - new_x,coords.y + new_y }) == 0 && (coords.x - new_x) >= minCoord.x
 		&& (coords.y + new_y) <= maxCoord.y)
 	{
-		moves.push_back(std::make_pair(coords, Coords{ coords.x - new_x,coords.y + new_y }));
+		if (Coords{ coords.x - new_x,coords.y + new_y } != enemyKingPos)
+		{
+			moves.push_back(std::make_pair(coords, Coords{ coords.x - new_x,coords.y + new_y }));
+		}
+		myTargetList.push_back({ coords.x - new_x,coords.y + new_y });
+		
 		if (opponentpieces->count({ coords.x - new_x, coords.y + new_y }) > 0)
 		{
 			break;
@@ -73,7 +93,12 @@ void Queen::GetMoves(const Map* mypieces, const Map* opponentpieces)
 
 	while (mypieces->count({ coords.x - new_x,coords.y }) == 0 && (coords.x - new_x) >= minCoord.x)
 	{
-		moves.push_back(std::make_pair(coords, Coords{ coords.x - new_x,coords.y }));
+		if (Coords{ coords.x - new_x,coords.y } != enemyKingPos)
+		{
+			moves.push_back(std::make_pair(coords, Coords{ coords.x - new_x,coords.y }));
+		}
+		myTargetList.push_back({ coords.x - new_x,coords.y });
+		
 		if (opponentpieces->count({ coords.x - new_x, coords.y }) > 0)
 		{
 			break;
@@ -85,7 +110,12 @@ void Queen::GetMoves(const Map* mypieces, const Map* opponentpieces)
 	new_x = 1;
 	while (mypieces->count({ coords.x + new_x,coords.y }) == 0 && (coords.x + new_x) <= maxCoord.x)
 	{
-		moves.push_back(std::make_pair(coords, Coords{ coords.x + new_x,coords.y }));
+		if (Coords{ coords.x + new_x,coords.y } != enemyKingPos)
+		{
+			moves.push_back(std::make_pair(coords, Coords{ coords.x + new_x,coords.y }));
+		}
+		myTargetList.push_back({ coords.x + new_x,coords.y });
+		
 		if (opponentpieces->count({ coords.x + new_x, coords.y }) > 0)
 		{
 			break;
@@ -96,7 +126,12 @@ void Queen::GetMoves(const Map* mypieces, const Map* opponentpieces)
 	new_x = 1;
 	while (mypieces->count({ coords.x - new_x,coords.y }) == 0 && (coords.x - new_x) >= minCoord.x)
 	{
-		moves.push_back(std::make_pair(coords, Coords{ coords.x - new_x,coords.y }));
+		if (Coords{ coords.x - new_x,coords.y } != enemyKingPos)
+		{
+			moves.push_back(std::make_pair(coords, Coords{ coords.x - new_x,coords.y }));
+		}
+		myTargetList.push_back({ coords.x - new_x,coords.y });
+		
 		if (opponentpieces->count({ coords.x - new_x, coords.y }) > 0)
 		{
 			break;
@@ -107,7 +142,12 @@ void Queen::GetMoves(const Map* mypieces, const Map* opponentpieces)
 	//check up
 	while (mypieces->count({ coords.x,coords.y - new_y }) == 0 && (coords.y - new_y) >= minCoord.y)
 	{
-		moves.push_back(std::make_pair(coords, Coords{ coords.x,coords.y - new_y }));
+		if (Coords{ coords.x,coords.y - new_y } != enemyKingPos)
+		{
+			moves.push_back(std::make_pair(coords, Coords{ coords.x,coords.y - new_y }));
+		}
+		myTargetList.push_back({ coords.x,coords.y - new_y });
+		
 		if (opponentpieces->count({ coords.x,coords.y - new_y }) > 0)
 		{
 			break;
@@ -118,7 +158,12 @@ void Queen::GetMoves(const Map* mypieces, const Map* opponentpieces)
 	new_y = 1;
 	while (mypieces->count({ coords.x,coords.y + new_y }) == 0 && (coords.y + new_y) <= maxCoord.y)
 	{
-		moves.push_back(std::make_pair(coords, Coords{ coords.x,coords.y + new_y }));
+		if (Coords{ coords.x,coords.y + new_y } != enemyKingPos)
+		{
+			moves.push_back(std::make_pair(coords, Coords{ coords.x,coords.y + new_y }));
+		}
+		myTargetList.push_back({ coords.x,coords.y + new_y });
+		
 		if (opponentpieces->count({ coords.x,coords.y + new_y }) > 0)
 		{
 			break;

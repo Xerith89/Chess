@@ -3,8 +3,8 @@
 
 class King : public Piece {
 public:
-	King(int x, int y, const std::string spritename);
-	void GetMoves(const Map* mypieces, const Map* opponentpieces)override;
+	King(int x, int y, const std::string spritename, const Board& brd);
+	void GetMoves(const Map* mypieces, const Map* opponentpieces, std::vector<Coords>& myTargetList, const Coords& enemyKingPos, std::vector<Coords>& EnemyTargetList)override;
 private:
 
 };

@@ -7,13 +7,13 @@
 #include <random>
 #include <assert.h>
 #include "King.h"
+#include <algorithm>
 
 class Opponent{
 	using Map = std::map<std::pair<int, int>, std::unique_ptr<Piece>>;
 public:
 	Opponent(Board& brd);
 	void DoTurn();
-	Coords GetKingPosition()const;
 private:
 	void GenerationZero();
 	bool humanOpponent;
@@ -21,5 +21,4 @@ private:
 	std::random_device rd;
 	std::mt19937 rng;
 	King* kingInstance = nullptr;
-	Coords kingLoc = { 4, 0 };
 };

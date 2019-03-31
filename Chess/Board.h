@@ -17,10 +17,18 @@ public:
 	void UpdateBoard(Window& wnd);
 	std::map<std::pair<int,int>, std::unique_ptr<Piece>> whitePieces;
 	std::map<std::pair<int,int>, std::unique_ptr<Piece>> blackPieces;
+	std::vector<Coords> whitePieceTargets;
+	std::vector<Coords> blackPieceTargets;
 	std::pair<int, int> TranslateCoords(Piece* piece);
 	Coords TranslateCoords(int x_in, int y_in);
 	std::pair<int, int> TranslateCoords(Coords coords_in);
+	void UpdateWhiteKingLoc(Coords new_loc);
+	Coords GetWhiteKingLoc()const;
+	void UpdateBlackKingLoc(Coords new_loc);
+	Coords GetBlackKingLoc()const;
 private:
+	Coords whiteKingLoc = { 4,7 };
+	Coords blackKingLoc = { 4,0 };
 	int x;
 	int y;
 	Sprite BoardSprite = nullptr;

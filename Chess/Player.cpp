@@ -10,7 +10,6 @@ Player::Player(Window & wnd, Board & brd)
 
 void Player::DoTurn()
 {
-
 	//Check for left mouse button
 	if (wnd.inpt.LeftMsePressed())
 	{
@@ -26,10 +25,11 @@ void Player::DoTurn()
 				TestForCheck();
 				//If the piece exists then store it and get the moves for it
 				pieceSelected = true;
-				piece->second->GetMoves(&brd.whitePieces, &brd.blackPieces);
-				for (const auto& p : piece->second->MoveList())
+				piece->second->GetMoves(&brd.whitePieces, &brd.blackPieces, brd.whitePieceTargets, brd.GetBlackKingLoc(),brd.blackPieceTargets);
+
+				for (const auto& m : piece->second->MoveList())
 				{
-					selectedMoves.push_back(p.second);
+					selectedMoves.push_back(m.second);
 				}
 				//We didn't click something with valid moves
 				if (selectedMoves.empty())
@@ -53,28 +53,29 @@ void Player::DoTurn()
 					piece->second.get()->MoveTo({ selectedTarget.x, selectedTarget.y });
 					brd.whitePieces.insert_or_assign({ selectedTarget.x, selectedTarget.y }, std::move(brd.whitePieces.find({ selectedPiece.x,selectedPiece.y })->second));
 					brd.whitePieces.erase({ selectedPiece.x,selectedPiece.y });
-					
+
 					//Check if we're moving our king, if so then update the king's position
 					kingInstance = dynamic_cast<King*>(brd.whitePieces.find({ selectedTarget.x, selectedTarget.y })->second.get());
 					if (kingInstance != nullptr)
 					{
-						kingLoc = { selectedTarget.x,selectedTarget.y };
+						brd.UpdateWhiteKingLoc({ selectedTarget.x,selectedTarget.y });
 						kingInstance = nullptr;
 					}
-					
-					//end of turn cleanup
-					pieceSelected = false;
-					playerTurn = false;					
 				}
-				//Check for taking pieces
-				if (brd.blackPieces.count({ selectedTarget.x, selectedTarget.y }) > 0)
-				{
-					brd.blackPieces.erase({ selectedTarget.x,selectedTarget.y });
-				}
-			}	
-		}
-		
+								
+			}
+			//Check for taking pieces
+			if (std::find(selectedMoves.begin(), selectedMoves.end(), selectedTarget) != selectedMoves.end() 
+				&& brd.blackPieces.count({ selectedTarget.x, selectedTarget.y }) > 0)
+			{
+				brd.blackPieces.erase({ selectedTarget.x,selectedTarget.y });
+			}
+			//end of turn cleanup
+			pieceSelected = false;
+			playerTurn = false;
+		}	
 	}
+		
 
 	//Remove any selected pieces
 	if (wnd.inpt.RightMsePressed())
@@ -86,14 +87,14 @@ void Player::DoTurn()
 
 void Player::DrawPossibleMoves(Graphics& gfx)
 {
-	if (brd.whitePieces.count({ selectedPiece.x, selectedPiece.y }) > 0)
+	const auto moves = brd.whitePieces.find({ selectedPiece.x, selectedPiece.y });
+	if (moves != brd.whitePieces.end())
 	{
-		const auto moves = brd.whitePieces.find({ selectedPiece.x, selectedPiece.y })->second.get()->MoveList();
+		moves->second.get()->MoveList();
 
-		for (const auto& m : moves)
+		for (const auto& m : moves->second->MoveList())
 		{
 			auto position = brd.TranslateCoords({ m.second });
-
 			gfx.DrawSprite(position.first, position.second, target);
 		}
 	}
@@ -109,24 +110,14 @@ void Player::SetPlayerTurn()
 	playerTurn = true;
 }
 
-Coords Player::GetKingPosition() const
-{
-	return kingLoc;
-}
-
 void Player::TestForCheck()
 {
-	//Go through each piece and check if its target is our king,
-	//if any target equals our king location then we're in check
-	for (Map::iterator it = brd.blackPieces.begin(); it != brd.blackPieces.end(); it++)
+	//Go through the possible targets of the black pieces and see if we're checked.
+	for (const auto& m : brd.blackPieceTargets)
+	if (m == brd.GetWhiteKingLoc())
 	{
-		it->second->GetMoves(&brd.blackPieces,&brd.whitePieces);
-		for (const auto& m : it->second->MoveList())
-			if (m.second == kingLoc)
-			{
-				checked = true;
-				return;
-			}
+		checked = true;
+		return;
 	}
 	checked = false;
 }

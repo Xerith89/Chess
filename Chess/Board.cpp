@@ -83,3 +83,23 @@ std::pair<int, int> Board::TranslateCoords(Coords coords_in)
 	return std::make_pair(x_out, y_out);
 }
 
+void Board::UpdateWhiteKingLoc(Coords new_loc)
+{
+	whiteKingLoc = new_loc;
+}
+
+Coords Board::GetWhiteKingLoc() const
+{
+	return whiteKingLoc;
+}
+
+void Board::UpdateBlackKingLoc(Coords new_loc)
+{
+	blackKingLoc = new_loc;
+}
+
+Coords Board::GetBlackKingLoc() const
+{
+	return blackKingLoc;
+}
+
