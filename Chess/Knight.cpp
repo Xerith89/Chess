@@ -1,6 +1,6 @@
 #include "Knight.h"
 #include "Board.h"
-Knight::Knight(int x, int y, const std::string spritename,bool white, const Board& brd)
+Knight::Knight(int x, int y, const std::string spritename,bool white,  Board& brd)
 	:
 	Piece({ x,y }, spritename, brd, white)
 {
@@ -13,19 +13,17 @@ std::vector<std::pair<Coords, Coords>> Knight::GetMoves()
 	{
 		myKingPos = brd.GetWhiteKingLoc();
 		myPieces = &brd.whitePieces;
-		myTargetList = brd.whitePieceTargets;
 		opponentKingPos = brd.GetBlackKingLoc();
 		opponentPieces = &brd.blackPieces;
-		opponentTargetList = &brd.blackPieceTargets;
+		opponentTargetList = brd.blackPieceTargets;
 	}
 	else
 	{
 		myKingPos = brd.GetBlackKingLoc();
 		myPieces = &brd.blackPieces;
-		myTargetList = brd.blackPieceTargets;
 		opponentKingPos = brd.GetWhiteKingLoc();
 		opponentPieces = &brd.whitePieces;
-		opponentTargetList = &brd.whitePieceTargets;
+		opponentTargetList = brd.whitePieceTargets;
 	}
 
 	std::vector<std::pair<Coords, Coords>> moves;
@@ -117,6 +115,15 @@ std::vector<std::pair<Coords, Coords>> Knight::GetMoves()
 			moves.push_back(std::make_pair(coords, Coords{ coords.x + new_x,coords.y - new_y }));
 		}
 		myTargetList.insert(Coords{ coords.x + new_x,coords.y - new_y });
+	}
+
+	if (whitePiece)
+	{
+		brd.SetWhitePieceTargets(myTargetList);
+	}
+	else
+	{
+		brd.SetBlackPieceTargets(myTargetList);
 	}
 	return moves;
 }

@@ -81,6 +81,7 @@ void Game::Render()
 	{
 	case GameState::NORMAL:
 		brd.DrawBoard(gfx);
+		player.DrawChecked(gfx);
 		player.DrawPossibleMoves(gfx);
 		player.DrawPieces(gfx);
 		opponent.DrawPieces(gfx);
@@ -93,6 +94,7 @@ void Game::Render()
 		break;
 	case GameState::PLAYERCHECKMATED:
 		brd.DrawBoard(gfx);
+		player.DrawChecked(gfx);
 		player.DrawPieces(gfx);
 		opponent.DrawPieces(gfx);
 		gfx.DrawSprite(200, 200, playerlose);

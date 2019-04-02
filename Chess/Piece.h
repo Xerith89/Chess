@@ -12,7 +12,7 @@
 class Board;
 class Piece {
 protected:
-	const Board& brd;
+	Board& brd;
 	Coords coords;
 	Sprite pieceSprite;
 	Coords maxCoord = { 7,7 };
@@ -28,10 +28,10 @@ protected:
 	Map* myPieces;
 	Map* opponentPieces;
 	std::set<Coords> myTargetList;
-	const std::set<Coords>* opponentTargetList;
+	std::set<Coords> opponentTargetList;
 public:
 	Coords GetCoords()const;
-	Piece(Coords coords, const std::string spritename, const Board& brd, bool whitePiece);
+	Piece(Coords coords, const std::string spritename, Board& brd, bool whitePiece);
 	Sprite& GetSprite();
 	void MoveBy(Coords delta);
 	void MoveTo(Coords new_coords);

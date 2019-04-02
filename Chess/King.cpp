@@ -1,7 +1,7 @@
 #include "King.h"
 #include "Board.h"
 
-King::King(int x, int y, const std::string spritename,bool white, const Board& brd)
+King::King(int x, int y, const std::string spritename,bool white, Board& brd)
 	:
 	Piece({ x,y }, spritename, brd, white)
 {
@@ -13,19 +13,17 @@ std::vector<std::pair<Coords, Coords>> King::GetMoves()
 	{
 		myKingPos = brd.GetWhiteKingLoc();
 		myPieces = &brd.whitePieces;
-		myTargetList = brd.whitePieceTargets;
 		opponentKingPos = brd.GetBlackKingLoc();
 		opponentPieces = &brd.blackPieces;
-		opponentTargetList = &brd.blackPieceTargets;
+		opponentTargetList = brd.blackPieceTargets;
 	}
 	else
 	{
 		myKingPos = brd.GetBlackKingLoc();
 		myPieces = &brd.blackPieces;
-		myTargetList = brd.blackPieceTargets;
 		opponentKingPos = brd.GetWhiteKingLoc();
 		opponentPieces = &brd.whitePieces;
-		opponentTargetList = &brd.whitePieceTargets;
+		opponentTargetList = brd.whitePieceTargets;
 	}
 
 	std::vector<std::pair<Coords, Coords>> moves;
@@ -36,7 +34,7 @@ std::vector<std::pair<Coords, Coords>> King::GetMoves()
 	if (myPieces->count({ coords.x - new_x,coords.y - new_y }) == 0 && (coords.x - new_x) >= minCoord.x
 		&& (coords.y - new_y) >= minCoord.y && Coords{ coords.x - new_x,coords.y - new_y } != opponentKingPos)
 	{
-		if (std::none_of(opponentTargetList->begin(), opponentTargetList->end(), [&](const Coords rhs) {
+		if (std::none_of(opponentTargetList.begin(), opponentTargetList.end(), [&](const Coords rhs) {
 			return rhs == Coords{ coords.x - new_x,coords.y - new_y }; }))
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x - new_x,coords.y - new_y }));
@@ -49,7 +47,7 @@ std::vector<std::pair<Coords, Coords>> King::GetMoves()
 	if (myPieces->count({ coords.x + new_x,coords.y - new_y }) == 0 && (coords.x + new_x) <= maxCoord.x
 		&& (coords.y - new_y) >= minCoord.y && Coords{ coords.x + new_x,coords.y - new_y } != opponentKingPos)
 	{
-		if (std::none_of(opponentTargetList->begin(), opponentTargetList->end(), [&](const Coords rhs) {
+		if (std::none_of(opponentTargetList.begin(), opponentTargetList.end(), [&](const Coords rhs) {
 			return rhs == Coords{ coords.x + new_x,coords.y - new_y }; }))
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x + new_x,coords.y - new_y }));
@@ -61,7 +59,7 @@ std::vector<std::pair<Coords, Coords>> King::GetMoves()
 	if (myPieces->count({ coords.x + new_x,coords.y + new_y }) == 0 && (coords.x + new_x) <= maxCoord.x
 		&& (coords.y + new_y) <= maxCoord.y && Coords{ coords.x + new_x,coords.y + new_y } != opponentKingPos)
 	{
-		if (std::none_of(opponentTargetList->begin(), opponentTargetList->end(), [&](const Coords rhs) {
+		if (std::none_of(opponentTargetList.begin(), opponentTargetList.end(), [&](const Coords rhs) {
 		return rhs == Coords{ coords.x + new_x,coords.y + new_y }; }))
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x + new_x,coords.y + new_y }));
@@ -74,7 +72,7 @@ std::vector<std::pair<Coords, Coords>> King::GetMoves()
 	if (myPieces->count({ coords.x - new_x,coords.y + new_y }) == 0 && (coords.x - new_x) >= minCoord.x
 		&& (coords.y + new_y) <= maxCoord.y && Coords{ coords.x - new_x,coords.y + new_y } != opponentKingPos)
 	{
-		if (std::none_of(opponentTargetList->begin(), opponentTargetList->end(), [&](const Coords rhs) {
+		if (std::none_of(opponentTargetList.begin(), opponentTargetList.end(), [&](const Coords rhs) {
 			return rhs == Coords{ coords.x - new_x,coords.y + new_y }; }))
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x - new_x,coords.y + new_y }));
@@ -85,7 +83,7 @@ std::vector<std::pair<Coords, Coords>> King::GetMoves()
 	//check left
 	if (myPieces->count({ coords.x - new_x,coords.y }) == 0 && (coords.x - new_x) >= minCoord.x && Coords{ coords.x - new_x,coords.y } != opponentKingPos)
 	{
-		if (std::none_of(opponentTargetList->begin(), opponentTargetList->end(), [&](const Coords rhs) {
+		if (std::none_of(opponentTargetList.begin(), opponentTargetList.end(), [&](const Coords rhs) {
 			return rhs == Coords{ coords.x - new_x,coords.y }; }))
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x - new_x,coords.y }));
@@ -95,7 +93,7 @@ std::vector<std::pair<Coords, Coords>> King::GetMoves()
 	//check right
 	if (myPieces->count({ coords.x + new_x,coords.y }) == 0 && (coords.x + new_x) <= maxCoord.x && Coords{ coords.x + new_x,coords.y } != opponentKingPos)
 	{
-		if (std::none_of(opponentTargetList->begin(), opponentTargetList->end(), [&](const Coords rhs) {
+		if (std::none_of(opponentTargetList.begin(), opponentTargetList.end(), [&](const Coords rhs) {
 		return rhs == Coords{ coords.x + new_x,coords.y }; }))
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x + new_x,coords.y }));
@@ -108,7 +106,7 @@ std::vector<std::pair<Coords, Coords>> King::GetMoves()
 	if (myPieces->count({ coords.x,coords.y - new_y }) == 0 && (coords.y - new_y) >= minCoord.y && Coords{ coords.x,coords.y - new_y } != opponentKingPos)
 	{
 		
-		if (std::none_of(opponentTargetList->begin(), opponentTargetList->end(), [&](const Coords rhs) {
+		if (std::none_of(opponentTargetList.begin(), opponentTargetList.end(), [&](const Coords rhs) {
 			return rhs == Coords{coords.x, coords.y - new_y }; }))
 			{
 				moves.push_back(std::make_pair(coords, Coords{ coords.x,coords.y - new_y }));
@@ -120,13 +118,23 @@ std::vector<std::pair<Coords, Coords>> King::GetMoves()
 	//Check down
 	if (myPieces->count({ coords.x,coords.y + new_y }) == 0 && (coords.y + new_y) <= maxCoord.y && Coords{ coords.x,coords.y + new_y} != opponentKingPos)
 	{
-		if (std::none_of(opponentTargetList->begin(), opponentTargetList->end(), [&](const Coords rhs) {
+		if (std::none_of(opponentTargetList.begin(), opponentTargetList.end(), [&](const Coords rhs) {
 			return rhs == Coords{coords.x, coords.y + new_y}; }))
 		{
 				moves.push_back(std::make_pair(coords, Coords{ coords.x,coords.y + new_y }));
 				myTargetList.insert(Coords{ coords.x,coords.y + new_y });
 		}
 	}
+
+	if (whitePiece)
+	{
+		brd.SetWhitePieceTargets(myTargetList);
+	}
+	else
+	{
+		brd.SetBlackPieceTargets(myTargetList);
+	}
+
 	return moves;
 }
 

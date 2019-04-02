@@ -4,7 +4,8 @@ Player::Player(Window & wnd, Board & brd)
 	:
 	wnd(wnd),
 	brd(brd),
-	target("./Sprites/target.bmp")
+	target("./Sprites/target.bmp"),
+	inCheck("./Sprites/checked.bmp")
 {
 }
 
@@ -106,6 +107,15 @@ void Player::DrawPieces(Graphics & gfx) const
 	{
 		auto position = brd.TranslateCoords(x.second.get());
 		gfx.DrawSprite(position.first, position.second, x.second->GetSprite());
+	}
+}
+
+void Player::DrawChecked(Graphics & gfx) const
+{
+	if (checked)
+	{
+		auto position = brd.TranslateCoords({ brd.GetWhiteKingLoc() });
+		gfx.DrawSprite(position.first, position.second, inCheck);
 	}
 }
 

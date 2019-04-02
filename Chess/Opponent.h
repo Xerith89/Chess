@@ -16,7 +16,9 @@ public:
 	void DoTurn();
 	bool GetCmated()const;
 	void DrawPieces(Graphics& gfx)const;
+	void DrawChecked(Graphics& gfx)const;
 private:
+	Sprite inCheck;
 	std::vector<std::pair<Coords, Coords>> movelist;
 	bool checked = false;
 	bool cmated = false;

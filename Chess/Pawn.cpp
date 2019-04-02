@@ -1,6 +1,6 @@
 #include "Pawn.h"
 #include "Board.h"
-Pawn::Pawn(int x, int y, const std::string spritename, bool white, const Board& brd)
+Pawn::Pawn(int x, int y, const std::string spritename, bool white, Board& brd)
 	:
 	Piece({ x,y }, spritename, brd, white)	
 {
@@ -16,7 +16,7 @@ std::vector<std::pair<Coords, Coords>> Pawn::GetMoves()
 		myTargetList = brd.whitePieceTargets;
 		opponentKingPos = brd.GetBlackKingLoc();
 		opponentPieces = &brd.blackPieces;
-		opponentTargetList = &brd.blackPieceTargets;
+		opponentTargetList = brd.blackPieceTargets;
 		y_offset = 1;
 	}
 	else
@@ -26,14 +26,13 @@ std::vector<std::pair<Coords, Coords>> Pawn::GetMoves()
 		myTargetList = brd.blackPieceTargets;
 		opponentKingPos = brd.GetWhiteKingLoc();
 		opponentPieces = &brd.whitePieces;
-		opponentTargetList = &brd.whitePieceTargets;
+		opponentTargetList = brd.whitePieceTargets;
 		y_offset = -1;
-		attackOffset = -attackOffset;
 	}
+
 	//Empty out the moves list from the previous piece
 	std::vector<std::pair<Coords, Coords>> moves;
-	
-	
+		
 	//Pawns can move 2 places on the first go so check if we've moved yet
 	if (coords != startCoords) 
 	{ 
@@ -104,6 +103,15 @@ std::vector<std::pair<Coords, Coords>> Pawn::GetMoves()
 			moves.push_back(std::make_pair(coords, Coords{ coords.x + 1,coords.y - attackOffset }));
 		}
 		
+	}
+
+	if (whitePiece)
+	{
+		brd.SetWhitePieceTargets(myTargetList);
+	}
+	else
+	{
+		brd.SetBlackPieceTargets(myTargetList);
 	}
 	return moves;
 }

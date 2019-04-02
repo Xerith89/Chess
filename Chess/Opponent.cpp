@@ -3,7 +3,8 @@
 Opponent::Opponent(Board & brd)
 	:
 	brd(brd),
-	rng(rd())
+	rng(rd()),
+	inCheck("./Sprites/checked.bmp")
 {
 	
 }
@@ -24,6 +25,15 @@ void Opponent::DrawPieces(Graphics & gfx) const
 	{
 		auto position = brd.TranslateCoords(x.second.get());
 		gfx.DrawSprite(position.first, position.second, x.second->GetSprite());
+	}
+}
+
+void Opponent::DrawChecked(Graphics & gfx) const
+{
+	if (checked)
+	{
+		auto position = brd.TranslateCoords({ brd.GetBlackKingLoc() });
+		gfx.DrawSprite(position.first, position.second, inCheck);
 	}
 }
 

@@ -15,7 +15,6 @@ public:
 	void DrawBoard(Graphics& gfx);
 	int GetCellWidth();
 	int GetCellHeight();
-	void UpdateBoard(Window& wnd);
 	std::map<std::pair<int,int>, std::unique_ptr<Piece>> whitePieces;
 	std::map<std::pair<int,int>, std::unique_ptr<Piece>> blackPieces;
 	std::set<Coords> whitePieceTargets;
@@ -27,6 +26,8 @@ public:
 	Coords GetWhiteKingLoc()const;
 	void UpdateBlackKingLoc(Coords new_loc);
 	Coords GetBlackKingLoc()const;
+	void SetWhitePieceTargets(std::set<Coords> input);
+	void SetBlackPieceTargets(std::set<Coords> input);
 private:
 	Coords whiteKingLoc = { 4,7 };
 	Coords blackKingLoc = { 4,0 };

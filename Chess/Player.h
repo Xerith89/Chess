@@ -11,6 +11,7 @@ public:
 	void DoTurn();
 	void DrawPossibleMoves(Graphics& gfx);
 	void DrawPieces(Graphics& gfx)const;
+	void DrawChecked(Graphics& gfx)const;
 	bool PlayerTurn()const;
 	void SetPlayerTurn();
 	bool GetCMated()const;
@@ -20,6 +21,7 @@ private:
 	bool cMated = false;
 	void TestForCheck();
 	Sprite target;
+	Sprite inCheck;
 	Window& wnd;
 	Board& brd;
 	Coords selectedPiece;

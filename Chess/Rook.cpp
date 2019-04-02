@@ -1,6 +1,6 @@
 #include "Rook.h"
 #include "Board.h"
-Rook::Rook(int x, int y, const std::string spritename,bool white, const Board& brd)
+Rook::Rook(int x, int y, const std::string spritename,bool white, Board& brd)
 	:
 	Piece({ x,y }, spritename, brd, white)
 {
@@ -15,7 +15,7 @@ std::vector<std::pair<Coords, Coords>> Rook::GetMoves()
 		myTargetList = brd.whitePieceTargets;
 		opponentKingPos = brd.GetBlackKingLoc();
 		opponentPieces = &brd.blackPieces;
-		opponentTargetList = &brd.blackPieceTargets;
+		opponentTargetList = brd.blackPieceTargets;
 	}
 	else
 	{
@@ -24,7 +24,7 @@ std::vector<std::pair<Coords, Coords>> Rook::GetMoves()
 		myTargetList = brd.blackPieceTargets;
 		opponentKingPos = brd.GetWhiteKingLoc();
 		opponentPieces = &brd.whitePieces;
-		opponentTargetList = &brd.whitePieceTargets;
+		opponentTargetList = brd.whitePieceTargets;
 	}
 
 	std::vector<std::pair<Coords, Coords>> moves;
@@ -88,6 +88,16 @@ std::vector<std::pair<Coords, Coords>> Rook::GetMoves()
 		{break;}
 		new_y++;
 	}
+
+	if (whitePiece)
+	{
+		brd.SetWhitePieceTargets(myTargetList);
+	}
+	else
+	{
+		brd.SetBlackPieceTargets(myTargetList);
+	}
+
 	return moves;
 }
 
