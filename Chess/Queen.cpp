@@ -175,9 +175,10 @@ std::vector<std::pair<Coords, Coords>> Queen::GetMoves(const Map* mypieces, cons
 
 std::vector<std::pair<Coords, Coords>> Queen::GetCheckedMoves(const Map* mypieces, const Map* opponentpieces, std::set<Coords>& myTargetList, const Coords& enemyKingPos, std::set<Coords>& EnemyTargetList, const Coords & myKingPos)
 {
-	//Get every available move;
-	auto allMoves = GetMoves(mypieces, opponentpieces, myTargetList, enemyKingPos, EnemyTargetList, myKingPos);
 	std::vector<std::pair<Coords, Coords>> trimMoves;
+	/*Get every available move;
+	auto allMoves = GetMoves(mypieces, opponentpieces, myTargetList, enemyKingPos, EnemyTargetList, myKingPos);
+
 	//Go through the enemy target list and if it matches our move list then add it to the filtered move list
 	for (const auto& m : EnemyTargetList)
 	{
@@ -188,6 +189,6 @@ std::vector<std::pair<Coords, Coords>> Queen::GetCheckedMoves(const Map* mypiece
 		{
 			trimMoves.push_back(*it);
 		}
-	}
+	}*/
 	return trimMoves;
 }

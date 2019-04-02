@@ -14,9 +14,11 @@ class Opponent{
 public:
 	Opponent(Board& brd);
 	void DoTurn();
+	bool GetCmated()const;
 private:
 	std::vector<std::pair<Coords, Coords>> movelist;
 	bool checked = false;
+	bool cmated = false;
 	void TestForCheck();
 	void GenerationZero();
 	bool humanOpponent;
@@ -24,4 +26,6 @@ private:
 	std::random_device rd;
 	std::mt19937 rng;
 	King* kingInstance = nullptr;
+	int x_roll;
+	int y_roll;
 };

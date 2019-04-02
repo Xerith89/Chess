@@ -48,25 +48,48 @@ Game::Game(Window & wnd)
 		brd.whitePieces.emplace(std::make_pair(i,6), std::make_unique<Pawn>(i, 6, "./Sprites/pawnW.bmp",true,brd));
 		brd.blackPieces.emplace(std::make_pair(i,1), std::make_unique<Pawn>(i, 1, "./Sprites/pawnB.bmp",false,brd));
 	}
+
+	
+	gameStatus = GameState::NORMAL;
 }
 
 void Game::Update()
 {
-	if (player.PlayerTurn())
+	if (gameStatus == GameState::NORMAL)
 	{
-		player.DoTurn();
-	}
-	if (!player.PlayerTurn())
-	{
-		opponent.DoTurn();
-		player.SetPlayerTurn();
+		if (player.PlayerTurn())
+		{
+			player.DoTurn();
+		}
+		if (opponent.GetCmated())
+		{
+			gameStatus = GameState::OPPONENTCHECKMATED;
+		}
+		if (!player.PlayerTurn())
+		{
+			opponent.DoTurn();
+			player.SetPlayerTurn();
+		}
+		if (player.GetCMated())
+		{
+			gameStatus = GameState::PLAYERCHECKMATED;
+		}
 	}
 }
 
 void Game::Render()
 {
-	brd.DrawBoard(gfx);
-	player.DrawPossibleMoves(gfx);
+	switch  (gameStatus)
+	{
+	case GameState::NORMAL:
+		brd.DrawBoard(gfx);
+		player.DrawPossibleMoves(gfx);
+		break;
+	case GameState::OPPONENTCHECKMATED:
+		brd.DrawBoard(gfx);
+		gfx.DrawSprite(200, 200, checkmated);
+		break;
+	}
 }
 
 void Game::Run()

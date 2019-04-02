@@ -12,10 +12,11 @@ public:
 	void DrawPossibleMoves(Graphics& gfx);
 	bool PlayerTurn()const;
 	void SetPlayerTurn();
-
+	bool GetCMated()const;
 private:
 	King* kingInstance = nullptr;
 	bool checked = false;
+	bool cMated = false;
 	void TestForCheck();
 	Sprite target;
 	Window& wnd;

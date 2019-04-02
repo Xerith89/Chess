@@ -16,15 +16,18 @@ class Game {
 private:
 	Window& wnd;
 	Graphics gfx;
+	Sprite checkmated = ("./Sprites/checkmate.bmp");
 	void Render();
 	void Update();
-	enum GameState
-	{
-		MainMenu,
-		LocalGame,
-		MultiplayerGame,
-		MultiplayerFind
+	enum GameState {
+		NORMAL,
+		PLAYERCHECKED,
+		OPPONENTCHECKED,
+		PLAYERCHECKMATED,
+		OPPONENTCHECKMATED,
+		STALEMATE
 	};
+	int gameStatus;
 	bool playerTurn = true;
 	bool opponentTurn = false;
 public:

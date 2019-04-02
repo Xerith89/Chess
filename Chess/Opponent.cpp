@@ -13,6 +13,11 @@ void Opponent::DoTurn()
 	GenerationZero();
 }
 
+bool Opponent::GetCmated() const
+{
+	return cmated;
+}
+
 void Opponent::TestForCheck()
 {
 	//Go through the possible targets of the white pieces and see if we're checked.
@@ -50,7 +55,16 @@ void Opponent::GenerationZero()
 			
 			(!checked)? movelist = piece->second->GetMoves(&brd.blackPieces, &brd.whitePieces, brd.blackPieceTargets, brd.GetWhiteKingLoc(), brd.whitePieceTargets, brd.GetBlackKingLoc())
 			: movelist = piece->second->GetCheckedMoves(&brd.blackPieces, &brd.whitePieces, brd.blackPieceTargets, brd.GetWhiteKingLoc(), brd.whitePieceTargets, brd.GetBlackKingLoc());
-			
+			if (checked)
+			{
+				piece = brd.blackPieces.find({ brd.GetBlackKingLoc().x,brd.GetBlackKingLoc().y });
+				movelist = piece->second->GetCheckedMoves(&brd.blackPieces, &brd.whitePieces, brd.blackPieceTargets, brd.GetWhiteKingLoc(), brd.whitePieceTargets, brd.GetBlackKingLoc());
+				if (movelist.size() == 0)
+				{
+					cmated = true;
+					return;
+			}
+			}
 			maximum = movelist.size() - 1;
 			//Set maximum to be the amount of moves in the list. If its 0 then we run the loop again
 		}

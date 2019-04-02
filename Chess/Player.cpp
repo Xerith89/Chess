@@ -29,7 +29,12 @@ void Player::DoTurn()
 				pieceSelected = true;
 				(!checked) ? selectedMoves = piece->second->GetMoves(&brd.whitePieces, &brd.blackPieces, brd.whitePieceTargets, brd.GetBlackKingLoc(), brd.blackPieceTargets, brd.GetWhiteKingLoc()) :
 					piece->second->GetCheckedMoves(&brd.whitePieces, &brd.blackPieces, brd.whitePieceTargets, brd.GetBlackKingLoc(), brd.blackPieceTargets, brd.GetWhiteKingLoc());
-
+				
+				if (checked && selectedMoves.size() == 0)
+				{
+					cMated = true;
+					return;
+				}
 				//We didn't click something with valid moves
 				if (selectedMoves.empty())
 				{
@@ -102,6 +107,11 @@ bool Player::PlayerTurn() const
 void Player::SetPlayerTurn()
 {
 	playerTurn = true;
+}
+
+bool Player::GetCMated() const
+{
+	return cMated;
 }
 
 void Player::TestForCheck()
