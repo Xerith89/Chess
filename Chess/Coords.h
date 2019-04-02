@@ -17,7 +17,7 @@ struct Coords
 	}
 	bool operator<(const Coords& rhs)const
 	{
-		return x < rhs.x;
+		return (x < rhs.x) || (x == rhs.x) && (y < rhs.y);
 	}
 	bool InbetweenTwoCoords(const Coords& origin, const Coords& dest, const Coords& intersection)const
 	{
