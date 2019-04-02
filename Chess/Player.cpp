@@ -25,11 +25,12 @@ void Player::DoTurn()
 			if (piece != brd.whitePieces.end())
 			{
 				TestForCheck();
-				//If the piece exists then store it and get the moves for it
+				//If the piece exists then store it and get the moves for it - different moves depending on whether we are checked or not
 				pieceSelected = true;
 				(!checked) ? selectedMoves = piece->second->GetMoves(&brd.whitePieces, &brd.blackPieces, brd.whitePieceTargets, brd.GetBlackKingLoc(), brd.blackPieceTargets, brd.GetWhiteKingLoc()) :
 					piece->second->GetCheckedMoves(&brd.whitePieces, &brd.blackPieces, brd.whitePieceTargets, brd.GetBlackKingLoc(), brd.blackPieceTargets, brd.GetWhiteKingLoc());
 				
+				//If we have no possible moves and we're chcked then game over.
 				if (checked && selectedMoves.size() == 0)
 				{
 					cMated = true;

@@ -3,10 +3,9 @@
 
 /*
 BUG LIST
-
+.Possible that white piece targets are not fully working - needs exploring
 TODO LIST
-.Check moves
-.Check mate
+.Check moves - for pieces that are able to block or take a checking piece.
 .Promotion of pawns
 */
 

@@ -26,6 +26,4 @@ private:
 	std::random_device rd;
 	std::mt19937 rng;
 	King* kingInstance = nullptr;
-	int x_roll;
-	int y_roll;
 };
