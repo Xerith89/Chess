@@ -16,7 +16,8 @@ class Game {
 private:
 	Window& wnd;
 	Graphics gfx;
-	Sprite checkmated = ("./Sprites/checkmate.bmp");
+	Sprite playerwin = ("./Sprites/checkmatepwin.bmp");
+	Sprite playerlose = ("./Sprites/checkmateplose.bmp");
 	void Render();
 	void Update();
 	enum GameState {

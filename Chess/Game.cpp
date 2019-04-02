@@ -87,7 +87,11 @@ void Game::Render()
 		break;
 	case GameState::OPPONENTCHECKMATED:
 		brd.DrawBoard(gfx);
-		gfx.DrawSprite(200, 200, checkmated);
+		gfx.DrawSprite(200, 200, playerwin);
+		break;
+	case GameState::PLAYERCHECKMATED:
+		brd.DrawBoard(gfx);
+		gfx.DrawSprite(200, 200, playerlose);
 		break;
 	}
 }
