@@ -15,7 +15,7 @@ std::vector<std::pair<Coords, Coords>> King::GetMoves(const Map* mypieces,const 
 	int new_y = 1;
 	//Check pieces left up - we don't want to go past our white pieces or the end of the board
 	if (mypieces->count({ coords.x - new_x,coords.y - new_y }) == 0 && (coords.x - new_x) >= minCoord.x
-		&& (coords.y - new_y) >= minCoord.y)
+		&& (coords.y - new_y) >= minCoord.y && Coords{ coords.x - new_x,coords.y - new_y } != enemyKingPos)
 	{
 		if (std::none_of(EnemyTargetList.begin(), EnemyTargetList.end(), [&](const Coords rhs) {
 			return rhs == Coords{ coords.x - new_x,coords.y - new_y }; }))
@@ -28,7 +28,7 @@ std::vector<std::pair<Coords, Coords>> King::GetMoves(const Map* mypieces,const 
 	
 	//Check pieces right up - we don't want to go past our white pieces or the end of the board
 	if (mypieces->count({ coords.x + new_x,coords.y - new_y }) == 0 && (coords.x + new_x) <= maxCoord.x
-		&& (coords.y - new_y) >= minCoord.y)
+		&& (coords.y - new_y) >= minCoord.y && Coords{ coords.x + new_x,coords.y - new_y } != enemyKingPos)
 	{
 		if (std::none_of(EnemyTargetList.begin(), EnemyTargetList.end(), [&](const Coords rhs) {
 			return rhs == Coords{ coords.x + new_x,coords.y - new_y }; }))
@@ -40,7 +40,7 @@ std::vector<std::pair<Coords, Coords>> King::GetMoves(const Map* mypieces,const 
 
 	//Check pieces right down - we don't want to go past our white pieces or the end of the board
 	if (mypieces->count({ coords.x + new_x,coords.y + new_y }) == 0 && (coords.x + new_x) <= maxCoord.x
-		&& (coords.y + new_y) <= maxCoord.y)
+		&& (coords.y + new_y) <= maxCoord.y && Coords{ coords.x + new_x,coords.y + new_y } != enemyKingPos)
 	{
 		if (std::none_of(EnemyTargetList.begin(), EnemyTargetList.end(), [&](const Coords rhs) {
 		return rhs == Coords{ coords.x + new_x,coords.y + new_y }; }))
@@ -53,7 +53,7 @@ std::vector<std::pair<Coords, Coords>> King::GetMoves(const Map* mypieces,const 
 
 	//Check pieces left down - we don't want to go past our white pieces or the end of the board
 	if (mypieces->count({ coords.x - new_x,coords.y + new_y }) == 0 && (coords.x - new_x) >= minCoord.x
-		&& (coords.y + new_y) <= maxCoord.y)
+		&& (coords.y + new_y) <= maxCoord.y && Coords{ coords.x - new_x,coords.y + new_y } != enemyKingPos)
 	{
 		if (std::none_of(EnemyTargetList.begin(), EnemyTargetList.end(), [&](const Coords rhs) {
 			return rhs == Coords{ coords.x - new_x,coords.y + new_y }; }))
@@ -63,7 +63,8 @@ std::vector<std::pair<Coords, Coords>> King::GetMoves(const Map* mypieces,const 
 		}
 	}
 
-	if (mypieces->count({ coords.x - new_x,coords.y }) == 0 && (coords.x - new_x) >= minCoord.x)
+	//check left
+	if (mypieces->count({ coords.x - new_x,coords.y }) == 0 && (coords.x - new_x) >= minCoord.x && Coords{ coords.x - new_x,coords.y } != enemyKingPos)
 	{
 		if (std::none_of(EnemyTargetList.begin(), EnemyTargetList.end(), [&](const Coords rhs) {
 			return rhs == Coords{ coords.x - new_x,coords.y }; }))
@@ -73,7 +74,7 @@ std::vector<std::pair<Coords, Coords>> King::GetMoves(const Map* mypieces,const 
 		}
 	}
 	//check right
-	if (mypieces->count({ coords.x + new_x,coords.y }) == 0 && (coords.x + new_x) <= maxCoord.x)
+	if (mypieces->count({ coords.x + new_x,coords.y }) == 0 && (coords.x + new_x) <= maxCoord.x && Coords{ coords.x + new_x,coords.y } != enemyKingPos)
 	{
 		if (std::none_of(EnemyTargetList.begin(), EnemyTargetList.end(), [&](const Coords rhs) {
 		return rhs == Coords{ coords.x + new_x,coords.y }; }))
@@ -85,7 +86,7 @@ std::vector<std::pair<Coords, Coords>> King::GetMoves(const Map* mypieces,const 
 	}
 
 	//check up
-	if (mypieces->count({ coords.x,coords.y - new_y }) == 0 && (coords.y - new_y) >= minCoord.y)
+	if (mypieces->count({ coords.x,coords.y - new_y }) == 0 && (coords.y - new_y) >= minCoord.y && Coords{ coords.x,coords.y - new_y } != enemyKingPos)
 	{
 		
 		if (std::none_of(EnemyTargetList.begin(), EnemyTargetList.end(), [&](const Coords rhs) {
@@ -98,7 +99,7 @@ std::vector<std::pair<Coords, Coords>> King::GetMoves(const Map* mypieces,const 
 	}
 	
 	//Check down
-	if (mypieces->count({ coords.x,coords.y + new_y }) == 0 && (coords.y + new_y) <= maxCoord.y)
+	if (mypieces->count({ coords.x,coords.y + new_y }) == 0 && (coords.y + new_y) <= maxCoord.y && Coords{ coords.x,coords.y + new_y} != enemyKingPos)
 	{
 		if (std::none_of(EnemyTargetList.begin(), EnemyTargetList.end(), [&](const Coords rhs) {
 			return rhs == Coords{coords.x, coords.y + new_y}; }))
