@@ -47,7 +47,10 @@ void Opponent::GenerationZero()
 		
 		if (piece != brd.blackPieces.end())
 		{
-			movelist = piece->second->GetMoves(&brd.blackPieces, &brd.whitePieces, brd.blackPieceTargets, brd.GetWhiteKingLoc(), brd.whitePieceTargets);
+			
+			(!checked)? movelist = piece->second->GetMoves(&brd.blackPieces, &brd.whitePieces, brd.blackPieceTargets, brd.GetWhiteKingLoc(), brd.whitePieceTargets, brd.GetBlackKingLoc())
+			: movelist = piece->second->GetCheckedMoves(&brd.blackPieces, &brd.whitePieces, brd.blackPieceTargets, brd.GetWhiteKingLoc(), brd.whitePieceTargets, brd.GetBlackKingLoc());
+			
 			maximum = movelist.size() - 1;
 			//Set maximum to be the amount of moves in the list. If its 0 then we run the loop again
 		}
@@ -80,6 +83,6 @@ void Opponent::GenerationZero()
 	brd.blackPieceTargets.clear();
 	for (const auto& p : brd.blackPieces)
 	{
-		p.second->GetMoves(&brd.blackPieces, &brd.whitePieces, brd.blackPieceTargets, brd.GetWhiteKingLoc(), brd.whitePieceTargets);
+		p.second->GetMoves(&brd.blackPieces, &brd.whitePieces, brd.blackPieceTargets, brd.GetWhiteKingLoc(), brd.whitePieceTargets, brd.GetBlackKingLoc());
 	}
 }

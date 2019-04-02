@@ -27,7 +27,8 @@ void Player::DoTurn()
 				TestForCheck();
 				//If the piece exists then store it and get the moves for it
 				pieceSelected = true;
-				selectedMoves = piece->second->GetMoves(&brd.whitePieces, &brd.blackPieces, brd.whitePieceTargets, brd.GetBlackKingLoc(),brd.blackPieceTargets);
+				(!checked) ? selectedMoves = piece->second->GetMoves(&brd.whitePieces, &brd.blackPieces, brd.whitePieceTargets, brd.GetBlackKingLoc(), brd.blackPieceTargets, brd.GetWhiteKingLoc()) :
+					piece->second->GetCheckedMoves(&brd.whitePieces, &brd.blackPieces, brd.whitePieceTargets, brd.GetBlackKingLoc(), brd.blackPieceTargets, brd.GetWhiteKingLoc());
 
 				//We didn't click something with valid moves
 				if (selectedMoves.empty())
@@ -67,7 +68,7 @@ void Player::DoTurn()
 			brd.whitePieceTargets.clear();
 			for (const auto& p : brd.whitePieces)
 			{
-				p.second->GetMoves(&brd.whitePieces, &brd.blackPieces, brd.whitePieceTargets, brd.GetBlackKingLoc(), brd.blackPieceTargets);
+				p.second->GetMoves(&brd.whitePieces, &brd.blackPieces, brd.whitePieceTargets, brd.GetBlackKingLoc(), brd.blackPieceTargets, brd.GetWhiteKingLoc());
 			}
 		}	
 	}

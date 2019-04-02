@@ -7,7 +7,7 @@ King::King(int x, int y, const std::string spritename, const Board& brd)
 {
 }
 
-std::vector<std::pair<Coords, Coords>> King::GetMoves(const Map* mypieces,const Map* opponentpieces, std::set<Coords>& myTargetList,const Coords& enemyKingPos, std::set<Coords>& EnemyTargetList)
+std::vector<std::pair<Coords, Coords>> King::GetMoves(const Map* mypieces,const Map* opponentpieces, std::set<Coords>& myTargetList,const Coords& enemyKingPos, std::set<Coords>& EnemyTargetList, const Coords & myKingPos)
 {
 	std::vector<std::pair<Coords, Coords>> moves;
 
@@ -111,7 +111,7 @@ std::vector<std::pair<Coords, Coords>> King::GetMoves(const Map* mypieces,const 
 	return moves;
 }
 
-std::vector<Coords> King::GetCheckedMoves(const Map * mypieces, const Map * opponentpieces)
+std::vector<std::pair<Coords, Coords>> King::GetCheckedMoves(const Map* mypieces, const Map* opponentpieces, std::set<Coords>& myTargetList, const Coords& enemyKingPos, std::set<Coords>& EnemyTargetList, const Coords & myKingPos)
 {
-	return std::vector<Coords>();
+	return GetMoves(mypieces,opponentpieces,myTargetList,enemyKingPos,EnemyTargetList, myKingPos);
 }

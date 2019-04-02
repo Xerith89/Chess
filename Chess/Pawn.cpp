@@ -8,7 +8,7 @@ Pawn::Pawn(int x, int y, const std::string spritename, bool white, const Board& 
 	startCoords = { x,y };
 }
 
-std::vector<std::pair<Coords, Coords>> Pawn::GetMoves(const Map* mypieces, const Map* opponentpieces, std::set<Coords>& myTargetList, const Coords& enemyKingPos, std::set<Coords>& EnemyTargetList)
+std::vector<std::pair<Coords, Coords>> Pawn::GetMoves(const Map* mypieces, const Map* opponentpieces, std::set<Coords>& myTargetList, const Coords& enemyKingPos, std::set<Coords>& EnemyTargetList, const Coords & myKingPos)
 {
 	//Empty out the moves list from the previous piece
 	std::vector<std::pair<Coords, Coords>> moves;
@@ -71,8 +71,16 @@ std::vector<std::pair<Coords, Coords>> Pawn::GetMoves(const Map* mypieces, const
 		
 	}
 		
-	myTargetList.insert(Coords{ coords.x - 1,coords.y - attackOffset });
-	myTargetList.insert(Coords{ coords.x + 1,coords.y - attackOffset });
+	if (!whitePiece)
+	{
+		myTargetList.insert(Coords{ coords.x - 1,coords.y + 1 });
+		myTargetList.insert(Coords{ coords.x + 1,coords.y + 1 });
+	}
+	else
+	{
+		myTargetList.insert(Coords{ coords.x - 1,coords.y - 1 });
+		myTargetList.insert(Coords{ coords.x + 1,coords.y - 1 });
+	}
 	
 	if (opponentpieces->count({ coords.x + 1,coords.y - attackOffset }) == 1)
 	{
@@ -86,8 +94,22 @@ std::vector<std::pair<Coords, Coords>> Pawn::GetMoves(const Map* mypieces, const
 	return moves;
 }
 
-std::vector<Coords> Pawn::GetCheckedMoves(const Map * mypieces, const Map * opponentpieces)
+std::vector<std::pair<Coords, Coords>> Pawn::GetCheckedMoves(const Map* mypieces, const Map* opponentpieces, std::set<Coords>& myTargetList, const Coords& enemyKingPos, std::set<Coords>& EnemyTargetList, const Coords & myKingPos)
 {
-	return std::vector<Coords>();
+	//Get every available move;
+	auto allMoves = GetMoves(mypieces, opponentpieces, myTargetList, enemyKingPos, EnemyTargetList, myKingPos);
+	std::vector<std::pair<Coords, Coords>> trimMoves;
+	//Go through the enemy target list and if it matches our move list then add it to the filtered move list
+	for (const auto& m : EnemyTargetList)
+	{
+		auto it = (std::find_if(allMoves.begin(), allMoves.end(), [&](const std::pair<Coords, Coords>& rhs) {
+			return m == rhs.second; }));
+
+		if (it != allMoves.end())
+		{
+			trimMoves.push_back(*it);
+		}
+	}
+	return trimMoves;
 }
 

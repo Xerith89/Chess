@@ -3,7 +3,6 @@
 
 /*
 BUG LIST
-.You can move into check positions
 
 TODO LIST
 .Check moves
