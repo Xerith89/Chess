@@ -70,18 +70,10 @@ std::vector<std::pair<Coords, Coords>> Pawn::GetMoves(const Map* mypieces, const
 		}
 		
 	}
-
-	if (!whitePiece)
-	{
-		myTargetList.insert(Coords{ coords.x - 1,coords.y +1 });
-		myTargetList.insert(Coords{ coords.x + 1,coords.y +1 });
-	}
-	else
-	{
-		myTargetList.insert(Coords{ coords.x - 1,coords.y - 1 });
-		myTargetList.insert(Coords{ coords.x + 1,coords.y - 1 });
-	}
-
+		
+	myTargetList.insert(Coords{ coords.x - 1,coords.y - attackOffset });
+	myTargetList.insert(Coords{ coords.x + 1,coords.y - attackOffset });
+	
 	if (opponentpieces->count({ coords.x + 1,coords.y - attackOffset }) == 1)
 	{
 		assert(y_offset < 10);
