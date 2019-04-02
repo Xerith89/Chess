@@ -13,12 +13,13 @@ Coords Piece::GetCoords()const
 	return coords;
 }
 
-Piece::Piece(Coords coords, const std::string spritename, const Board& brd)
+Piece::Piece(Coords coords, const std::string spritename, const Board& brd,bool white)
 	:
 	coords(coords),
 	startCoords(coords),
 	pieceSprite(spritename),
-	brd(brd)
+	brd(brd),
+	whitePiece(white)
 {
 }
 

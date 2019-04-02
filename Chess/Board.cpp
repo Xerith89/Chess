@@ -13,18 +13,6 @@ Board::Board(const std::string spritename, int x, int y)
 void Board::DrawBoard(Graphics& gfx)
 {
 	gfx.DrawSprite(x, y, BoardSprite);
-
-	for (const auto& x : whitePieces)
-	{
-		auto position = TranslateCoords(x.second.get());
-		gfx.DrawSprite(position.first, position.second, x.second->GetSprite());
-	}
-
-	for (const auto& x : blackPieces)
-	{
-		auto position = TranslateCoords(x.second.get());
-		gfx.DrawSprite(position.first, position.second, x.second->GetSprite());
-	}
 }
 
 int Board::GetCellWidth()

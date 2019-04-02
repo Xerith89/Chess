@@ -1,40 +1,59 @@
 #include "Rook.h"
-
-Rook::Rook(int x, int y, const std::string spritename, const Board& brd)
+#include "Board.h"
+Rook::Rook(int x, int y, const std::string spritename,bool white, const Board& brd)
 	:
-	Piece({ x,y }, spritename, brd)
+	Piece({ x,y }, spritename, brd, white)
 {
 }
 
-std::vector<std::pair<Coords, Coords>> Rook::GetMoves(const Map* mypieces, const Map* opponentpieces, std::set<Coords>& myTargetList, const Coords& enemyKingPos, std::set<Coords>& EnemyTargetList, const Coords & myKingPos)
+std::vector<std::pair<Coords, Coords>> Rook::GetMoves()
 {
+	if (whitePiece)
+	{
+		myKingPos = brd.GetWhiteKingLoc();
+		myPieces = &brd.whitePieces;
+		myTargetList = brd.whitePieceTargets;
+		opponentKingPos = brd.GetBlackKingLoc();
+		opponentPieces = &brd.blackPieces;
+		opponentTargetList = &brd.blackPieceTargets;
+	}
+	else
+	{
+		myKingPos = brd.GetBlackKingLoc();
+		myPieces = &brd.blackPieces;
+		myTargetList = brd.blackPieceTargets;
+		opponentKingPos = brd.GetWhiteKingLoc();
+		opponentPieces = &brd.whitePieces;
+		opponentTargetList = &brd.whitePieceTargets;
+	}
+
 	std::vector<std::pair<Coords, Coords>> moves;
 	int new_x = 1;
 	//Check pieces to our left - we don't want to go past our white pieces or the end of the board
-	while (mypieces->count({ coords.x - new_x,coords.y }) == 0 && (coords.x - new_x) >= minCoord.x)
+	while (myPieces->count({ coords.x - new_x,coords.y }) == 0 && (coords.x - new_x) >= minCoord.x)
 	{
-		if (Coords{ coords.x - new_x,coords.y } != enemyKingPos)
+		if (Coords{ coords.x - new_x,coords.y } != opponentKingPos)
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x - new_x,coords.y }));
 		}
 		myTargetList.insert(Coords{ coords.x - new_x,coords.y });
 		
-		if (opponentpieces->count({ coords.x - new_x, coords.y }) > 0)
+		if (opponentPieces->count({ coords.x - new_x, coords.y }) > 0)
 		{break;}
 		new_x++;
 
 	}
 	//Reset x and check right
 	new_x = 1;
-	while (mypieces->count({ coords.x + new_x,coords.y }) == 0 && (coords.x + new_x) <= maxCoord.x)
+	while (myPieces->count({ coords.x + new_x,coords.y }) == 0 && (coords.x + new_x) <= maxCoord.x)
 	{
-		if (Coords{ coords.x + new_x,coords.y } != enemyKingPos)
+		if (Coords{ coords.x + new_x,coords.y } != opponentKingPos)
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x + new_x,coords.y }));
 		}
 		myTargetList.insert(Coords{ coords.x + new_x,coords.y });
 	
-		if (opponentpieces->count({ coords.x + new_x, coords.y }) > 0)
+		if (opponentPieces->count({ coords.x + new_x, coords.y }) > 0)
 		{break;}
 		new_x++;
 	
@@ -43,40 +62,40 @@ std::vector<std::pair<Coords, Coords>> Rook::GetMoves(const Map* mypieces, const
 	
 	//check up
 	int new_y = 1;
-	while (mypieces->count({ coords.x,coords.y - new_y}) == 0 && (coords.y-new_y) >= minCoord.y)
+	while (myPieces->count({ coords.x,coords.y - new_y}) == 0 && (coords.y-new_y) >= minCoord.y)
 	{
-		if (Coords{ coords.x,coords.y - new_y } != enemyKingPos)
+		if (Coords{ coords.x,coords.y - new_y } != opponentKingPos)
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x,coords.y - new_y }));
 		}
 		myTargetList.insert(Coords{ coords.x,coords.y - new_y });
 		
-		if (opponentpieces->count({ coords.x,coords.y - new_y }) > 0)
+		if (opponentPieces->count({ coords.x,coords.y - new_y }) > 0)
 		{break;}
 		new_y++;
 	}
 	//Check down
 	new_y = 1;
-	while (mypieces->count({ coords.x,coords.y + new_y }) == 0 && (coords.y +new_y) <= maxCoord.y)
+	while (myPieces->count({ coords.x,coords.y + new_y }) == 0 && (coords.y +new_y) <= maxCoord.y)
 	{
-		if (Coords{ coords.x,coords.y + new_y } != enemyKingPos)
+		if (Coords{ coords.x,coords.y + new_y } != opponentKingPos)
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x,coords.y + new_y }));
 		}
 		myTargetList.insert(Coords{ coords.x,coords.y + new_y });
 		
-		if (opponentpieces->count({ coords.x,coords.y + new_y }) > 0)
+		if (opponentPieces->count({ coords.x,coords.y + new_y }) > 0)
 		{break;}
 		new_y++;
 	}
 	return moves;
 }
 
-std::vector<std::pair<Coords, Coords>> Rook::GetCheckedMoves(const Map* mypieces, const Map* opponentpieces, std::set<Coords>& myTargetList, const Coords& enemyKingPos, std::set<Coords>& EnemyTargetList, const Coords & myKingPos)
+std::vector<std::pair<Coords, Coords>> Rook::GetCheckedMoves()
 {
 	std::vector<std::pair<Coords, Coords>> trimMoves;
 	/*Get every available move;
-	auto allMoves = GetMoves(mypieces, opponentpieces, myTargetList, enemyKingPos, EnemyTargetList, myKingPos);
+	auto allMoves = GetMoves(myPieces, opponentPieces, myTargetList, opponentKingPos, EnemyTargetList, myKingPos);
 
 	//Go through the enemy target list and if it matches our move list then add it to the filtered move list
 	for (const auto& m : EnemyTargetList)

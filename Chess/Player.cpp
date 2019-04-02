@@ -27,8 +27,8 @@ void Player::DoTurn()
 				TestForCheck();
 				//If the piece exists then store it and get the moves for it - different moves depending on whether we are checked or not
 				pieceSelected = true;
-				(!checked) ? selectedMoves = piece->second->GetMoves(&brd.whitePieces, &brd.blackPieces, brd.whitePieceTargets, brd.GetBlackKingLoc(), brd.blackPieceTargets, brd.GetWhiteKingLoc()) :
-					piece->second->GetCheckedMoves(&brd.whitePieces, &brd.blackPieces, brd.whitePieceTargets, brd.GetBlackKingLoc(), brd.blackPieceTargets, brd.GetWhiteKingLoc());
+				(!checked) ? selectedMoves = piece->second->GetMoves() :
+					piece->second->GetCheckedMoves();
 				
 				//If we have no possible moves and we're chcked then game over.
 				if (checked && selectedMoves.size() == 0)
@@ -74,7 +74,7 @@ void Player::DoTurn()
 			brd.whitePieceTargets.clear();
 			for (const auto& p : brd.whitePieces)
 			{
-				p.second->GetMoves(&brd.whitePieces, &brd.blackPieces, brd.whitePieceTargets, brd.GetBlackKingLoc(), brd.blackPieceTargets, brd.GetWhiteKingLoc());
+				p.second->GetMoves();
 			}
 		}	
 	}
@@ -97,6 +97,15 @@ void Player::DrawPossibleMoves(Graphics& gfx)
 			auto position = brd.TranslateCoords({ m.second });
 			gfx.DrawSprite(position.first, position.second, target);
 		}
+	}
+}
+
+void Player::DrawPieces(Graphics & gfx) const
+{
+	for (const auto& x : brd.whitePieces)
+	{
+		auto position = brd.TranslateCoords(x.second.get());
+		gfx.DrawSprite(position.first, position.second, x.second->GetSprite());
 	}
 }
 

@@ -18,6 +18,15 @@ bool Opponent::GetCmated() const
 	return cmated;
 }
 
+void Opponent::DrawPieces(Graphics & gfx) const
+{
+	for (const auto& x : brd.blackPieces)
+	{
+		auto position = brd.TranslateCoords(x.second.get());
+		gfx.DrawSprite(position.first, position.second, x.second->GetSprite());
+	}
+}
+
 void Opponent::TestForCheck()
 {
 	//Go through the possible targets of the white pieces and see if we're checked.
@@ -44,11 +53,11 @@ void Opponent::GenerationZero()
 	for (const auto& p : brd.blackPieces)
 	{
 		if (!checked) {
-			temp = p.second->GetMoves(&brd.blackPieces, &brd.whitePieces, brd.blackPieceTargets, brd.GetWhiteKingLoc(), brd.whitePieceTargets, brd.GetBlackKingLoc());
+			temp = p.second->GetMoves();
 		}
 		else
 		{
-			temp = p.second->GetCheckedMoves(&brd.blackPieces, &brd.whitePieces, brd.blackPieceTargets, brd.GetWhiteKingLoc(), brd.whitePieceTargets, brd.GetBlackKingLoc());
+			temp = p.second->GetCheckedMoves();
 		}
 		 movelist.insert(movelist.end(), temp.begin(), temp.end()); 
 	}
@@ -95,6 +104,6 @@ void Opponent::GenerationZero()
 	brd.blackPieceTargets.clear();
 	for (const auto& p : brd.blackPieces)
 	{
-		p.second->GetMoves(&brd.blackPieces, &brd.whitePieces, brd.blackPieceTargets, brd.GetWhiteKingLoc(), brd.whitePieceTargets, brd.GetBlackKingLoc());
+		p.second->GetMoves();
 	}
 }

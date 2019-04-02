@@ -1,25 +1,39 @@
 #include "Pawn.h"
-
+#include "Board.h"
 Pawn::Pawn(int x, int y, const std::string spritename, bool white, const Board& brd)
 	:
-	Piece({ x,y }, spritename, brd),
-	whitePiece(white)
+	Piece({ x,y }, spritename, brd, white)	
 {
 	startCoords = { x,y };
 }
 
-std::vector<std::pair<Coords, Coords>> Pawn::GetMoves(const Map* mypieces, const Map* opponentpieces, std::set<Coords>& myTargetList, const Coords& enemyKingPos, std::set<Coords>& EnemyTargetList, const Coords & myKingPos)
+std::vector<std::pair<Coords, Coords>> Pawn::GetMoves()
 {
-	//Empty out the moves list from the previous piece
-	std::vector<std::pair<Coords, Coords>> moves;
-	y_offset = 1;
-	//If we are a black piece we need to invert our variables for movement and attack to result in a positive when put into our checking functions
-	if (!whitePiece)
+	if (whitePiece)
 	{
+		myKingPos = brd.GetWhiteKingLoc();
+		myPieces = &brd.whitePieces;
+		myTargetList = brd.whitePieceTargets;
+		opponentKingPos = brd.GetBlackKingLoc();
+		opponentPieces = &brd.blackPieces;
+		opponentTargetList = &brd.blackPieceTargets;
+		y_offset = 1;
+	}
+	else
+	{
+		myKingPos = brd.GetBlackKingLoc();
+		myPieces = &brd.blackPieces;
+		myTargetList = brd.blackPieceTargets;
+		opponentKingPos = brd.GetWhiteKingLoc();
+		opponentPieces = &brd.whitePieces;
+		opponentTargetList = &brd.whitePieceTargets;
 		y_offset = -1;
 		attackOffset = -attackOffset;
 	}
-
+	//Empty out the moves list from the previous piece
+	std::vector<std::pair<Coords, Coords>> moves;
+	
+	
 	//Pawns can move 2 places on the first go so check if we've moved yet
 	if (coords != startCoords) 
 	{ 
@@ -29,9 +43,9 @@ std::vector<std::pair<Coords, Coords>> Pawn::GetMoves(const Map* mypieces, const
 	//If we haven't moved then we want to check if the place is free up to two times
 	if (firstMove)
 	{
-		while (mypieces->count({ coords.x, coords.y - y_offset }) == 0 && std::abs(y_offset) < 3)
+		while (myPieces->count({ coords.x, coords.y - y_offset }) == 0 && std::abs(y_offset) < 3)
 		{
-			if (opponentpieces->count({ coords.x,coords.y - y_offset }) == 0)
+			if (opponentPieces->count({ coords.x,coords.y - y_offset }) == 0)
 			{
 				
 				assert(y_offset < 10);
@@ -49,9 +63,9 @@ std::vector<std::pair<Coords, Coords>> Pawn::GetMoves(const Map* mypieces, const
 		//reset our move offset based on whether we are a white or black piece
 		(whitePiece) ? y_offset = 1 : y_offset = -1;
 	//If we have moved then just check the next 
-		while (mypieces->count({ coords.x,coords.y - y_offset }) == 0 && y_offset < 2)
+		while (myPieces->count({ coords.x,coords.y - y_offset }) == 0 && y_offset < 2)
 		{
-			if (opponentpieces->count({ coords.x,coords.y - y_offset }) == 0)
+			if (opponentPieces->count({ coords.x,coords.y - y_offset }) == 0)
 			{
 				assert(y_offset < 10);
 				moves.push_back(std::make_pair(coords, Coords{ coords.x,coords.y - y_offset }));
@@ -61,10 +75,10 @@ std::vector<std::pair<Coords, Coords>> Pawn::GetMoves(const Map* mypieces, const
 	}
 	
 	//Check if we have any diagonal black pieces at our current space - they  can be taken and are a possible move
-	if (opponentpieces->count({ coords.x - 1,coords.y - attackOffset }) == 1)
+	if (opponentPieces->count({ coords.x - 1,coords.y - attackOffset }) == 1)
 	{
 		assert(y_offset < 10);
-		if (Coords{ coords.x - 1,coords.y - attackOffset } != enemyKingPos)
+		if (Coords{ coords.x - 1,coords.y - attackOffset } != opponentKingPos)
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x - 1,coords.y - attackOffset }));
 		}
@@ -82,10 +96,10 @@ std::vector<std::pair<Coords, Coords>> Pawn::GetMoves(const Map* mypieces, const
 		myTargetList.insert(Coords{ coords.x + 1,coords.y - 1 });
 	}
 	
-	if (opponentpieces->count({ coords.x + 1,coords.y - attackOffset }) == 1)
+	if (opponentPieces->count({ coords.x + 1,coords.y - attackOffset }) == 1)
 	{
 		assert(y_offset < 10);
-		if (Coords{ coords.x + 1,coords.y - attackOffset } != enemyKingPos)
+		if (Coords{ coords.x + 1,coords.y - attackOffset } != opponentKingPos)
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x + 1,coords.y - attackOffset }));
 		}
@@ -94,11 +108,11 @@ std::vector<std::pair<Coords, Coords>> Pawn::GetMoves(const Map* mypieces, const
 	return moves;
 }
 
-std::vector<std::pair<Coords, Coords>> Pawn::GetCheckedMoves(const Map* mypieces, const Map* opponentpieces, std::set<Coords>& myTargetList, const Coords& enemyKingPos, std::set<Coords>& EnemyTargetList, const Coords & myKingPos)
+std::vector<std::pair<Coords, Coords>> Pawn::GetCheckedMoves()
 {
 	std::vector<std::pair<Coords, Coords>> trimMoves;
 	/*Get every available move;
-	auto allMoves = GetMoves(mypieces, opponentpieces, myTargetList, enemyKingPos, EnemyTargetList, myKingPos);
+	auto allMoves = GetMoves(myPieces, opponentPieces, myTargetList, opponentKingPos, EnemyTargetList, myKingPos);
 
 	//Go through the enemy target list and if it matches our move list then add it to the filtered move list
 	for (const auto& m : EnemyTargetList)

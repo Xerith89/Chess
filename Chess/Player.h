@@ -10,6 +10,7 @@ public:
 	Player(Window& wnd, Board& brd);
 	void DoTurn();
 	void DrawPossibleMoves(Graphics& gfx);
+	void DrawPieces(Graphics& gfx)const;
 	bool PlayerTurn()const;
 	void SetPlayerTurn();
 	bool GetCMated()const;

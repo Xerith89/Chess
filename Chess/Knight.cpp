@@ -1,33 +1,53 @@
 #include "Knight.h"
-
-Knight::Knight(int x, int y, const std::string spritename, const Board& brd)
+#include "Board.h"
+Knight::Knight(int x, int y, const std::string spritename,bool white, const Board& brd)
 	:
-	Piece({ x,y }, spritename, brd)
+	Piece({ x,y }, spritename, brd, white)
 {
 }
 
-std::vector<std::pair<Coords, Coords>> Knight::GetMoves(const Map* mypieces, const Map* opponentpieces, std::set<Coords>& myTargetList, const Coords& enemyKingPos, std::set<Coords>& EnemyTargetList, const Coords & myKingPos)
+std::vector<std::pair<Coords, Coords>> Knight::GetMoves()
 {
+
+	if (whitePiece)
+	{
+		myKingPos = brd.GetWhiteKingLoc();
+		myPieces = &brd.whitePieces;
+		myTargetList = brd.whitePieceTargets;
+		opponentKingPos = brd.GetBlackKingLoc();
+		opponentPieces = &brd.blackPieces;
+		opponentTargetList = &brd.blackPieceTargets;
+	}
+	else
+	{
+		myKingPos = brd.GetBlackKingLoc();
+		myPieces = &brd.blackPieces;
+		myTargetList = brd.blackPieceTargets;
+		opponentKingPos = brd.GetWhiteKingLoc();
+		opponentPieces = &brd.whitePieces;
+		opponentTargetList = &brd.whitePieceTargets;
+	}
+
 	std::vector<std::pair<Coords, Coords>> moves;
 
 	int new_x = 1;
 	int new_y = 2;
 
 	//check up
-	if (mypieces->count({ coords.x - new_x,coords.y - new_y }) == 0 && (coords.y - new_y) >= minCoord.y 
+	if (myPieces->count({ coords.x - new_x,coords.y - new_y }) == 0 && (coords.y - new_y) >= minCoord.y 
 		&& (coords.x - new_x) >= minCoord.x)
 	{
-		if (Coords{ coords.x - new_x,coords.y - new_y } != enemyKingPos)
+		if (Coords{ coords.x - new_x,coords.y - new_y } != opponentKingPos)
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x - new_x,coords.y - new_y }));
 		}
 		myTargetList.insert(Coords{ coords.x - new_x,coords.y - new_y });
 	}
 
-	if (mypieces->count({ coords.x + new_x,coords.y - new_y }) == 0 && (coords.y - new_y) >= minCoord.y
+	if (myPieces->count({ coords.x + new_x,coords.y - new_y }) == 0 && (coords.y - new_y) >= minCoord.y
 		&& (coords.x + new_x) <= maxCoord.x)
 	{
-		if (Coords{ coords.x + new_x,coords.y - new_y } != enemyKingPos)
+		if (Coords{ coords.x + new_x,coords.y - new_y } != opponentKingPos)
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x + new_x,coords.y - new_y }));
 		}
@@ -35,20 +55,20 @@ std::vector<std::pair<Coords, Coords>> Knight::GetMoves(const Map* mypieces, con
 	}
 
 	//check down
-	if (mypieces->count({ coords.x - new_x,coords.y + new_y }) == 0 && (coords.y + new_y) <= maxCoord.y
+	if (myPieces->count({ coords.x - new_x,coords.y + new_y }) == 0 && (coords.y + new_y) <= maxCoord.y
 		&& (coords.x - new_x) >= minCoord.x)
 	{
-		if (Coords{ coords.x - new_x,coords.y + new_y } != enemyKingPos)
+		if (Coords{ coords.x - new_x,coords.y + new_y } != opponentKingPos)
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x - new_x,coords.y + new_y }));
 		}
 		myTargetList.insert(Coords{ coords.x - new_x,coords.y + new_y });
 	}
 
-	if (mypieces->count({ coords.x + new_x,coords.y + new_y }) == 0 && (coords.y + new_y) <= maxCoord.y
+	if (myPieces->count({ coords.x + new_x,coords.y + new_y }) == 0 && (coords.y + new_y) <= maxCoord.y
 		&& (coords.x + new_x) <= maxCoord.x)
 	{
-		if (Coords{ coords.x + new_x,coords.y + new_y } != enemyKingPos)
+		if (Coords{ coords.x + new_x,coords.y + new_y } != opponentKingPos)
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x + new_x,coords.y + new_y }));
 		}
@@ -59,40 +79,40 @@ std::vector<std::pair<Coords, Coords>> Knight::GetMoves(const Map* mypieces, con
 	new_x = 2;
 	new_y = 1;
 
-	if (mypieces->count({ coords.x - new_x,coords.y + new_y }) == 0 && (coords.y + new_y) <= maxCoord.y
+	if (myPieces->count({ coords.x - new_x,coords.y + new_y }) == 0 && (coords.y + new_y) <= maxCoord.y
 		&& (coords.x - new_x) >= minCoord.x)
 	{
-		if (Coords{ coords.x - new_x,coords.y + new_y } != enemyKingPos)
+		if (Coords{ coords.x - new_x,coords.y + new_y } != opponentKingPos)
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x - new_x,coords.y + new_y }));
 		}
 		myTargetList.insert(Coords{ coords.x - new_x,coords.y + new_y });
 	}
 
-	if (mypieces->count({ coords.x - new_x,coords.y - new_y }) == 0 && (coords.y - new_y) >= minCoord.y
+	if (myPieces->count({ coords.x - new_x,coords.y - new_y }) == 0 && (coords.y - new_y) >= minCoord.y
 		&& (coords.x - new_x) >= minCoord.x)
 	{
-		if (Coords{ coords.x - new_x,coords.y - new_y } != enemyKingPos)
+		if (Coords{ coords.x - new_x,coords.y - new_y } != opponentKingPos)
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x - new_x,coords.y - new_y }));
 		}
 		myTargetList.insert(Coords{ coords.x - new_x,coords.y - new_y });
 	}
 
-	if (mypieces->count({ coords.x + new_x,coords.y + new_y }) == 0 && (coords.y + new_y) <= maxCoord.y
+	if (myPieces->count({ coords.x + new_x,coords.y + new_y }) == 0 && (coords.y + new_y) <= maxCoord.y
 		&& (coords.x + new_x) <= maxCoord.x)
 	{
-		if (Coords{ coords.x + new_x,coords.y + new_y } != enemyKingPos)
+		if (Coords{ coords.x + new_x,coords.y + new_y } != opponentKingPos)
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x + new_x,coords.y + new_y }));
 		}
 		myTargetList.insert(Coords{ coords.x + new_x,coords.y + new_y });
 	}
 
-	if (mypieces->count({ coords.x + new_x,coords.y - new_y }) == 0 && (coords.y - new_y) >= minCoord.y
+	if (myPieces->count({ coords.x + new_x,coords.y - new_y }) == 0 && (coords.y - new_y) >= minCoord.y
 		&& (coords.x + new_x) <= maxCoord.x)
 	{
-		if (Coords{ coords.x + new_x,coords.y - new_y } != enemyKingPos)
+		if (Coords{ coords.x + new_x,coords.y - new_y } != opponentKingPos)
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x + new_x,coords.y - new_y }));
 		}
@@ -101,11 +121,11 @@ std::vector<std::pair<Coords, Coords>> Knight::GetMoves(const Map* mypieces, con
 	return moves;
 }
 
-std::vector<std::pair<Coords, Coords>> Knight::GetCheckedMoves(const Map* mypieces, const Map* opponentpieces, std::set<Coords>& myTargetList, const Coords& enemyKingPos, std::set<Coords>& EnemyTargetList, const Coords & myKingPos)
+std::vector<std::pair<Coords, Coords>> Knight::GetCheckedMoves()
 {
 	std::vector<std::pair<Coords, Coords>> trimMoves;
 	/*Get every available move;
-	auto allMoves = GetMoves(mypieces, opponentpieces, myTargetList, enemyKingPos, EnemyTargetList, myKingPos);
+	auto allMoves = GetMoves(myPieces, opponentPieces, myTargetList, opponentKingPos, EnemyTargetList, myKingPos);
 
 	//Go through the enemy target list and if it matches our move list then add it to the filtered move list
 	for (const auto& m : EnemyTargetList)

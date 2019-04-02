@@ -20,16 +20,23 @@ protected:
 	Coords startCoords;
 	bool selected = false;
 	std::vector<std::pair<Coords, Coords>>  moves;
-	using Map = std::map<std::pair<int,int>, std::unique_ptr<Piece>>;
+	using Map = const std::map<std::pair<int,int>, std::unique_ptr<Piece>>;
 	bool InbetweenCoords(const Coords& origin, const Coords& dest, const Coords& intersecting)const;
+	bool whitePiece;
+	Coords opponentKingPos;
+	Coords myKingPos;
+	Map* myPieces;
+	Map* opponentPieces;
+	std::set<Coords> myTargetList;
+	const std::set<Coords>* opponentTargetList;
 public:
 	Coords GetCoords()const;
-	Piece(Coords coords, const std::string spritename, const Board& brd);
+	Piece(Coords coords, const std::string spritename, const Board& brd, bool whitePiece);
 	Sprite& GetSprite();
 	void MoveBy(Coords delta);
 	void MoveTo(Coords new_coords);
 	void SetSelected(bool status);
 	bool GetSelected()const;
-	virtual std::vector<std::pair<Coords, Coords>> GetMoves(const Map* mypieces, const Map* opponentpieces, std::set<Coords>& myTargetList, const Coords& enemyKingPos, std::set<Coords>& EnemyTargetList, const Coords & myKingPos) = 0;
-	virtual std::vector<std::pair<Coords, Coords>> GetCheckedMoves(const Map* mypieces, const Map* opponentpieces, std::set<Coords>& myTargetList, const Coords& enemyKingPos, std::set<Coords>& EnemyTargetList, const Coords & myKingPos) = 0;
+	virtual std::vector<std::pair<Coords, Coords>> GetMoves() = 0;
+	virtual std::vector<std::pair<Coords, Coords>> GetCheckedMoves() = 0;
 };

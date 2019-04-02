@@ -15,6 +15,7 @@ public:
 	Opponent(Board& brd);
 	void DoTurn();
 	bool GetCmated()const;
+	void DrawPieces(Graphics& gfx)const;
 private:
 	std::vector<std::pair<Coords, Coords>> movelist;
 	bool checked = false;
