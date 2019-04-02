@@ -3,10 +3,12 @@
 
 /*
 BUG LIST
-.You can take Kings
 .You can move into check positions
-.If you click a piece with no moves available, select a pawn then deselect it - you can't get the moves back for the pawn
-.Check doesn't acknowledge pawn take semantics
+
+TODO LIST
+.Check moves
+.Check mate
+.Promotion of pawns
 */
 
 Game::Game(Window & wnd)
@@ -47,7 +49,6 @@ Game::Game(Window & wnd)
 		brd.whitePieces.emplace(std::make_pair(i,6), std::make_unique<Pawn>(i, 6, "./Sprites/pawnW.bmp",true,brd));
 		brd.blackPieces.emplace(std::make_pair(i,1), std::make_unique<Pawn>(i, 1, "./Sprites/pawnB.bmp",false,brd));
 	}
-
 }
 
 void Game::Update()

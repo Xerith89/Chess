@@ -16,15 +16,8 @@ void Player::DoTurn()
 		//Check for an unselected piece or a piece with no available moves - we can then select a new piece
 		if (!pieceSelected)
 		{
-			//new move so clear out our move buffers
-			brd.blackPieceTargets.clear();
+			//new move so clear out our move buffer
 			selectedMoves.clear();
-
-			//call this for each black piece to get the most updated black targets
-			for (const auto& p : brd.blackPieces)
-			{
-				p.second->GetMoves(&brd.blackPieces, &brd.whitePieces, brd.blackPieceTargets, brd.GetWhiteKingLoc(), brd.whitePieceTargets);
-			}
 
 			//Translate the mouse position to board coords
 			selectedPiece = brd.TranslateCoords(wnd.inpt.GetMseX(), wnd.inpt.GetMseY());
@@ -48,8 +41,11 @@ void Player::DoTurn()
 		{
 			//We already have a target so we're clicking on a new position - do the usual translate
 			selectedTarget = brd.TranslateCoords(wnd.inpt.GetMseX(), wnd.inpt.GetMseY());
+			auto it = (std::find_if(selectedMoves.begin(), selectedMoves.end(), [&](const std::pair<Coords, Coords>& rhs) {
+			return selectedTarget == rhs.second;}));
+
 			auto piece = brd.whitePieces.find({ selectedPiece.x,selectedPiece.y });
-			if (piece != brd.whitePieces.end() && selectedTarget != selectedPiece)
+			if (piece != brd.whitePieces.end() && it != selectedMoves.end() )
 			{
 				//Insert at new position and delete old one
 				piece->second.get()->MoveTo({ selectedTarget.x, selectedTarget.y });
@@ -58,26 +54,24 @@ void Player::DoTurn()
 				
 				//Check if we're moving our king, if so then update the king's position
 				kingInstance = dynamic_cast<King*>(brd.whitePieces.find({ selectedTarget.x, selectedTarget.y })->second.get());
-				if (kingInstance != nullptr)
-				{
-					brd.UpdateWhiteKingLoc({ selectedTarget.x,selectedTarget.y });
-					kingInstance = nullptr;
-				}
+				if (kingInstance != nullptr){brd.UpdateWhiteKingLoc({ selectedTarget.x,selectedTarget.y });}
 
 				//Check for taking pieces
-				if (brd.blackPieces.count({ selectedTarget.x, selectedTarget.y }) > 0)
-				{
-					brd.blackPieces.erase({ selectedTarget.x,selectedTarget.y });
-				}
+				if (brd.blackPieces.count({ selectedTarget.x, selectedTarget.y }) > 0){brd.blackPieces.erase({ selectedTarget.x,selectedTarget.y });}
 						
 				//end of turn cleanup
 				pieceSelected = false;
 				playerTurn = false;
-			}					
+			}	
+			//Get our new targets for the black players turn
+			brd.whitePieceTargets.clear();
+			for (const auto& p : brd.whitePieces)
+			{
+				p.second->GetMoves(&brd.whitePieces, &brd.blackPieces, brd.whitePieceTargets, brd.GetBlackKingLoc(), brd.blackPieceTargets);
+			}
 		}	
 	}
 		
-
 	//Remove any selected pieces
 	if (wnd.inpt.RightMsePressed())
 	{

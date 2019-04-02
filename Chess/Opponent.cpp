@@ -69,12 +69,17 @@ void Opponent::GenerationZero()
 	if (kingInstance != nullptr)
 	{
 		brd.UpdateBlackKingLoc( { newloc.x,newloc.y });
-		kingInstance = nullptr;
 	}
 	
 	//If we take a piece then update that too
 	if (brd.whitePieces.count({ newloc.x, newloc.y }) > 0)
 	{
 		brd.whitePieces.erase({ newloc.x,newloc.y });
+	}
+	//recalculate our targets following our turn
+	brd.blackPieceTargets.clear();
+	for (const auto& p : brd.blackPieces)
+	{
+		p.second->GetMoves(&brd.blackPieces, &brd.whitePieces, brd.blackPieceTargets, brd.GetWhiteKingLoc(), brd.whitePieceTargets);
 	}
 }

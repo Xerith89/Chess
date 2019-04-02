@@ -11,5 +11,5 @@ private:
 	bool firstMove = true;
 	bool whitePiece;
 	int attackOffset = 1;
-	int y_offset = 1;
+	int y_offset;
 };

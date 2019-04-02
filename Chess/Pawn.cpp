@@ -12,7 +12,7 @@ std::vector<std::pair<Coords, Coords>> Pawn::GetMoves(const Map* mypieces, const
 {
 	//Empty out the moves list from the previous piece
 	std::vector<std::pair<Coords, Coords>> moves;
-	
+	y_offset = 1;
 	//If we are a black piece we need to invert our variables for movement and attack to result in a positive when put into our checking functions
 	if (!whitePiece)
 	{
@@ -71,8 +71,16 @@ std::vector<std::pair<Coords, Coords>> Pawn::GetMoves(const Map* mypieces, const
 		
 	}
 
-	myTargetList.insert(Coords{ coords.x - 1,coords.y - attackOffset });
-	myTargetList.insert(Coords{ coords.x + 1,coords.y - attackOffset });
+	if (!whitePiece)
+	{
+		myTargetList.insert(Coords{ coords.x - 1,coords.y +1 });
+		myTargetList.insert(Coords{ coords.x + 1,coords.y +1 });
+	}
+	else
+	{
+		myTargetList.insert(Coords{ coords.x - 1,coords.y - 1 });
+		myTargetList.insert(Coords{ coords.x + 1,coords.y - 1 });
+	}
 
 	if (opponentpieces->count({ coords.x + 1,coords.y - attackOffset }) == 1)
 	{
