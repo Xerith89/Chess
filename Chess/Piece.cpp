@@ -1,15 +1,24 @@
 #include "Piece.h"
 
+bool Piece::InbetweenCoords(const Coords & origin, const Coords & dest,const Coords& intersecting) const
+{
+		//check we're above the min x and y value but below the max x and y - therefore inbetween them
+		return intersecting.x >= std::min(origin.x, coords.x) && intersecting.x <= std::max(dest.x, origin.x)
+			&& intersecting.y >= std::min(origin.y, dest.y) && intersecting.y <= std::max(origin.y, dest.y);
+	
+}
+
 Coords Piece::GetCoords()const
 {
 	return coords;
 }
 
-Piece::Piece(Coords coords, const std::string spritename)
+Piece::Piece(Coords coords, const std::string spritename, const Board& brd)
 	:
 	coords(coords),
 	startCoords(coords),
-	pieceSprite(spritename)
+	pieceSprite(spritename),
+	brd(brd)
 {
 }
 
@@ -47,8 +56,4 @@ bool Piece::GetSelected() const
 	return selected;
 }
 
-std::vector<std::pair<Coords,Coords>> Piece::MoveList() const
-{
-	return moves;
-}
 
