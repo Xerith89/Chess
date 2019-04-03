@@ -78,6 +78,11 @@ std::vector<std::pair<Coords, Coords>> Rook::GetMoves()
 	new_y = 1;
 	while (myPieces->count({ coords.x,coords.y + new_y }) == 0 && (coords.y +new_y) <= maxCoord.y)
 	{
+		//Put the position into the map
+		//Call get moves on opponents get moves
+		//Check if our our king loc is now in the opponent target list
+		//if it is then the move is invalid otherwise it is valid and we add it to the move list and the target list
+		//erase from the map
 		if (Coords{ coords.x,coords.y + new_y } != opponentKingPos)
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x,coords.y + new_y }));
@@ -101,13 +106,3 @@ std::vector<std::pair<Coords, Coords>> Rook::GetMoves()
 	return moves;
 }
 
-std::vector<std::pair<Coords, Coords>> Rook::GetCheckedMoves()
-{
-	std::vector<std::pair<Coords, Coords>> trimMoves;
-	/*
-	for each move we're processing, pretend that we've made it then run get targets
-	check if king loc is still equal to a target. If so then its not a valid move
-	If it isn't then it is a valid move and we had it to the returned move vector.
-	*/
-	return trimMoves;
-}

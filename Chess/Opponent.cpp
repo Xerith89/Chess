@@ -40,13 +40,11 @@ void Opponent::DrawChecked(Graphics & gfx) const
 void Opponent::TestForCheck()
 {
 	//Go through the possible targets of the white pieces and see if we're checked.
-	for (const auto& m : brd.whitePieceTargets)
+	const auto p = std::find(brd.whitePieceTargets.begin(), brd.whitePieceTargets.end(), brd.GetWhiteKingLoc());
+	if (p != brd.whitePieceTargets.end())
 	{
-		if (m == brd.GetBlackKingLoc())
-		{
-			checked = true;
-			return;
-		}
+		checked = true;
+		return;
 	}
 	checked = false;
 }
@@ -62,13 +60,8 @@ void Opponent::GenerationZero()
 	//Go through all our pieces, get moves for them. The returning vector is then amalgamated.
 	for (const auto& p : brd.blackPieces)
 	{
-		if (!checked) {
-			temp = p.second->GetMoves();
-		}
-		else
-		{
-			temp = p.second->GetCheckedMoves();
-		}
+		
+		temp = p.second->GetMoves();
 		 movelist.insert(movelist.end(), temp.begin(), temp.end()); 
 	}
 	//If we have no moves and we're checked then its game over.

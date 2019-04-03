@@ -38,5 +38,4 @@ public:
 	void SetSelected(bool status);
 	bool GetSelected()const;
 	virtual std::vector<std::pair<Coords, Coords>> GetMoves() = 0;
-	virtual std::vector<std::pair<Coords, Coords>> GetCheckedMoves() = 0;
 };

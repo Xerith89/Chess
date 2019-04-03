@@ -115,16 +115,5 @@ std::vector<std::pair<Coords, Coords>> Bishop::GetMoves()
 	return moves;
 }
 
-std::vector<std::pair<Coords, Coords>> Bishop::GetCheckedMoves()
-{
-
-	std::vector<std::pair<Coords, Coords>> trimMoves;
-	/*
-	for each move we're processing, pretend that we've made it then run get targets
-	check if king loc is still equal to a target. If so then its not a valid move
-	If it isn't then it is a valid move and we had it to the returned move vector.
-	*/
-	return trimMoves;
-}
 
 

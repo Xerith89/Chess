@@ -28,9 +28,8 @@ void Player::DoTurn()
 				TestForCheck();
 				//If the piece exists then store it and get the moves for it - different moves depending on whether we are checked or not
 				pieceSelected = true;
-				(!checked) ? selectedMoves = piece->second->GetMoves() :
-					selectedMoves = piece->second->GetCheckedMoves();
-				
+				selectedMoves = piece->second->GetMoves();
+								
 				//If we have no possible moves and we're chcked then game over.
 				if (checked && selectedMoves.size() == 0)
 				{
@@ -137,8 +136,8 @@ bool Player::GetCMated() const
 void Player::TestForCheck()
 {
 	//Go through the possible targets of the black pieces and see if we're checked.
-	for (const auto& m : brd.blackPieceTargets)
-	if (m == brd.GetWhiteKingLoc())
+	const auto p = std::find(brd.blackPieceTargets.begin(), brd.blackPieceTargets.end(), brd.GetWhiteKingLoc());
+	if (p != brd.blackPieceTargets.end())
 	{
 		checked = true;
 		return;

@@ -138,8 +138,4 @@ std::vector<std::pair<Coords, Coords>> King::GetMoves()
 	return moves;
 }
 
-std::vector<std::pair<Coords, Coords>> King::GetCheckedMoves()
-{
-	std::vector<int> bla;
-	return GetMoves();
-}
+

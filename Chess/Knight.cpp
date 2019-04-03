@@ -128,22 +128,3 @@ std::vector<std::pair<Coords, Coords>> Knight::GetMoves()
 	return moves;
 }
 
-std::vector<std::pair<Coords, Coords>> Knight::GetCheckedMoves()
-{
-	std::vector<std::pair<Coords, Coords>> trimMoves;
-	/*Get every available move;
-	auto allMoves = GetMoves(myPieces, opponentPieces, myTargetList, opponentKingPos, EnemyTargetList, myKingPos);
-
-	//Go through the enemy target list and if it matches our move list then add it to the filtered move list
-	for (const auto& m : EnemyTargetList)
-	{
-		auto it = (std::find_if(allMoves.begin(), allMoves.end(), [&](const std::pair<Coords, Coords>& rhs) {
-			return m == rhs.second; }));
-
-		if (it != allMoves.end())
-		{
-			trimMoves.push_back(*it);
-		}
-	}*/
-	return trimMoves;
-}
