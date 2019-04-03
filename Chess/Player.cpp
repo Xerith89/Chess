@@ -29,7 +29,7 @@ void Player::DoTurn()
 				//If the piece exists then store it and get the moves for it - different moves depending on whether we are checked or not
 				pieceSelected = true;
 				(!checked) ? selectedMoves = piece->second->GetMoves() :
-					piece->second->GetCheckedMoves();
+					selectedMoves = piece->second->GetCheckedMoves();
 				
 				//If we have no possible moves and we're chcked then game over.
 				if (checked && selectedMoves.size() == 0)

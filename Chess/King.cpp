@@ -128,11 +128,11 @@ std::vector<std::pair<Coords, Coords>> King::GetMoves()
 
 	if (whitePiece)
 	{
-		brd.SetWhitePieceTargets(myTargetList);
+		brd.whitePieceTargets.insert(myTargetList.begin(), myTargetList.end());
 	}
 	else
 	{
-		brd.SetBlackPieceTargets(myTargetList);
+		brd.blackPieceTargets.insert(myTargetList.begin(), myTargetList.end());
 	}
 
 	return moves;
@@ -140,5 +140,6 @@ std::vector<std::pair<Coords, Coords>> King::GetMoves()
 
 std::vector<std::pair<Coords, Coords>> King::GetCheckedMoves()
 {
+	std::vector<int> bla;
 	return GetMoves();
 }

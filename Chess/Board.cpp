@@ -86,13 +86,3 @@ Coords Board::GetBlackKingLoc() const
 	return blackKingLoc;
 }
 
-void Board::SetWhitePieceTargets(std::set<Coords> input)
-{
-	whitePieceTargets.insert(input.begin(),input.end());
-}
-
-void Board::SetBlackPieceTargets(std::set<Coords> input)
-{
-	blackPieceTargets.insert(input.begin(),input.end());
-}
-

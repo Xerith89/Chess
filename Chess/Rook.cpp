@@ -91,11 +91,11 @@ std::vector<std::pair<Coords, Coords>> Rook::GetMoves()
 
 	if (whitePiece)
 	{
-		brd.SetWhitePieceTargets(myTargetList);
+		brd.whitePieceTargets.insert(myTargetList.begin(), myTargetList.end());
 	}
 	else
 	{
-		brd.SetBlackPieceTargets(myTargetList);
+		brd.blackPieceTargets.insert(myTargetList.begin(), myTargetList.end());
 	}
 
 	return moves;
@@ -104,19 +104,10 @@ std::vector<std::pair<Coords, Coords>> Rook::GetMoves()
 std::vector<std::pair<Coords, Coords>> Rook::GetCheckedMoves()
 {
 	std::vector<std::pair<Coords, Coords>> trimMoves;
-	/*Get every available move;
-	auto allMoves = GetMoves(myPieces, opponentPieces, myTargetList, opponentKingPos, EnemyTargetList, myKingPos);
-
-	//Go through the enemy target list and if it matches our move list then add it to the filtered move list
-	for (const auto& m : EnemyTargetList)
-	{
-		auto it = (std::find_if(allMoves.begin(), allMoves.end(), [&](const std::pair<Coords, Coords>& rhs) {
-			return m == rhs.second; }));
-
-		if (it != allMoves.end())
-		{
-			trimMoves.push_back(*it);
-		}
-	}*/
+	/*
+	for each move we're processing, pretend that we've made it then run get targets
+	check if king loc is still equal to a target. If so then its not a valid move
+	If it isn't then it is a valid move and we had it to the returned move vector.
+	*/
 	return trimMoves;
 }

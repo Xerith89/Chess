@@ -106,11 +106,11 @@ std::vector<std::pair<Coords, Coords>> Bishop::GetMoves()
 
 	if (whitePiece)
 	{
-		brd.SetWhitePieceTargets(myTargetList);
+		brd.whitePieceTargets.insert(myTargetList.begin(), myTargetList.end());
 	}
 	else
 	{
-		brd.SetBlackPieceTargets(myTargetList);
+		brd.blackPieceTargets.insert(myTargetList.begin(), myTargetList.end());
 	}
 	return moves;
 }

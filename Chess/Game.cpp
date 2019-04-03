@@ -3,10 +3,11 @@
 
 /*
 BUG LIST
-.Possible that white piece targets are not fully working - needs exploring
 TODO LIST
-.Check moves - for pieces that are able to block or take a checking piece.
+.Take or block a checking piece
 .Promotion of pawns
+.Enpassant
+.Castling
 */
 
 Game::Game(Window & wnd)
