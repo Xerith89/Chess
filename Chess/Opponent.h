@@ -10,13 +10,18 @@
 #include <algorithm>
 
 class Opponent{
-	using Map = std::map<std::pair<int, int>, std::unique_ptr<Piece>>;
+	using Map = std::map<std::pair<int, int>, std::shared_ptr<Piece>>;
 public:
 	Opponent(Board& brd);
 	void DoTurn();
+	bool GetCmated()const;
+	void DrawPieces(Graphics& gfx)const;
+	void DrawChecked(Graphics& gfx)const;
 private:
+	Sprite inCheck;
 	std::vector<std::pair<Coords, Coords>> movelist;
 	bool checked = false;
+	bool cmated = false;
 	void TestForCheck();
 	void GenerationZero();
 	bool humanOpponent;

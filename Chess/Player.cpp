@@ -4,7 +4,8 @@ Player::Player(Window & wnd, Board & brd)
 	:
 	wnd(wnd),
 	brd(brd),
-	target("./Sprites/target.bmp")
+	target("./Sprites/target.bmp"),
+	inCheck("./Sprites/checked.bmp")
 {
 }
 
@@ -25,11 +26,24 @@ void Player::DoTurn()
 			if (piece != brd.whitePieces.end())
 			{
 				TestForCheck();
-				//If the piece exists then store it and get the moves for it
+				//If the piece exists then store it and get the moves for it - different moves depending on whether we are checked or not
 				pieceSelected = true;
-				(!checked) ? selectedMoves = piece->second->GetMoves(&brd.whitePieces, &brd.blackPieces, brd.whitePieceTargets, brd.GetBlackKingLoc(), brd.blackPieceTargets, brd.GetWhiteKingLoc()) :
-					piece->second->GetCheckedMoves(&brd.whitePieces, &brd.blackPieces, brd.whitePieceTargets, brd.GetBlackKingLoc(), brd.blackPieceTargets, brd.GetWhiteKingLoc());
-
+				selectedMoves = piece->second->GetMoves();
+								
+				//If we have no possible moves and we're chcked then game over.
+				if (checked)
+				{
+					for (const auto& p : brd.blackPieces)
+					{
+						auto temp = p.second->GetMoves();
+						movelist.insert(movelist.end(), temp.begin(), temp.end());
+					}
+					if (movelist.size() == 0)
+					{
+						cMated = true;
+					}
+					return;
+				}
 				//We didn't click something with valid moves
 				if (selectedMoves.empty())
 				{
@@ -50,7 +64,7 @@ void Player::DoTurn()
 			{
 				//Insert at new position and delete old one
 				piece->second.get()->MoveTo({ selectedTarget.x, selectedTarget.y });
-				brd.whitePieces.insert_or_assign({ selectedTarget.x, selectedTarget.y }, std::move(brd.whitePieces.find({ selectedPiece.x,selectedPiece.y })->second));
+				brd.whitePieces.insert_or_assign({ selectedTarget.x, selectedTarget.y }, std::move(piece->second));
 				brd.whitePieces.erase({ selectedPiece.x,selectedPiece.y });
 				
 				//Check if we're moving our king, if so then update the king's position
@@ -68,7 +82,7 @@ void Player::DoTurn()
 			brd.whitePieceTargets.clear();
 			for (const auto& p : brd.whitePieces)
 			{
-				p.second->GetMoves(&brd.whitePieces, &brd.blackPieces, brd.whitePieceTargets, brd.GetBlackKingLoc(), brd.blackPieceTargets, brd.GetWhiteKingLoc());
+				p.second->GetTargets(&brd.blackPieces);
 			}
 		}	
 	}
@@ -94,6 +108,15 @@ void Player::DrawPossibleMoves(Graphics& gfx)
 	}
 }
 
+void Player::DrawPieces(Graphics & gfx) const
+{
+	for (const auto& x : brd.whitePieces)
+	{
+		auto position = brd.TranslateCoords(x.second.get());
+		gfx.DrawSprite(position.first, position.second, x.second->GetSprite());
+	}
+}
+
 bool Player::PlayerTurn() const
 {
 	return playerTurn;
@@ -104,11 +127,16 @@ void Player::SetPlayerTurn()
 	playerTurn = true;
 }
 
+bool Player::GetCMated() const
+{
+	return cMated;
+}
+
 void Player::TestForCheck()
 {
 	//Go through the possible targets of the black pieces and see if we're checked.
-	for (const auto& m : brd.blackPieceTargets)
-	if (m == brd.GetWhiteKingLoc())
+	const auto p = std::find(brd.blackPieceTargets.begin(), brd.blackPieceTargets.end(), brd.GetWhiteKingLoc());
+	if (p != brd.blackPieceTargets.end())
 	{
 		checked = true;
 		return;

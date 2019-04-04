@@ -7,6 +7,7 @@
 #include <set>
 
 class Board {
+	using Map = std::map<std::pair<int, int>, std::shared_ptr<Piece>>;
 public:
 	Board(const std::string spritename, int x, int y);
 	~Board() = default;
@@ -15,9 +16,8 @@ public:
 	void DrawBoard(Graphics& gfx);
 	int GetCellWidth();
 	int GetCellHeight();
-	void UpdateBoard(Window& wnd);
-	std::map<std::pair<int,int>, std::unique_ptr<Piece>> whitePieces;
-	std::map<std::pair<int,int>, std::unique_ptr<Piece>> blackPieces;
+	Map whitePieces;
+	Map blackPieces;
 	std::set<Coords> whitePieceTargets;
 	std::set<Coords> blackPieceTargets;
 	std::pair<int, int> TranslateCoords(Piece* piece);
@@ -27,6 +27,7 @@ public:
 	Coords GetWhiteKingLoc()const;
 	void UpdateBlackKingLoc(Coords new_loc);
 	Coords GetBlackKingLoc()const;
+	bool CheckValidMove(const Coords from, const Coords to,const bool whitePiece);
 private:
 	Coords whiteKingLoc = { 4,7 };
 	Coords blackKingLoc = { 4,0 };

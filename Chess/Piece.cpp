@@ -13,12 +13,13 @@ Coords Piece::GetCoords()const
 	return coords;
 }
 
-Piece::Piece(Coords coords, const std::string spritename, const Board& brd)
+Piece::Piece(Coords coords, const std::string spritename, Board& brd,bool white)
 	:
 	coords(coords),
 	startCoords(coords),
 	pieceSprite(spritename),
-	brd(brd)
+	brd(brd),
+	whitePiece(white)
 {
 }
 
@@ -45,15 +46,4 @@ void Piece::MoveTo(Coords new_coords)
 		coords = new_coords;
 	}
 }
-
-void Piece::SetSelected(bool status)
-{
-	selected = status;
-}
-
-bool Piece::GetSelected() const
-{
-	return selected;
-}
-
 

@@ -13,18 +13,6 @@ Board::Board(const std::string spritename, int x, int y)
 void Board::DrawBoard(Graphics& gfx)
 {
 	gfx.DrawSprite(x, y, BoardSprite);
-
-	for (const auto& x : whitePieces)
-	{
-		auto position = TranslateCoords(x.second.get());
-		gfx.DrawSprite(position.first, position.second, x.second->GetSprite());
-	}
-
-	for (const auto& x : blackPieces)
-	{
-		auto position = TranslateCoords(x.second.get());
-		gfx.DrawSprite(position.first, position.second, x.second->GetSprite());
-	}
 }
 
 int Board::GetCellWidth()
@@ -35,11 +23,6 @@ int Board::GetCellWidth()
 int Board::GetCellHeight()
 {
 	return cellHeight;
-}
-
-void Board::UpdateBoard(Window & wnd)
-{
-
 }
 
 std::pair<int, int> Board::TranslateCoords(Piece* piece)
@@ -101,5 +84,42 @@ void Board::UpdateBlackKingLoc(Coords new_loc)
 Coords Board::GetBlackKingLoc() const
 {
 	return blackKingLoc;
+}
+
+bool Board::CheckValidMove(const Coords from, const Coords to,const bool whitePiece)
+{
+	//check what colour the piece we're playing is.
+	const Map* opponentPieces = &blackPieces;
+	auto* opponentTargets = &blackPieceTargets;
+	Map myPieces = whitePieces;
+	auto myKing = whiteKingLoc;
+	
+	if (!whitePiece)
+	{
+		opponentPieces = &whitePieces;
+		opponentTargets = &whitePieceTargets;
+		myPieces = blackPieces;
+		myKing = blackKingLoc;
+	}
+
+	//look up the piece with the from coords
+	auto piece = myPieces.find({ from.x,from.y });
+	
+	//If we find it
+	if (piece != myPieces.end())
+	{
+		//Add the new position
+		myPieces.insert_or_assign({ to.x, to.y }, std::move(piece->second));
+		//remove the old position
+		myPieces.erase({ from.x,from.y });
+		//Clear opponent targets then get them all passed on this new updated map of pieces
+		opponentTargets->clear();
+		for (const auto& p : *opponentPieces)
+		{
+			p.second->GetTargets(&myPieces);
+		}
+	}
+	//if count is 0 then the move doesn't cause check and we'll add it.
+	return opponentTargets->count({ myKing }) == 0;
 }
 
