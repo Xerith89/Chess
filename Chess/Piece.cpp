@@ -47,14 +47,3 @@ void Piece::MoveTo(Coords new_coords)
 	}
 }
 
-void Piece::SetSelected(bool status)
-{
-	selected = status;
-}
-
-bool Piece::GetSelected() const
-{
-	return selected;
-}
-
-
