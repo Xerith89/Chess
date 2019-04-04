@@ -17,12 +17,12 @@ public:
 	bool GetCmated()const;
 	void DrawPieces(Graphics& gfx)const;
 	void DrawChecked(Graphics& gfx)const;
+	void TestForCheck();
 private:
 	Sprite inCheck;
 	std::vector<std::pair<Coords, Coords>> movelist;
 	bool checked = false;
 	bool cmated = false;
-	void TestForCheck();
 	void GenerationZero();
 	bool humanOpponent;
 	Board& brd;

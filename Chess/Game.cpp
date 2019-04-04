@@ -58,7 +58,9 @@ void Game::Update()
 		if (player.PlayerTurn())
 		{
 			player.DoTurn();
+			player.TestForCheck();
 		}
+		opponent.TestForCheck();
 		if (opponent.GetCmated())
 		{
 			gameStatus = GameState::OPPONENTCHECKMATED;
@@ -67,7 +69,9 @@ void Game::Update()
 		{
 			opponent.DoTurn();
 			player.SetPlayerTurn();
+			opponent.TestForCheck();
 		}
+		player.TestForCheck();
 		if (player.GetCMated())
 		{
 			gameStatus = GameState::PLAYERCHECKMATED;
@@ -82,17 +86,21 @@ void Game::Render()
 	case GameState::NORMAL:
 		brd.DrawBoard(gfx);
 		player.DrawPossibleMoves(gfx);
+		player.DrawChecked(gfx);
+		opponent.DrawChecked(gfx);
 		player.DrawPieces(gfx);
 		opponent.DrawPieces(gfx);
 		break;
 	case GameState::OPPONENTCHECKMATED:
 		brd.DrawBoard(gfx);
+		opponent.DrawChecked(gfx);
 		player.DrawPieces(gfx);
 		opponent.DrawPieces(gfx);
 		gfx.DrawSprite(200, 200, playerwin);
 		break;
 	case GameState::PLAYERCHECKMATED:
 		brd.DrawBoard(gfx);
+		player.DrawChecked(gfx);
 		player.DrawPieces(gfx);
 		opponent.DrawPieces(gfx);
 		gfx.DrawSprite(200, 200, playerlose);

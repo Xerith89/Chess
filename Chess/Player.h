@@ -11,14 +11,15 @@ public:
 	void DoTurn();
 	void DrawPossibleMoves(Graphics& gfx);
 	void DrawPieces(Graphics& gfx)const;
+	void DrawChecked(Graphics& gfx)const;
 	bool PlayerTurn()const;
 	void SetPlayerTurn();
 	bool GetCMated()const;
+	void TestForCheck();
 private:
 	King* kingInstance = nullptr;
 	bool checked = false;
 	bool cMated = false;
-	void TestForCheck();
 	Sprite target;
 	Sprite inCheck;
 	Window& wnd;

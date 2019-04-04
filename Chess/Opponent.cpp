@@ -40,7 +40,7 @@ void Opponent::DrawChecked(Graphics & gfx) const
 void Opponent::TestForCheck()
 {
 	//Go through the possible targets of the white pieces and see if we're checked.
-	const auto p = std::find(brd.whitePieceTargets.begin(), brd.whitePieceTargets.end(), brd.GetWhiteKingLoc());
+	const auto p = std::find(brd.whitePieceTargets.begin(), brd.whitePieceTargets.end(), brd.GetBlackKingLoc());
 	if (p != brd.whitePieceTargets.end())
 	{
 		checked = true;

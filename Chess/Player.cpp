@@ -117,6 +117,15 @@ void Player::DrawPieces(Graphics & gfx) const
 	}
 }
 
+void Player::DrawChecked(Graphics & gfx) const
+{
+	if (checked)
+	{
+		auto position = brd.TranslateCoords({ brd.GetWhiteKingLoc() });
+		gfx.DrawSprite(position.first, position.second, inCheck);
+	}
+}
+
 bool Player::PlayerTurn() const
 {
 	return playerTurn;
