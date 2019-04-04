@@ -20,7 +20,7 @@ protected:
 	Coords startCoords;
 	bool selected = false;
 	std::vector<std::pair<Coords, Coords>>  moves;
-	using Map = std::map<std::pair<int,int>, std::unique_ptr<Piece>>;
+	using Map = std::map<std::pair<int,int>, std::shared_ptr<Piece>>;
 	bool InbetweenCoords(const Coords& origin, const Coords& dest, const Coords& intersecting)const;
 	bool whitePiece;
 	Coords opponentKingPos;
@@ -36,4 +36,5 @@ public:
 	void MoveBy(Coords delta);
 	void MoveTo(Coords new_coords);
 	virtual std::vector<std::pair<Coords, Coords>> GetMoves() = 0;
+	virtual void GetTargets(Map* oppoPieces) = 0;
 };

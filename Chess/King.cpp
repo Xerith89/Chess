@@ -138,4 +138,10 @@ std::vector<std::pair<Coords, Coords>> King::GetMoves()
 	return moves;
 }
 
+void King::GetTargets(Map* oppoPieces)
+{
+	myTargetList.clear();
+	GetMoves();
+}
+
 

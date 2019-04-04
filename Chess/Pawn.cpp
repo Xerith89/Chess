@@ -11,22 +11,16 @@ std::vector<std::pair<Coords, Coords>> Pawn::GetMoves()
 {
 	if (whitePiece)
 	{
-		myKingPos = brd.GetWhiteKingLoc();
 		myPieces = &brd.whitePieces;
-		myTargetList = brd.whitePieceTargets;
 		opponentKingPos = brd.GetBlackKingLoc();
 		opponentPieces = &brd.blackPieces;
-		opponentTargetList = brd.blackPieceTargets;
 		y_offset = 1;
 	}
 	else
 	{
-		myKingPos = brd.GetBlackKingLoc();
 		myPieces = &brd.blackPieces;
-		myTargetList = brd.blackPieceTargets;
 		opponentKingPos = brd.GetWhiteKingLoc();
 		opponentPieces = &brd.whitePieces;
-		opponentTargetList = brd.whitePieceTargets;
 		y_offset = -1;
 	}
 
@@ -44,7 +38,7 @@ std::vector<std::pair<Coords, Coords>> Pawn::GetMoves()
 	{
 		while (myPieces->count({ coords.x, coords.y - y_offset }) == 0 && std::abs(y_offset) < 3)
 		{
-			if (opponentPieces->count({ coords.x,coords.y - y_offset }) == 0)
+			if (opponentPieces->count({ coords.x,coords.y - y_offset }) == 0 && brd.CheckValidMove(coords, Coords{ coords.x,coords.y - y_offset }, whitePiece))
 			{
 				
 				assert(y_offset < 10);
@@ -64,7 +58,7 @@ std::vector<std::pair<Coords, Coords>> Pawn::GetMoves()
 	//If we have moved then just check the next 
 		while (myPieces->count({ coords.x,coords.y - y_offset }) == 0 && y_offset < 2)
 		{
-			if (opponentPieces->count({ coords.x,coords.y - y_offset }) == 0)
+			if (opponentPieces->count({ coords.x,coords.y - y_offset }) == 0 && brd.CheckValidMove(coords, Coords{ coords.x,coords.y - y_offset }, whitePiece))
 			{
 				assert(y_offset < 10);
 				moves.push_back(std::make_pair(coords, Coords{ coords.x,coords.y - y_offset }));
@@ -77,13 +71,30 @@ std::vector<std::pair<Coords, Coords>> Pawn::GetMoves()
 	if (opponentPieces->count({ coords.x - 1,coords.y - attackOffset }) == 1)
 	{
 		assert(y_offset < 10);
-		if (Coords{ coords.x - 1,coords.y - attackOffset } != opponentKingPos)
+		if (Coords{ coords.x - 1,coords.y - attackOffset } != opponentKingPos && brd.CheckValidMove(coords, Coords{ coords.x - 1,coords.y - attackOffset }, whitePiece))
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x - 1,coords.y - attackOffset }));
 		}
 		
 	}
+			
+	if (opponentPieces->count({ coords.x + 1,coords.y - attackOffset }) == 1)
+	{
+		assert(y_offset < 10);
+		if (Coords{ coords.x + 1,coords.y - attackOffset } != opponentKingPos && brd.CheckValidMove(coords, Coords{ coords.x + 1,coords.y - attackOffset }, whitePiece))
+		{
+			moves.push_back(std::make_pair(coords, Coords{ coords.x + 1,coords.y - attackOffset }));
+		}
 		
+	}
+
+	return moves;
+}
+
+void Pawn::GetTargets(Map* oppoPieces)
+{
+	(whitePiece) ?	myTargetList = brd.whitePieceTargets :	myTargetList = brd.blackPieceTargets;
+	myTargetList.clear();
 	if (!whitePiece)
 	{
 		myTargetList.insert(Coords{ coords.x - 1,coords.y + 1 });
@@ -94,16 +105,6 @@ std::vector<std::pair<Coords, Coords>> Pawn::GetMoves()
 		myTargetList.insert(Coords{ coords.x - 1,coords.y - 1 });
 		myTargetList.insert(Coords{ coords.x + 1,coords.y - 1 });
 	}
-	
-	if (opponentPieces->count({ coords.x + 1,coords.y - attackOffset }) == 1)
-	{
-		assert(y_offset < 10);
-		if (Coords{ coords.x + 1,coords.y - attackOffset } != opponentKingPos)
-		{
-			moves.push_back(std::make_pair(coords, Coords{ coords.x + 1,coords.y - attackOffset }));
-		}
-		
-	}
 
 	if (whitePiece)
 	{
@@ -113,7 +114,6 @@ std::vector<std::pair<Coords, Coords>> Pawn::GetMoves()
 	{
 		brd.blackPieceTargets.insert(myTargetList.begin(), myTargetList.end());
 	}
-	return moves;
 }
 
 

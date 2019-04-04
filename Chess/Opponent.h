@@ -10,7 +10,7 @@
 #include <algorithm>
 
 class Opponent{
-	using Map = std::map<std::pair<int, int>, std::unique_ptr<Piece>>;
+	using Map = std::map<std::pair<int, int>, std::shared_ptr<Piece>>;
 public:
 	Opponent(Board& brd);
 	void DoTurn();

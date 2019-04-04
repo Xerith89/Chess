@@ -107,6 +107,6 @@ void Opponent::GenerationZero()
 	brd.blackPieceTargets.clear();
 	for (const auto& p : brd.blackPieces)
 	{
-		p.second->GetMoves();
+		p.second->GetTargets(&brd.whitePieces);
 	}
 }

@@ -86,3 +86,37 @@ Coords Board::GetBlackKingLoc() const
 	return blackKingLoc;
 }
 
+bool Board::CheckValidMove(const Coords from, const Coords to,const bool whitePiece)
+{
+	//check what colour the piece we're playing is.
+	const Map* opponentPieces = &blackPieces;
+	auto* opponentTargets = &blackPieceTargets;
+	Map myPieces = whitePieces;
+	auto myKing = whiteKingLoc;
+	
+	if (!whitePiece)
+	{
+		opponentPieces = &whitePieces;
+		opponentTargets = &whitePieceTargets;
+		myPieces = blackPieces;
+		myKing = blackKingLoc;
+	}
+
+	//look up the piece with the from coords
+	auto piece = myPieces.find({ from.x,from.y });
+	
+	if (piece != myPieces.end())
+	{
+		myPieces.insert_or_assign({ to.x, to.y }, std::move(piece->second));
+		myPieces.erase({ from.x,from.y });
+		
+		opponentTargets->clear();
+		for (const auto& p : *opponentPieces)
+		{
+			p.second->GetTargets(&myPieces);
+		}
+	}
+	
+	return opponentTargets->count({ myKing }) == 0;
+}
+

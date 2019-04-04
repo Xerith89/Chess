@@ -31,9 +31,17 @@ void Player::DoTurn()
 				selectedMoves = piece->second->GetMoves();
 								
 				//If we have no possible moves and we're chcked then game over.
-				if (checked && selectedMoves.size() == 0)
+				if (checked)
 				{
-					cMated = true;
+					for (const auto& p : brd.blackPieces)
+					{
+						auto temp = p.second->GetMoves();
+						movelist.insert(movelist.end(), temp.begin(), temp.end());
+					}
+					if (movelist.size() == 0)
+					{
+						cMated = true;
+					}
 					return;
 				}
 				//We didn't click something with valid moves
@@ -56,7 +64,7 @@ void Player::DoTurn()
 			{
 				//Insert at new position and delete old one
 				piece->second.get()->MoveTo({ selectedTarget.x, selectedTarget.y });
-				brd.whitePieces.insert_or_assign({ selectedTarget.x, selectedTarget.y }, std::move(brd.whitePieces.find({ selectedPiece.x,selectedPiece.y })->second));
+				brd.whitePieces.insert_or_assign({ selectedTarget.x, selectedTarget.y }, std::move(piece->second));
 				brd.whitePieces.erase({ selectedPiece.x,selectedPiece.y });
 				
 				//Check if we're moving our king, if so then update the king's position
@@ -74,7 +82,7 @@ void Player::DoTurn()
 			brd.whitePieceTargets.clear();
 			for (const auto& p : brd.whitePieces)
 			{
-				p.second->GetMoves();
+				p.second->GetTargets(&brd.blackPieces);
 			}
 		}	
 	}
@@ -106,15 +114,6 @@ void Player::DrawPieces(Graphics & gfx) const
 	{
 		auto position = brd.TranslateCoords(x.second.get());
 		gfx.DrawSprite(position.first, position.second, x.second->GetSprite());
-	}
-}
-
-void Player::DrawChecked(Graphics & gfx) const
-{
-	if (checked)
-	{
-		auto position = brd.TranslateCoords({ brd.GetWhiteKingLoc() });
-		gfx.DrawSprite(position.first, position.second, inCheck);
 	}
 }
 

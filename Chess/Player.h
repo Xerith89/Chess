@@ -5,13 +5,12 @@
 #include "King.h"
 
 class Player {
-	using Map = std::map<std::pair<int, int>, std::unique_ptr<Piece>>;
+	using Map = std::map<std::pair<int, int>, std::shared_ptr<Piece>>;
 public:
 	Player(Window& wnd, Board& brd);
 	void DoTurn();
 	void DrawPossibleMoves(Graphics& gfx);
 	void DrawPieces(Graphics& gfx)const;
-	void DrawChecked(Graphics& gfx)const;
 	bool PlayerTurn()const;
 	void SetPlayerTurn();
 	bool GetCMated()const;
@@ -28,5 +27,6 @@ private:
 	Coords selectedTarget;
 	bool pieceSelected = false;
 	std::vector<std::pair<Coords, Coords>> selectedMoves;
+	std::vector<std::pair<Coords, Coords>> movelist;
 	bool playerTurn = true;
 };
