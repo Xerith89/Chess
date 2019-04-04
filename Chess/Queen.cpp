@@ -193,9 +193,14 @@ void Queen::GetTargets(Map* oppoPieces)
 	int new_x = 1;
 	int new_y = 1;
 	//Check pieces left up - we don't want to go past our white pieces or the end of the board
-	while (opponentPieces->count({ coords.x,coords.y }) == 0 && myPieces->count({ coords.x - new_x,coords.y - new_y }) == 0 && (coords.x - new_x) >= minCoord.x && (coords.y - new_y) >= minCoord.y)
+	while (opponentPieces->count({ coords.x,coords.y }) == 0 && (coords.x - new_x) >= minCoord.x && (coords.y - new_y) >= minCoord.y)
 	{
 		myTargetList.insert(Coords{ coords.x - new_x,coords.y - new_y });
+
+		if (myPieces->count({ coords.x - new_x,coords.y - new_y }) > 0)
+		{
+			break;
+		}
 
 		if (opponentPieces->count({ coords.x - new_x, coords.y - new_y }) > 0 && opponentKingPos != Coords{ coords.x - new_x, coords.y - new_y })
 		{
@@ -208,9 +213,14 @@ void Queen::GetTargets(Map* oppoPieces)
 	new_x = 1;
 	new_y = 1;
 	//Check pieces right up - we don't want to go past our white pieces or the end of the board
-	while (opponentPieces->count({ coords.x,coords.y }) == 0 && myPieces->count({ coords.x + new_x,coords.y - new_y }) == 0 && (coords.x + new_x) <= maxCoord.x && (coords.y - new_y) >= minCoord.y)
+	while (opponentPieces->count({ coords.x,coords.y }) == 0 && (coords.x + new_x) <= maxCoord.x && (coords.y - new_y) >= minCoord.y)
 	{
 		myTargetList.insert(Coords{ coords.x + new_x,coords.y - new_y });
+		
+		if (myPieces->count({ coords.x + new_x,coords.y - new_y }) > 0)
+		{
+			break;
+		}
 
 		if (opponentPieces->count({ coords.x + new_x, coords.y - new_y }) > 0 && opponentKingPos != Coords{ coords.x + new_x, coords.y - new_y })
 		{
@@ -223,9 +233,14 @@ void Queen::GetTargets(Map* oppoPieces)
 	new_x = 1;
 	new_y = 1;
 	//Check pieces right down - we don't want to go past our white pieces or the end of the board
-	while (opponentPieces->count({ coords.x,coords.y }) == 0 && myPieces->count({ coords.x + new_x,coords.y + new_y }) == 0 && (coords.x + new_x) <= maxCoord.x && (coords.y + new_y) <= maxCoord.y)
+	while (opponentPieces->count({ coords.x,coords.y }) == 0 && (coords.x + new_x) <= maxCoord.x && (coords.y + new_y) <= maxCoord.y)
 	{
 		myTargetList.insert(Coords{ coords.x + new_x,coords.y + new_y });
+
+		if (myPieces->count({ coords.x + new_x,coords.y + new_y }) > 0)
+		{
+			break;
+		}
 
 		if (opponentPieces->count({ coords.x + new_x, coords.y + new_y }) > 0 && opponentKingPos != Coords{ coords.x + new_x, coords.y + new_y })
 		{
@@ -238,9 +253,14 @@ void Queen::GetTargets(Map* oppoPieces)
 	new_x = 1;
 	new_y = 1;
 	//Check pieces left down - we don't want to go past our white pieces or the end of the board
-	while (opponentPieces->count({ coords.x,coords.y }) == 0 && myPieces->count({ coords.x - new_x,coords.y + new_y }) == 0 && (coords.x - new_x) >= minCoord.x && (coords.y + new_y) <= maxCoord.y)
+	while (opponentPieces->count({ coords.x,coords.y }) == 0 && (coords.x - new_x) >= minCoord.x && (coords.y + new_y) <= maxCoord.y)
 	{
 		myTargetList.insert(Coords{ coords.x - new_x,coords.y + new_y });
+		
+		if (myPieces->count({ coords.x - new_x,coords.y + new_y }) > 0)
+		{
+			break;
+		}
 
 		if (opponentPieces->count({ coords.x - new_x, coords.y + new_y }) > 0 && opponentKingPos != Coords{ coords.x - new_x, coords.y + new_y })
 		{
@@ -250,9 +270,14 @@ void Queen::GetTargets(Map* oppoPieces)
 		new_y++;
 	}
 
-	while (opponentPieces->count({ coords.x,coords.y }) == 0 && myPieces->count({ coords.x - new_x,coords.y }) == 0 && (coords.x - new_x) >= minCoord.x)
+	while (opponentPieces->count({ coords.x,coords.y }) == 0 && (coords.x - new_x) >= minCoord.x)
 	{
 		myTargetList.insert(Coords{ coords.x - new_x,coords.y });
+		
+		if (myPieces->count({ coords.x - new_x,coords.y }) > 0)
+		{
+			break;
+		}
 
 		if (opponentPieces->count({ coords.x - new_x, coords.y }) > 0 && opponentKingPos != Coords{ coords.x - new_x, coords.y })
 		{
@@ -263,9 +288,14 @@ void Queen::GetTargets(Map* oppoPieces)
 	}
 	//Reset x and check right
 	new_x = 1;
-	while (opponentPieces->count({ coords.x,coords.y }) == 0 && myPieces->count({ coords.x + new_x,coords.y }) == 0 && (coords.x + new_x) <= maxCoord.x)
+	while (opponentPieces->count({ coords.x,coords.y }) == 0 && (coords.x + new_x) <= maxCoord.x)
 	{
 		myTargetList.insert(Coords{ coords.x + new_x,coords.y });
+		
+		if (myPieces->count({ coords.x + new_x,coords.y }) > 0)
+		{
+			break;
+		}
 
 		if (opponentPieces->count({ coords.x + new_x, coords.y }) > 0 && opponentKingPos != Coords{ coords.x + new_x, coords.y })
 		{
@@ -275,9 +305,14 @@ void Queen::GetTargets(Map* oppoPieces)
 	}
 
 	new_x = 1;
-	while (opponentPieces->count({ coords.x,coords.y }) == 0 && myPieces->count({ coords.x - new_x,coords.y }) == 0 && (coords.x - new_x) >= minCoord.x)
+	while (opponentPieces->count({ coords.x,coords.y }) == 0 && (coords.x - new_x) >= minCoord.x)
 	{
 		myTargetList.insert(Coords{ coords.x - new_x,coords.y });
+		
+		if (myPieces->count({ coords.x - new_x,coords.y }) > 0)
+		{
+			break;
+		}
 
 		if (opponentPieces->count({ coords.x - new_x, coords.y }) > 0 && opponentKingPos != Coords{ coords.x - new_x, coords.y })
 		{
@@ -287,9 +322,14 @@ void Queen::GetTargets(Map* oppoPieces)
 	}
 	new_y = 1;
 	//check up
-	while (opponentPieces->count({ coords.x,coords.y }) == 0 && myPieces->count({ coords.x,coords.y - new_y }) == 0 && (coords.y - new_y) >= minCoord.y)
+	while (opponentPieces->count({ coords.x,coords.y }) == 0 && (coords.y - new_y) >= minCoord.y)
 	{
 		myTargetList.insert({ coords.x,coords.y - new_y });
+		
+		if (myPieces->count({ coords.x,coords.y - new_y }) > 0)
+		{
+			break;
+		}
 
 		if (opponentPieces->count({ coords.x,coords.y - new_y }) > 0 && opponentKingPos != Coords{ coords.x,coords.y - new_y })
 		{
@@ -299,9 +339,14 @@ void Queen::GetTargets(Map* oppoPieces)
 	}
 	//Check down
 	new_y = 1;
-	while (opponentPieces->count({ coords.x,coords.y }) == 0 && myPieces->count({ coords.x,coords.y + new_y }) == 0 && (coords.y + new_y) <= maxCoord.y)
+	while (opponentPieces->count({ coords.x,coords.y }) == 0 && (coords.y + new_y) <= maxCoord.y)
 	{
 		myTargetList.insert(Coords{ coords.x,coords.y + new_y });
+		
+		if (myPieces->count({ coords.x,coords.y + new_y }) > 0)
+		{
+			break;
+		}
 
 		if (opponentPieces->count({ coords.x,coords.y + new_y }) > 0 && opponentKingPos != Coords{ coords.x,coords.y + new_y })
 		{

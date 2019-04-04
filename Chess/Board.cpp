@@ -105,18 +105,21 @@ bool Board::CheckValidMove(const Coords from, const Coords to,const bool whitePi
 	//look up the piece with the from coords
 	auto piece = myPieces.find({ from.x,from.y });
 	
+	//If we find it
 	if (piece != myPieces.end())
 	{
+		//Add the new position
 		myPieces.insert_or_assign({ to.x, to.y }, std::move(piece->second));
+		//remove the old position
 		myPieces.erase({ from.x,from.y });
-		
+		//Clear opponent targets then get them all passed on this new updated map of pieces
 		opponentTargets->clear();
 		for (const auto& p : *opponentPieces)
 		{
 			p.second->GetTargets(&myPieces);
 		}
 	}
-	
+	//if count is 0 then the move doesn't cause check and we'll add it.
 	return opponentTargets->count({ myKing }) == 0;
 }
 

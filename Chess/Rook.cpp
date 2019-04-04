@@ -100,10 +100,14 @@ void Rook::GetTargets(Map* oppoPieces)
 	opponentPieces = oppoPieces;
 	int new_x = 1;
 	//Check pieces to our left - we don't want to go past our white pieces or the end of the board
-	while (opponentPieces->count({ coords.x,coords.y }) == 0 && myPieces->count({ coords.x - new_x,coords.y }) == 0 && (coords.x - new_x) >= minCoord.x)
+	while (opponentPieces->count({ coords.x,coords.y }) == 0 && (coords.x - new_x) >= minCoord.x)
 	{
-		
 		myTargetList.insert(Coords{ coords.x - new_x,coords.y });
+	
+		if (myPieces->count({ coords.x - new_x,coords.y }) > 0)
+		{
+			break;
+		}
 
 		if (opponentPieces->count({ coords.x - new_x, coords.y }) > 0 && opponentKingPos != Coords{ coords.x - new_x, coords.y })
 		{
@@ -113,9 +117,14 @@ void Rook::GetTargets(Map* oppoPieces)
 	}
 	//Reset x and check right
 	new_x = 1;
-	while (opponentPieces->count({ coords.x,coords.y }) == 0 && myPieces->count({ coords.x + new_x,coords.y }) == 0 && (coords.x + new_x) <= maxCoord.x)
+	while (opponentPieces->count({ coords.x,coords.y }) == 0 && (coords.x + new_x) <= maxCoord.x)
 	{
 		myTargetList.insert(Coords{ coords.x + new_x,coords.y });
+		
+		if (myPieces->count({ coords.x + new_x,coords.y }) > 0)
+		{
+			break;
+		}
 
 		if (opponentPieces->count({ coords.x + new_x, coords.y }) > 0 && opponentKingPos != Coords{ coords.x + new_x, coords.y })
 		{
@@ -126,9 +135,14 @@ void Rook::GetTargets(Map* oppoPieces)
 	
 	//check up
 	int new_y = 1;
-	while (opponentPieces->count({ coords.x,coords.y }) == 0 && myPieces->count({ coords.x,coords.y - new_y }) == 0 && (coords.y - new_y) >= minCoord.y)
+	while (opponentPieces->count({ coords.x,coords.y }) == 0 && (coords.y - new_y) >= minCoord.y)
 	{
 		myTargetList.insert(Coords{ coords.x,coords.y - new_y });
+		
+		if (myPieces->count({ coords.x,coords.y - new_y }) > 0)
+		{
+			break;
+		}
 
 		if (opponentPieces->count({ coords.x,coords.y - new_y }) > 0 && opponentKingPos != Coords{ coords.x,coords.y - new_y })
 		{
@@ -138,9 +152,14 @@ void Rook::GetTargets(Map* oppoPieces)
 	}
 	//Check down
 	new_y = 1;
-	while (opponentPieces->count({ coords.x,coords.y }) == 0 && myPieces->count({ coords.x,coords.y + new_y }) == 0 && (coords.y + new_y) <= maxCoord.y)
+	while (opponentPieces->count({ coords.x,coords.y }) == 0 && (coords.y + new_y) <= maxCoord.y)
 	{
 		myTargetList.insert(Coords{ coords.x,coords.y + new_y });
+		
+		if (myPieces->count({ coords.x,coords.y + new_y }) > 0)
+		{
+			break;
+		}
 
 		if (opponentPieces->count({ coords.x,coords.y + new_y }) > 0 && opponentKingPos != Coords{ coords.x,coords.y + new_y })
 		{

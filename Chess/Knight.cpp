@@ -127,48 +127,47 @@ void Knight::GetTargets(Map* oppoPieces)
 	int new_y = 2;
 
 	//check up
-	if (opponentPieces->count({ coords.x,coords.y }) == 0 && myPieces->count({ coords.x - new_x,coords.y - new_y }) == 0 && (coords.y - new_y) >= minCoord.y && (coords.x - new_x) >= minCoord.x)
+	if (opponentPieces->count({ coords.x,coords.y }) == 0 && (coords.y - new_y) >= minCoord.y && (coords.x - new_x) >= minCoord.x)
 	{
 		myTargetList.insert(Coords{ coords.x - new_x,coords.y - new_y });
 	}
 
-	if (opponentPieces->count({ coords.x,coords.y }) == 0 && myPieces->count({ coords.x + new_x,coords.y - new_y }) == 0 && (coords.y - new_y) >= minCoord.y && (coords.x + new_x) <= maxCoord.x)
+	if (opponentPieces->count({ coords.x,coords.y }) == 0 && (coords.y - new_y) >= minCoord.y && (coords.x + new_x) <= maxCoord.x)
 	{
 		myTargetList.insert(Coords{ coords.x + new_x,coords.y - new_y });
 	}
 
 	//check down
-	if (opponentPieces->count({ coords.x,coords.y }) == 0 && myPieces->count({ coords.x - new_x,coords.y + new_y }) == 0 && (coords.y + new_y) <= maxCoord.y && (coords.x - new_x) >= minCoord.x)
+	if (opponentPieces->count({ coords.x,coords.y }) == 0 && (coords.y + new_y) <= maxCoord.y && (coords.x - new_x) >= minCoord.x)
 	{
 		myTargetList.insert(Coords{ coords.x - new_x,coords.y + new_y });
 	}
 
-	if (opponentPieces->count({ coords.x,coords.y }) == 0 && myPieces->count({ coords.x + new_x,coords.y + new_y }) == 0 && (coords.y + new_y) <= maxCoord.y && (coords.x + new_x) <= maxCoord.x)
+	if (opponentPieces->count({ coords.x,coords.y }) == 0 && (coords.y + new_y) <= maxCoord.y && (coords.x + new_x) <= maxCoord.x)
 	{
 		myTargetList.insert(Coords{ coords.x + new_x,coords.y + new_y });
 	}
 
-	//check left
 	new_x = 2;
 	new_y = 1;
-
-	if (opponentPieces->count({ coords.x,coords.y }) == 0 && myPieces->count({ coords.x - new_x,coords.y + new_y }) == 0 && (coords.y + new_y) <= maxCoord.y && (coords.x - new_x) >= minCoord.x)
+	//check left down
+	if (opponentPieces->count({ coords.x,coords.y }) == 0 && (coords.y + new_y) <= maxCoord.y && (coords.x - new_x) >= minCoord.x)
 	{
 		myTargetList.insert(Coords{ coords.x - new_x,coords.y + new_y });
 	}
-
-	if (opponentPieces->count({ coords.x,coords.y }) == 0 && myPieces->count({ coords.x - new_x,coords.y - new_y }) == 0 && (coords.y - new_y) >= minCoord.y && (coords.x - new_x) >= minCoord.x)
+	//check left up
+	if (opponentPieces->count({ coords.x,coords.y }) == 0 && (coords.y - new_y) >= minCoord.y && (coords.x - new_x) >= minCoord.x)
 	{
 
 		myTargetList.insert(Coords{ coords.x - new_x,coords.y - new_y });
 	}
-
-	if (opponentPieces->count({ coords.x,coords.y }) == 0 && myPieces->count({ coords.x + new_x,coords.y + new_y }) == 0 && (coords.y + new_y) <= maxCoord.y && (coords.x + new_x) <= maxCoord.x)
+	//check right down
+	if (opponentPieces->count({ coords.x,coords.y }) == 0 && (coords.y + new_y) <= maxCoord.y && (coords.x + new_x) <= maxCoord.x)
 	{
 		myTargetList.insert(Coords{ coords.x + new_x,coords.y + new_y });
 	}
-
-	if (opponentPieces->count({ coords.x,coords.y }) == 0 && myPieces->count({ coords.x + new_x,coords.y - new_y }) == 0 && (coords.y - new_y) >= minCoord.y && (coords.x + new_x) <= maxCoord.x)
+	//check right up
+	if (opponentPieces->count({ coords.x,coords.y }) == 0 && (coords.y - new_y) >= minCoord.y && (coords.x + new_x) <= maxCoord.x)
 	{
 		myTargetList.insert(Coords{ coords.x + new_x,coords.y - new_y });
 	}

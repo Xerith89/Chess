@@ -3,7 +3,6 @@
 
 /*
 BUG LIST
-.It lets you take a piece even if it leads you into a check move
 TODO LIST
 .Promotion of pawns
 .Enpassant

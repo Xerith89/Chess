@@ -121,11 +121,15 @@ void Bishop::GetTargets(Map* oppoPieces)
 	int new_x = 1;
 	int new_y = 1;
 	//Check targets left up
-	while (opponentPieces->count({ coords.x,coords.y }) == 0 && myPieces->count({ coords.x - new_x,coords.y - new_y }) == 0 && (coords.x - new_x) >= minCoord.x && (coords.y - new_y) >= minCoord.y)
+	while (opponentPieces->count({ coords.x,coords.y }) == 0  && (coords.x - new_x) >= minCoord.x && (coords.y - new_y) >= minCoord.y)
 	{
 		//insert the target into our target list
 		myTargetList.insert(Coords{ coords.x - new_x,coords.y - new_y });
-
+		//If we hit our player then add it as a target and break
+		if (myPieces->count({ coords.x - new_x,coords.y - new_y }) > 0)
+		{
+			break;
+		}
 		//if we encounter an opponent check if it is a king - break if it isn't
 		if (opponentPieces->count({ coords.x - new_x, coords.y - new_y }) > 0 && opponentKingPos != Coords{ coords.x - new_x, coords.y - new_y })
 		{
@@ -138,10 +142,15 @@ void Bishop::GetTargets(Map* oppoPieces)
 
 	new_x = 1;
 	new_y = 1;
-	//Check pieces right up - we don't want to go past our white pieces or the end of the board
-	while (opponentPieces->count({ coords.x,coords.y }) == 0 && myPieces->count({ coords.x + new_x,coords.y - new_y }) == 0 && (coords.x + new_x) <= maxCoord.x && (coords.y - new_y) >= minCoord.y)
+	//Check pieces right up 
+	while (opponentPieces->count({ coords.x,coords.y }) == 0 && (coords.x + new_x) <= maxCoord.x && (coords.y - new_y) >= minCoord.y)
 	{
 		myTargetList.insert(Coords{ coords.x + new_x,coords.y - new_y });
+		
+		if (myPieces->count({ coords.x + new_x,coords.y - new_y }) > 0)
+		{
+			break;
+		}
 
 		if (opponentPieces->count({ coords.x + new_x, coords.y - new_y }) > 0 && opponentKingPos != Coords{ coords.x + new_x, coords.y - new_y })
 		{
@@ -153,10 +162,15 @@ void Bishop::GetTargets(Map* oppoPieces)
 
 	new_x = 1;
 	new_y = 1;
-	//Check pieces right down - we don't want to go past our white pieces or the end of the board
-	while (opponentPieces->count({ coords.x,coords.y }) == 0 && myPieces->count({ coords.x + new_x,coords.y + new_y }) == 0 && (coords.x + new_x) <= maxCoord.x && (coords.y + new_y) <= maxCoord.y)
+	//Check pieces right down 
+	while (opponentPieces->count({ coords.x,coords.y }) == 0 && (coords.x + new_x) <= maxCoord.x && (coords.y + new_y) <= maxCoord.y)
 	{
 		myTargetList.insert(Coords{ coords.x + new_x,coords.y + new_y });
+
+		if (myPieces->count({ coords.x + new_x,coords.y + new_y }) > 0)
+		{
+			break;
+		}
 
 		if (opponentPieces->count({ coords.x + new_x, coords.y + new_y }) > 0 && opponentKingPos != Coords{ coords.x + new_x, coords.y + new_y })
 		{
@@ -168,11 +182,16 @@ void Bishop::GetTargets(Map* oppoPieces)
 
 	new_x = 1;
 	new_y = 1;
-	//Check pieces left down - we don't want to go past our white pieces or the end of the board
-	while (opponentPieces->count({ coords.x,coords.y }) == 0 && myPieces->count({ coords.x - new_x,coords.y + new_y }) == 0 && (coords.x - new_x) >= minCoord.x && (coords.y + new_y) <= maxCoord.y)
+	//Check pieces left down
+	while (opponentPieces->count({ coords.x,coords.y }) == 0 && (coords.x - new_x) >= minCoord.x && (coords.y + new_y) <= maxCoord.y)
 	{
 		myTargetList.insert(Coords{ coords.x - new_x,coords.y + new_y });
 		
+		if (myPieces->count({ coords.x - new_x,coords.y + new_y }) > 0)
+		{
+			break;
+		}
+
 		if (opponentPieces->count({ coords.x - new_x, coords.y + new_y }) > 0 && opponentKingPos != Coords{ coords.x - new_x, coords.y + new_y })
 		{
 			break;
@@ -181,6 +200,7 @@ void Bishop::GetTargets(Map* oppoPieces)
 		new_y++;
 	}
 
+	//add our targets to the main target list
 	if (whitePiece)
 	{
 		brd.whitePieceTargets.insert(myTargetList.begin(), myTargetList.end());
