@@ -62,27 +62,34 @@ void Game::Update()
 	{
 	case GameState::NORMAL:
 		
+		//Players turn and they are not promoting
 		if (player.PlayerTurn() && !player.Promotion())
 		{
 			player.DoTurn();
 		}
 
+		//Player is promoting
 		if (player.Promotion())
 		{
 			player.Promote(&brd.whitePieces);
 		}
 
+		//Opponents turn and not promoting
 		if (!player.PlayerTurn() && !opponent.Promotion())
 		{
 			opponent.DoTurn();
 			player.SetPlayerTurn();
 		}
 
+		//Opponent promoting
 		if (opponent.Promotion())
 		{
 			opponent.Promote(&brd.whitePieces);
+			player.SetPlayerTurn();
+
 		}
 
+		//End game status checks
 		if (opponent.GetCheckMated())
 		{
 			gameStatus = GameState::OPPONENTCHECKMATED;
