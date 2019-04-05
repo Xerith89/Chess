@@ -7,6 +7,12 @@ TODO LIST
 .Promotion of pawns
 .Enpassant
 .Castling
+.Stalemate and Draw
+.Timer 
+.Generational Minimax AI
+.Multiplayer
+.Menu Screens
+.Sounds
 */
 
 Game::Game(Window & wnd)
@@ -15,7 +21,7 @@ Game::Game(Window & wnd)
 	gfx(wnd.GetHandle()),
 	brd("./Sprites/board.bmp",100,25),
 	player(wnd,brd),
-	opponent(brd)
+	opponent(wnd,brd)
 {
 	//Kings
 	brd.whitePieces.emplace(std::make_pair(4, 7), std::make_shared<King>(4, 7, "./Sprites/kingW.bmp",true,brd));
@@ -61,7 +67,7 @@ void Game::Update()
 			player.TestForCheck();
 		}
 		opponent.TestForCheck();
-		if (opponent.GetCmated())
+		if (opponent.GetCMated())
 		{
 			gameStatus = GameState::OPPONENTCHECKMATED;
 		}

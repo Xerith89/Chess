@@ -2,10 +2,7 @@
 
 Player::Player(Window & wnd, Board & brd)
 	:
-	wnd(wnd),
-	brd(brd),
-	target("./Sprites/target.bmp"),
-	inCheck("./Sprites/checked.bmp")
+	Actor(wnd,brd)
 {
 }
 
@@ -134,11 +131,6 @@ bool Player::PlayerTurn() const
 void Player::SetPlayerTurn()
 {
 	playerTurn = true;
-}
-
-bool Player::GetCMated() const
-{
-	return cMated;
 }
 
 void Player::TestForCheck()

@@ -1,22 +1,14 @@
 #include "Opponent.h"
 
-Opponent::Opponent(Board & brd)
+Opponent::Opponent(Window& wnd,Board & brd)
 	:
-	brd(brd),
-	rng(rd()),
-	inCheck("./Sprites/checked.bmp")
+	Actor(wnd,brd)
 {
-	
 }
 
 void Opponent::DoTurn()
 {
 	GenerationZero();
-}
-
-bool Opponent::GetCmated() const
-{
-	return cmated;
 }
 
 void Opponent::DrawPieces(Graphics & gfx) const
@@ -67,7 +59,7 @@ void Opponent::GenerationZero()
 	//If we have no moves and we're checked then its game over.
 	if (movelist.size() == 0 && checked)
 	{
-		cmated = true;
+		cMated = true;
 		return;
 	}
 	//Make sure we index in bounds by picking a value between 0 and size of the vector -1
