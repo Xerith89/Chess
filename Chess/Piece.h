@@ -6,8 +6,6 @@
 #include <set>
 #include <assert.h>
 #include <algorithm>
-#undef min
-#undef max
 
 class Board;
 class Piece {

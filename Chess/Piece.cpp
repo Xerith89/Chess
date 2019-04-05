@@ -1,3 +1,4 @@
+#include "MyWindows.h"
 #include "Piece.h"
 
 bool Piece::InbetweenCoords(const Coords & origin, const Coords & dest,const Coords& intersecting) const
