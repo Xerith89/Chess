@@ -4,7 +4,6 @@
 /*
 BUG LIST
 TODO LIST - required for dissertation
-.Promotion of pawns
 .Enpassant
 .Castling
 .Drawn games

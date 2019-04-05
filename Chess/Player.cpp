@@ -144,21 +144,21 @@ void Player::Promote(Map * map)
 	}
 
 	//Bishop
-	if (x >= 225 && x <= 282 && y >= 272 && y <= 330)
+	if (x >= 225 && x <= 285 && y >= 275 && y <= 330)
 	{
 		map->insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Bishop>(pawnInstance->GetCoords().x, 0, "./Sprites/bishopW.bmp", true, brd));
 		promotion = false;
 		playerTurn = false;
 	}
 	//Knight
-	if (x >= 355 && x <= 415 && y >= 272 && y <= 330)
+	if (x >= 355 && x <= 415 && y >= 275 && y <= 330)
 	{
 		map->insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Knight>(pawnInstance->GetCoords().x, 0, "./Sprites/knightW.bmp", true, brd));
 		promotion = false;
 		playerTurn = false;
 	}
 	//Rook
-	if (x >= 225 && x <= 282 && y >= 355 && y <= 410)
+	if (x >= 225 && x <= 285 && y >= 355 && y <= 410)
 	{
 		map->insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Rook>(pawnInstance->GetCoords().x, 0, "./Sprites/rookW.bmp", true, brd));
 		promotion = false;

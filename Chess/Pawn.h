@@ -10,5 +10,5 @@ private:
 	//Pawns can go two spaces in their first move so this will be used to populate move list each selection
 	bool firstMove = true;
 	int attackOffset = 1;
-	int y_offset;
+	int y_offset = 1;
 };

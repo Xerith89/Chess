@@ -15,6 +15,7 @@ std::vector<std::pair<Coords, Coords>> Pawn::GetMoves()
 		opponentKingPos = brd.GetBlackKingLoc();
 		opponentPieces = &brd.blackPieces;
 		y_offset = 1;
+		attackOffset = 1;
 	}
 	else
 	{
@@ -22,6 +23,7 @@ std::vector<std::pair<Coords, Coords>> Pawn::GetMoves()
 		opponentKingPos = brd.GetWhiteKingLoc();
 		opponentPieces = &brd.whitePieces;
 		y_offset = -1;
+		attackOffset = -1;
 	}
 
 	//Empty out the moves list from the previous piece
