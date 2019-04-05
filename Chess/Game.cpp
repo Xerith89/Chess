@@ -3,12 +3,13 @@
 
 /*
 BUG LIST
-TODO LIST
+TODO LIST - required for dissertation
 .Promotion of pawns
 .Enpassant
 .Castling
-.Draw
+.Drawn games
 .Generational Minimax AI
+/////////////// - required for corpus
 .Multiplayer
 .Menu Screens
 .Sounds
@@ -61,23 +62,38 @@ void Game::Update()
 	switch(gameStatus)
 	{
 	case GameState::NORMAL:
-		if (player.PlayerTurn())
+		
+		if (player.PlayerTurn() && !player.Promotion())
 		{
 			player.DoTurn();
 		}
-		if (opponent.GetCheckMated())
+
+		if (player.Promotion())
 		{
-			gameStatus = GameState::OPPONENTCHECKMATED;
+			player.Promote(&brd.whitePieces);
 		}
-		if (!player.PlayerTurn())
+
+		if (!player.PlayerTurn() && !opponent.Promotion())
 		{
 			opponent.DoTurn();
 			player.SetPlayerTurn();
 		}
+
+		if (opponent.Promotion())
+		{
+			opponent.Promote(&brd.whitePieces);
+		}
+
+		if (opponent.GetCheckMated())
+		{
+			gameStatus = GameState::OPPONENTCHECKMATED;
+		}
+
 		if (player.GetCheckMated())
 		{
 			gameStatus = GameState::PLAYERCHECKMATED;
 		}
+
 		if (player.GetStaleMated() || opponent.GetStaleMated())
 		{
 			gameStatus = GameState::STALEMATE;
@@ -98,7 +114,6 @@ void Game::Render()
 		player.DrawPieces(gfx);
 		opponent.DrawPieces(gfx);
 		player.DrawPromotion(gfx);
-		opponent.DrawPromotion(gfx);
 		break;
 	case GameState::OPPONENTCHECKMATED:
 		brd.DrawBoard(gfx);

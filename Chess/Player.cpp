@@ -61,6 +61,12 @@ void Player::DoTurn()
 				kingInstance = dynamic_cast<King*>(brd.whitePieces.find({ selectedTarget.x, selectedTarget.y })->second.get());
 				if (kingInstance != nullptr){brd.UpdateWhiteKingLoc({ selectedTarget.x,selectedTarget.y });}
 
+				//Check if we're moving a pawn so we can check for promotion
+				pawnInstance = dynamic_cast<Pawn*>(brd.whitePieces.find({ selectedTarget.x, selectedTarget.y })->second.get());
+				if (pawnInstance != nullptr && selectedPiece.y == 1 && selectedTarget.y == 0)
+				{
+					promotion = true;
+				}
 				//Check for taking pieces
 				if (brd.blackPieces.count({ selectedTarget.x, selectedTarget.y }) > 0){brd.blackPieces.erase({ selectedTarget.x,selectedTarget.y });}
 						
@@ -121,7 +127,50 @@ void Player::DrawPromotion(Graphics & gfx) const
 {
 	if (promotion)
 	{
-		gfx.DrawSprite(300, 200, promotionSprite);
+		gfx.DrawSprite(200, 200, promotionSprite);
+	}
+}
+
+void Player::Promote(Map * map)
+{
+	//Magic number use is not ideal
+	int x = 0;
+	int y = 0;
+
+	if (wnd.inpt.LeftMsePressed())
+	{
+		x = wnd.inpt.GetMseX();
+		y = wnd.inpt.GetMseY();
+	}
+
+	//Bishop
+	if (x >= 225 && x <= 282 && y >= 272 && y <= 330)
+	{
+		map->insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Bishop>(pawnInstance->GetCoords().x, 0, "./Sprites/bishopW.bmp", true, brd));
+		promotion = false;
+		playerTurn = false;
+	}
+	//Knight
+	if (x >= 355 && x <= 415 && y >= 272 && y <= 330)
+	{
+		map->insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Knight>(pawnInstance->GetCoords().x, 0, "./Sprites/knightW.bmp", true, brd));
+		promotion = false;
+		playerTurn = false;
+	}
+	//Rook
+	if (x >= 225 && x <= 282 && y >= 355 && y <= 410)
+	{
+		map->insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Rook>(pawnInstance->GetCoords().x, 0, "./Sprites/rookW.bmp", true, brd));
+		promotion = false;
+		playerTurn = false;
+	}
+	//Queen
+	if (x >= 355 && x <= 415 && y >= 355 && y <= 410)
+	{
+		map->insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Queen>(pawnInstance->GetCoords().x, 0, "./Sprites/queenW.bmp", true, brd));
+
+		promotion = false;
+		playerTurn = false;
 	}
 }
 
@@ -152,6 +201,7 @@ bool Player::TestForCheckMate()
 	//If we have no possible moves and we're chcked then game over.
 	if (checked)
 	{
+		movelist.clear();
 		for (const auto& p : brd.whitePieces)
 		{
 			auto temp = p.second->GetMoves();

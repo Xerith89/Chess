@@ -9,7 +9,6 @@ Actor::Actor(Window & wnd, Board & brd)
 {
 }
 
-
 bool Actor::GetCheckMated() const
 {
 	return cMated;
@@ -18,4 +17,9 @@ bool Actor::GetCheckMated() const
 bool Actor::GetStaleMated() const
 {
 	return stalemate;
+}
+
+bool Actor::Promotion() const
+{
+	return promotion;
 }

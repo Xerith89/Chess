@@ -7,6 +7,11 @@
 #include <random>
 #include <assert.h>
 #include "King.h"
+#include "Pawn.h"
+#include "Bishop.h"
+#include "Knight.h"
+#include "Queen.h"
+#include "Rook.h"
 #include <algorithm>
 
 class Actor {
@@ -14,6 +19,7 @@ protected:
 	Actor(Window& wnd, Board& brd);
 	using Map = std::map<std::pair<int, int>, std::shared_ptr<Piece>>;
 	King* kingInstance = nullptr;
+	Pawn* pawnInstance = nullptr;
 	bool checked = false;
 	bool cMated = false;
 	bool promotion = false;
@@ -31,7 +37,10 @@ protected:
 	virtual bool TestForCheckMate() = 0;
 	virtual void TestForStaleMate() = 0;
 	virtual void TestPawnPromotion() = 0;
+	virtual void Promote(Map* map) = 0;
+	
 public:
 	bool GetCheckMated()const;
 	bool GetStaleMated()const;
+	bool Promotion()const;
 };

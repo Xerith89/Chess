@@ -49,6 +49,32 @@ void Opponent::DrawPromotion(Graphics & gfx) const
 	}
 }
 
+void Opponent::Promote(Map * map)
+{
+	std::uniform_int_distribution<int> promotedPiece(0, std::max(0,3));
+	int piece = promotedPiece(rng);
+	//Bishop
+	switch (piece)
+	{
+	case 0:
+		map->insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Bishop>(pawnInstance->GetCoords().x, 7, "./Sprites/bishopB.bmp", false, brd));
+		promotion = false;
+		break;
+	case 1:
+		map->insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Knight>(pawnInstance->GetCoords().x, 7, "./Sprites/knightB.bmp", false, brd));
+		promotion = false;
+		break;
+	case 2:
+		map->insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Queen>(pawnInstance->GetCoords().x, 7, "./Sprites/queenB.bmp", false, brd));
+		promotion = false;
+		break;
+	case 3:
+		map->insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Rook>(pawnInstance->GetCoords().x, 7, "./Sprites/rookB.bmp", false, brd));
+		promotion = false;
+		break;
+	}
+}
+
 void Opponent::TestForCheck()
 {
 	//Go through the possible targets of the white pieces and see if we're checked.
@@ -126,6 +152,13 @@ void Opponent::GenerationZero()
 		{
 			brd.UpdateBlackKingLoc({ newloc.x,newloc.y });
 		}
+		//Check if pawn for promotion
+		pawnInstance = dynamic_cast<Pawn*>(piece->second.get());
+		if (pawnInstance != nullptr && currentloc.y == 6 && newloc.y == 7)
+		{
+			promotion = true;
+		}
+
 		//Reinsert into the map at the new position, remove the old entry
 		brd.blackPieces.insert_or_assign({ newloc.x, newloc.y }, std::move(piece->second));
 		brd.blackPieces.erase({ currentloc.x,currentloc.y });	
