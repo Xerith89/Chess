@@ -133,7 +133,6 @@ void Player::DrawPromotion(Graphics & gfx) const
 
 void Player::Promote(Map * map)
 {
-	//Magic number use is not ideal
 	int x = 0;
 	int y = 0;
 
@@ -143,6 +142,7 @@ void Player::Promote(Map * map)
 		y = wnd.inpt.GetMseY();
 	}
 
+	//Magic number use is not ideal but will go with it this one time
 	//Bishop
 	if (x >= 225 && x <= 285 && y >= 275 && y <= 330)
 	{
