@@ -102,6 +102,9 @@
     <ClInclude Include="Actor.h">
       <Filter>Header Files\Game Files</Filter>
     </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Header Files\Game Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Graphics.cpp">

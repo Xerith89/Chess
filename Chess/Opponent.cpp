@@ -1,5 +1,7 @@
 #include "Opponent.h"
 
+
+
 Opponent::Opponent(Window& wnd,Board & brd)
 	:
 	Actor(wnd,brd)
@@ -8,7 +10,16 @@ Opponent::Opponent(Window& wnd,Board & brd)
 
 void Opponent::DoTurn()
 {
+	//timer.Start();
 	GenerationZero();
+	//GenerationOne();
+	//GenerationTwo();
+	//GenerationThree();
+	//GenerationFour();
+	//GenerationFive();
+	//GenerationSix();
+	//std::string time("AI executed in : " + std::to_string(timer.Mark()) + " milliseconds.");
+	//MessageBox(wnd.GetHandle(), time.c_str(), "Speed", MB_OK);
 }
 
 void Opponent::DrawPieces(Graphics & gfx) const
@@ -101,4 +112,34 @@ void Opponent::GenerationZero()
 	{
 		p.second->GetTargets(&brd.whitePieces);
 	}
+}
+
+void Opponent::GenerationOne()
+{
+	//MiniMax with depth of 1
+}
+
+void Opponent::GenerationTwo()
+{
+	//MiniMax with depth of 5
+}
+
+void Opponent::GenerationThree()
+{
+	//Introduce alphabeta to G2
+}
+
+void Opponent::GenerationFour()
+{
+	//Introduce nullMove
+}
+
+void Opponent::GenerationFive()
+{
+	//parallel MiniMax 
+}
+
+void Opponent::GenerationSix()
+{
+	//12 moves ahead
 }

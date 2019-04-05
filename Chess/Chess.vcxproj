@@ -145,6 +145,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="Rook.h" />
     <ClInclude Include="Server.h" />
+    <ClInclude Include="Timer.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="MyWindows.h" />
   </ItemGroup>
