@@ -4,7 +4,8 @@
 
 Opponent::Opponent(Window& wnd,Board & brd)
 	:
-	Actor(wnd,brd)
+	Actor(wnd,brd),
+	promotionSprite("./Sprites/promoteB.bmp")
 {
 }
 
@@ -40,6 +41,14 @@ void Opponent::DrawChecked(Graphics & gfx) const
 	}
 }
 
+void Opponent::DrawPromotion(Graphics & gfx) const
+{
+	if (promotion)
+	{
+		gfx.DrawSprite(300, 200, promotionSprite);
+	}
+}
+
 void Opponent::TestForCheck()
 {
 	//Go through the possible targets of the white pieces and see if we're checked.
@@ -50,6 +59,10 @@ void Opponent::TestForCheck()
 		return;
 	}
 	checked = false;
+}
+
+void Opponent::TestPawnPromotion()
+{
 }
 
 //Our first AI that will be random based

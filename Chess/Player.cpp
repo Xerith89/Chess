@@ -2,7 +2,8 @@
 
 Player::Player(Window & wnd, Board & brd)
 	:
-	Actor(wnd,brd)
+	Actor(wnd,brd),
+	promotionSprite("./Sprites/promoteW.bmp")
 {
 }
 
@@ -123,6 +124,14 @@ void Player::DrawChecked(Graphics & gfx) const
 	}
 }
 
+void Player::DrawPromotion(Graphics & gfx) const
+{
+	if (promotion)
+	{
+		gfx.DrawSprite(300, 200, promotionSprite);
+	}
+}
+
 bool Player::PlayerTurn() const
 {
 	return playerTurn;
@@ -143,4 +152,8 @@ void Player::TestForCheck()
 		return;
 	}
 	checked = false;
+}
+
+void Player::TestPawnPromotion()
+{
 }

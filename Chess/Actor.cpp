@@ -9,6 +9,7 @@ Actor::Actor(Window & wnd, Board & brd)
 {
 }
 
+
 bool Actor::GetCMated() const
 {
 	return cMated;

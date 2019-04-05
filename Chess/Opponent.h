@@ -8,8 +8,10 @@ public:
 	void DoTurn() override;
 	void DrawPieces(Graphics& gfx)const override;
 	void DrawChecked(Graphics& gfx)const override;
+	void DrawPromotion(Graphics& gfx)const override;
 	void TestForCheck() override;
 private:
+	void TestPawnPromotion()override;
 	void GenerationZero();
 	void GenerationOne();
 	void GenerationTwo();
@@ -18,6 +20,7 @@ private:
 	void GenerationFive();
 	void GenerationSix();
 	bool humanOpponent;
+	Sprite promotionSprite;
 	std::random_device rd;
 	std::mt19937 rng;
 	Timer timer;

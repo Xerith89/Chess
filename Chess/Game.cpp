@@ -96,6 +96,8 @@ void Game::Render()
 		opponent.DrawChecked(gfx);
 		player.DrawPieces(gfx);
 		opponent.DrawPieces(gfx);
+		player.DrawPromotion(gfx);
+		opponent.DrawPromotion(gfx);
 		break;
 	case GameState::OPPONENTCHECKMATED:
 		brd.DrawBoard(gfx);

@@ -16,6 +16,7 @@ protected:
 	King* kingInstance = nullptr;
 	bool checked = false;
 	bool cMated = false;
+	bool promotion = false;
 	Sprite target;
 	Sprite inCheck;
 	Window& wnd;
@@ -24,7 +25,9 @@ protected:
 	virtual void DoTurn() = 0;
 	virtual void DrawPieces(Graphics& gfx)const = 0;
 	virtual void DrawChecked(Graphics& gfx)const = 0;
+	virtual void DrawPromotion(Graphics& gfx)const = 0;
 	virtual void TestForCheck() = 0;
+	virtual void TestPawnPromotion() = 0;
 public:
 	bool GetCMated()const;
 };
