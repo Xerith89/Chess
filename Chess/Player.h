@@ -11,13 +11,15 @@ public:
 	void DrawPromotion(Graphics& gfx)const override;
 	bool PlayerTurn()const;
 	void SetPlayerTurn();
-	void TestForCheck()override;
 private:
 	void TestPawnPromotion()override;
+	void TestForStaleMate()override;
+	void TestForCheck()override;
+	bool TestForCheckMate()override;
 	Coords selectedPiece;
 	Coords selectedTarget;
 	Sprite promotionSprite;
-	bool pieceSelected = false;
 	std::vector<std::pair<Coords, Coords>> selectedMoves;
 	bool playerTurn = true;
+	bool pieceSelected = false;
 };

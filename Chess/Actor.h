@@ -17,6 +17,7 @@ protected:
 	bool checked = false;
 	bool cMated = false;
 	bool promotion = false;
+	bool stalemate = false;
 	Sprite target;
 	Sprite inCheck;
 	Window& wnd;
@@ -27,7 +28,10 @@ protected:
 	virtual void DrawChecked(Graphics& gfx)const = 0;
 	virtual void DrawPromotion(Graphics& gfx)const = 0;
 	virtual void TestForCheck() = 0;
+	virtual bool TestForCheckMate() = 0;
+	virtual void TestForStaleMate() = 0;
 	virtual void TestPawnPromotion() = 0;
 public:
-	bool GetCMated()const;
+	bool GetCheckMated()const;
+	bool GetStaleMated()const;
 };

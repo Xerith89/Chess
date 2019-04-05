@@ -18,6 +18,7 @@ private:
 	Graphics gfx;
 	Sprite playerwin = ("./Sprites/checkmatepwin.bmp");
 	Sprite playerlose = ("./Sprites/checkmateplose.bmp");
+	Sprite stalemate = ("./Sprites/stalemate.bmp");
 	void Render();
 	void Update();
 	enum GameState {

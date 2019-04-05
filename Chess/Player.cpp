@@ -24,24 +24,16 @@ void Player::DoTurn()
 			if (piece != brd.whitePieces.end())
 			{
 				TestForCheck();
+				if (TestForCheckMate())
+				{
+					return;
+				}
+				TestForStaleMate();
 				//If the piece exists then store it and get the moves for it - different moves depending on whether we are checked or not
 				pieceSelected = true;
 				selectedMoves = piece->second->GetMoves();
 								
-				//If we have no possible moves and we're chcked then game over.
-				if (checked)
-				{
-					for (const auto& p : brd.blackPieces)
-					{
-						auto temp = p.second->GetMoves();
-						movelist.insert(movelist.end(), temp.begin(), temp.end());
-					}
-					if (movelist.size() == 0)
-					{
-						cMated = true;
-					}
-					return;
-				}
+				
 				//We didn't click something with valid moves
 				if (selectedMoves.empty())
 				{
@@ -82,6 +74,7 @@ void Player::DoTurn()
 			{
 				p.second->GetTargets(&brd.blackPieces);
 			}
+			TestForCheck();
 		}	
 	}
 		
@@ -154,6 +147,38 @@ void Player::TestForCheck()
 	checked = false;
 }
 
+bool Player::TestForCheckMate()
+{
+	//If we have no possible moves and we're chcked then game over.
+	if (checked)
+	{
+		for (const auto& p : brd.whitePieces)
+		{
+			auto temp = p.second->GetMoves();
+			movelist.insert(movelist.end(), temp.begin(), temp.end());
+		}
+		if (movelist.size() == 0)
+		{
+			cMated = true;
+		}
+		return cMated;
+	}
+	return cMated;
+}
+
 void Player::TestPawnPromotion()
 {
+}
+
+void Player::TestForStaleMate()
+{
+	for (const auto& p : brd.whitePieces)
+	{
+		auto temp = p.second->GetMoves();
+		movelist.insert(movelist.end(), temp.begin(), temp.end());
+	}
+	if (movelist.size() == 0 && !checked)
+	{
+		stalemate = true;
+	}
 }

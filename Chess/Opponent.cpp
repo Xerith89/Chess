@@ -61,8 +61,26 @@ void Opponent::TestForCheck()
 	checked = false;
 }
 
+bool Opponent::TestForCheckMate()
+{
+	if (movelist.size() == 0 && checked)
+	{
+		cMated = true;
+		return cMated;
+	}
+	return cMated;
+}
+
 void Opponent::TestPawnPromotion()
 {
+}
+
+void Opponent::TestForStaleMate()
+{
+	if (movelist.size() == 0 && !checked)
+	{
+		stalemate = true;
+	}
 }
 
 //Our first AI that will be random based
@@ -81,11 +99,11 @@ void Opponent::GenerationZero()
 		 movelist.insert(movelist.end(), temp.begin(), temp.end()); 
 	}
 	//If we have no moves and we're checked then its game over.
-	if (movelist.size() == 0 && checked)
+	if (TestForCheckMate())
 	{
-		cMated = true;
 		return;
 	}
+	TestForStaleMate();
 	//Make sure we index in bounds by picking a value between 0 and size of the vector -1
 	maximum = movelist.size() - 1;
 	std::uniform_int_distribution<int> movepick(0, std::max(0, maximum));
@@ -125,6 +143,7 @@ void Opponent::GenerationZero()
 	{
 		p.second->GetTargets(&brd.whitePieces);
 	}
+	TestForCheck();
 }
 
 void Opponent::GenerationOne()

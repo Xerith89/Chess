@@ -7,8 +7,7 @@ TODO LIST
 .Promotion of pawns
 .Enpassant
 .Castling
-.Stalemate and Draw
-.Timer 
+.Draw
 .Generational Minimax AI
 .Multiplayer
 .Menu Screens
@@ -59,15 +58,14 @@ Game::Game(Window & wnd)
 
 void Game::Update()
 {
-	if (gameStatus == GameState::NORMAL)
+	switch(gameStatus)
 	{
+	case GameState::NORMAL:
 		if (player.PlayerTurn())
 		{
 			player.DoTurn();
-			player.TestForCheck();
 		}
-		opponent.TestForCheck();
-		if (opponent.GetCMated())
+		if (opponent.GetCheckMated())
 		{
 			gameStatus = GameState::OPPONENTCHECKMATED;
 		}
@@ -75,13 +73,16 @@ void Game::Update()
 		{
 			opponent.DoTurn();
 			player.SetPlayerTurn();
-			opponent.TestForCheck();
 		}
-		player.TestForCheck();
-		if (player.GetCMated())
+		if (player.GetCheckMated())
 		{
 			gameStatus = GameState::PLAYERCHECKMATED;
 		}
+		if (player.GetStaleMated() || opponent.GetStaleMated())
+		{
+			gameStatus = GameState::STALEMATE;
+		}
+		break;
 	}
 }
 
@@ -112,6 +113,12 @@ void Game::Render()
 		player.DrawPieces(gfx);
 		opponent.DrawPieces(gfx);
 		gfx.DrawSprite(200, 200, playerlose);
+		break;
+	case GameState::STALEMATE:
+		brd.DrawBoard(gfx);
+		player.DrawPieces(gfx);
+		opponent.DrawPieces(gfx);
+		gfx.DrawSprite(200, 200, stalemate);
 		break;
 	}
 }
