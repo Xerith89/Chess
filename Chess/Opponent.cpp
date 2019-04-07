@@ -163,6 +163,8 @@ void Opponent::GenerationZero()
 		brd.blackPieces.insert_or_assign({ newloc.x, newloc.y }, std::move(piece->second));
 		brd.blackPieces.erase({ currentloc.x,currentloc.y });	
 	}
+
+	brd.playedMoves.push_back(std::make_pair(currentloc, newloc));
 	
 	//If we take a piece then update that too
 	if (brd.whitePieces.count({ newloc.x, newloc.y }) > 0)

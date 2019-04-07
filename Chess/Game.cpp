@@ -3,15 +3,16 @@
 
 /*
 BUG LIST
-TODO LIST - required for dissertation
+TODO LIST
 .Enpassant
 .Castling
 .Drawn games
 .Generational Minimax AI
-/////////////// - required for corpus
-.Multiplayer
+.Player best move
+.Played moves written to screen
 .Menu Screens
 .Sounds
+.Multiplayer
 */
 
 Game::Game(Window & wnd)

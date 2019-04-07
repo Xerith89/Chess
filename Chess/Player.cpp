@@ -73,6 +73,7 @@ void Player::DoTurn()
 				//end of turn cleanup
 				pieceSelected = false;
 				playerTurn = false;
+				brd.playedMoves.push_back(std::make_pair(selectedPiece, selectedTarget));
 			}	
 			//Get our new targets for the black players turn
 			brd.whitePieceTargets.clear();
