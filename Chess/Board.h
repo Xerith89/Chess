@@ -42,6 +42,11 @@ public:
 	bool GetBlackEnpassant()const;
 	void SetWhiteEnpassant(bool status);
 	void SetBlackEnpassant(bool status);
+	//Castling functions
+	bool GetLeftCastling()const;
+	void SetLeftCastling(bool status);
+	bool GetRightCastling()const;
+	void SetRightCastling(bool status);
 private:
 	Coords whiteKingLoc = { 4,7 };
 	Coords blackKingLoc = { 4,0 };
@@ -52,7 +57,9 @@ private:
 	Sprite lettersSprite;
 	bool whiteEnpassant = false;
 	bool blackEnpassant = false;
-	static constexpr int cellsPerRow = 8;
+	bool leftCastling = false;
+	bool rightCastling = false;
+	static constexpr int cellsPerRow = 8u;
 	const int cellWidth;
 	const int cellHeight;
 };

@@ -78,7 +78,7 @@ std::vector<std::pair<Coords, Coords>> Rook::GetMoves()
 		{break;}
 		new_y++;
 	}
-
+	
 	return moves;
 }
 
@@ -167,6 +167,8 @@ void Rook::GetTargets(Map* oppoPieces)
 		}
 		new_y++;
 	}
+
+
 
 	if (whitePiece)
 	{

@@ -11,4 +11,5 @@ private:
 	bool firstMove = true;
 	int attackOffset = 1;
 	int y_offset = 1;
+	Coords startCoords;
 };

@@ -15,7 +15,11 @@ public:
 	void TestForCheck()override;
 private:
 	GUI& gui;
+	Coords startKingLoc = { 4,7 };
+	Coords leftRookStartLoc = { 0,7 };
+	Coords rightRookStartLoc = { 7,7 };
 	void TestForStaleMate()override;
+	void TestForCastling()override;
 	bool TestForCheckMate()override;
 	Coords selectedPiece;
 	Coords selectedTarget;

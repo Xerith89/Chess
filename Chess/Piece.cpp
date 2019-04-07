@@ -9,7 +9,6 @@ Coords Piece::GetCoords()const
 Piece::Piece(Coords coords, const std::string spritename, Board& brd,bool white)
 	:
 	coords(coords),
-	startCoords(coords),
 	pieceSprite(spritename),
 	brd(brd),
 	whitePiece(white)

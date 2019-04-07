@@ -147,3 +147,23 @@ void Board::SetBlackEnpassant(bool status)
 	blackEnpassant = status;
 }
 
+bool Board::GetLeftCastling() const
+{
+	return leftCastling;
+}
+
+void Board::SetLeftCastling(bool status)
+{
+	leftCastling = status;
+}
+
+bool Board::GetRightCastling() const
+{
+	return rightCastling;
+}
+
+void Board::SetRightCastling(bool status)
+{
+	rightCastling = status;
+}
+

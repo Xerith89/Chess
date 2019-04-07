@@ -11,8 +11,12 @@ public:
 	void Promote(Map* map)override;
 	void TestForCheck() override;
 private:
+	Coords startKingLoc = { 4,0 };
+	Coords leftRookStartLoc = { 0,0 };
+	Coords rightRookStartLoc = { 7,0 };
 	bool TestForCheckMate()override;
 	void TestForStaleMate() override;
+	void TestForCastling()override;
 	void GenerationZero();
 	void GenerationOne();
 	void GenerationTwo();

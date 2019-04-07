@@ -30,9 +30,14 @@ void Player::DoTurn()
 				TestForStaleMate();
 				//If the piece exists then store it and get the moves for it - different moves depending on whether we are checked or not
 				pieceSelected = true;
+
+				//Check if we've clicked the King
+				kingInstance = dynamic_cast<King*>(brd.whitePieces.find({ selectedPiece.x, selectedPiece.y })->second.get());
+
+				TestForCastling();
+				
 				selectedMoves = piece->second->GetMoves();
 								
-				
 				//We didn't click something with valid moves
 				if (selectedMoves.empty())
 				{
@@ -56,9 +61,42 @@ void Player::DoTurn()
 				brd.whitePieces.insert_or_assign({ selectedTarget.x, selectedTarget.y }, std::move(piece->second));
 				brd.whitePieces.erase({ selectedPiece.x,selectedPiece.y });
 				
-				//Check if we're moving our king, if so then update the king's position
-				kingInstance = dynamic_cast<King*>(brd.whitePieces.find({ selectedTarget.x, selectedTarget.y })->second.get());
-				if (kingInstance != nullptr){brd.UpdateWhiteKingLoc({ selectedTarget.x,selectedTarget.y });}
+				//Update the king position if we've moved it - if we're castling we also need to move the relevent rook
+				if (kingInstance)
+				{
+					brd.UpdateWhiteKingLoc({ selectedTarget.x,selectedTarget.y });
+					//Left castling
+					if (selectedTarget.x == 2 && !hasCastled)
+					{
+						auto rook = brd.whitePieces.find({ 0,7 });
+						if (rook != brd.whitePieces.end())
+						{
+							rook->second.get()->MoveTo({ 3, 7 });
+							brd.whitePieces.insert_or_assign({ 3, 7 }, std::move(rook->second));
+							brd.whitePieces.erase({ 0,7 });
+							brd.SetLeftCastling(false);
+							brd.SetRightCastling(false);
+							hasCastled = true;
+						}
+					}
+					//right castling
+					if (selectedTarget.x == 6 && !hasCastled)
+					{
+						auto rook = brd.whitePieces.find({ 7,7 });
+						if (rook != brd.whitePieces.end())
+						{
+							rook->second.get()->MoveTo({ 5, 7 });
+							brd.whitePieces.insert_or_assign({ 5, 7 }, std::move(rook->second));
+							brd.whitePieces.erase({ 7,7 });
+							brd.SetLeftCastling(false);
+							brd.SetRightCastling(false);
+							hasCastled = true;
+						}
+					}
+					brd.SetLeftCastling(false);
+					brd.SetRightCastling(false);
+					hasCastled = true;
+				}
 
 				//Check if we're moving a pawn so we can check for promotion
 				pawnInstance = dynamic_cast<Pawn*>(brd.whitePieces.find({ selectedTarget.x, selectedTarget.y })->second.get());
@@ -235,5 +273,43 @@ void Player::TestForStaleMate()
 	if (movelist.size() == 0 && !checked)
 	{
 		stalemate = true;
+	}
+}
+
+void Player::TestForCastling()
+{
+	//Castling checks - we only want to do this if we haven't castled yet
+	if (kingInstance && !checked && !hasCastled)
+	{
+		//Check that our pieces haven't moved previously by looking at the previously played moves list.
+		const auto leftRookMoved = std::find_if(brd.playedMoves.begin(), brd.playedMoves.end(), [&](const std::pair<Coords, Coords>& rhs) {
+			return rhs.first == leftRookStartLoc;
+		});
+		const auto rightRookMoved = std::find_if(brd.playedMoves.begin(), brd.playedMoves.end(), [&](const std::pair<Coords, Coords>& rhs) {
+			return rhs.first == startKingLoc;
+		});
+
+		//First we check the King and Left most rook
+		if (leftRookMoved == brd.playedMoves.end())
+		{
+			//Make sure there are no pieces in the way and that the squares we're moving through aren't under attack
+			if (brd.whitePieces.count({ 1, 7 }) == 0 && brd.whitePieces.count({ 2, 7 }) == 0 &&
+				brd.whitePieces.count({ 3, 7 }) == 0 && brd.blackPieces.count({ 1, 7 }) == 0 && brd.blackPieces.count({ 2, 7 }) == 0 &&
+				brd.blackPieces.count({ 3, 7 }) == 0 && brd.blackPieceTargets.count({ 2,7 }) == 0 && brd.blackPieceTargets.count({ 3,7 }) == 0)
+			{
+				brd.SetLeftCastling(true);
+			}
+		}
+
+		if (rightRookMoved == brd.playedMoves.end())
+		{
+			//Make sure there are no pieces in the way
+			if (brd.whitePieces.count({ 5, 7 }) == 0 && brd.whitePieces.count({ 6, 7 }) == 0 &&
+				brd.blackPieces.count({ 5, 7 }) == 0 && brd.blackPieces.count({ 6, 7 }) == 0 &&
+				brd.blackPieceTargets.count({ 5, 7 }) == 0 && brd.blackPieceTargets.count({ 6, 7 }) == 0)
+			{
+				brd.SetRightCastling(true);
+			}
+		}
 	}
 }

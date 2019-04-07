@@ -10,22 +10,25 @@
 class Board;
 class Piece {
 protected:
+	Piece(Coords coords, const std::string spritename, Board& brd, bool whitePiece);
 	Board& brd;
 	Coords coords;
 	Sprite pieceSprite;
 	Coords maxCoord = { 7,7 };
 	Coords minCoord = { 0,0 };
-	Coords startCoords;
-	std::vector<std::pair<Coords, Coords>>  moves;
+	
 	using Map = std::map<std::pair<int,int>, std::shared_ptr<Piece>>;
 	bool whitePiece;
 	Coords opponentKingPos;
 	Coords myKingPos;
+	//References to maps containing colour's pieces
 	Map* myPieces;
 	Map* opponentPieces;
+	//Local version of the target list for each piece
 	std::set<Coords> myTargetList;
 	std::set<Coords> opponentTargetList;
-	Piece(Coords coords, const std::string spritename, Board& brd, bool whitePiece);
+	std::vector<std::pair<Coords, Coords>>  moves;
+	
 public:
 	virtual std::vector<std::pair<Coords, Coords>> GetMoves() = 0;
 	virtual void GetTargets(Map* oppoPieces) = 0;

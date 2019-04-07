@@ -98,6 +98,44 @@ void Opponent::TestForStaleMate()
 	}
 }
 
+void Opponent::TestForCastling()
+{
+	//Castling checks - we only want to do this if we haven't castled yet
+	if (kingInstance && !checked && !hasCastled)
+	{
+		//Check that our pieces haven't moved previously by looking at the previously played moves list.
+		const auto leftRookMoved = std::find_if(brd.playedMoves.begin(), brd.playedMoves.end(), [&](const std::pair<Coords, Coords>& rhs) {
+			return rhs.first == leftRookStartLoc;
+		});
+		const auto rightRookMoved = std::find_if(brd.playedMoves.begin(), brd.playedMoves.end(), [&](const std::pair<Coords, Coords>& rhs) {
+			return rhs.first == startKingLoc;
+		});
+
+		//First we check the King and Left most rook
+		if (leftRookMoved == brd.playedMoves.end())
+		{
+			//Make sure there are no pieces in the way and that the squares we're moving through aren't under attack
+			if (brd.blackPieces.count({ 1, 0 }) == 0 && brd.blackPieces.count({ 2, 0 }) == 0 &&
+				brd.blackPieces.count({ 3, 0 }) == 0 && brd.whitePieces.count({ 1, 0 }) == 0 && brd.whitePieces.count({ 2, 0 }) == 0 &&
+				brd.whitePieces.count({ 3, 0 }) == 0 && brd.whitePieceTargets.count({ 2,0 }) == 0 && brd.whitePieceTargets.count({ 3,0 }) == 0)
+			{
+				brd.SetLeftCastling(true);
+			}
+		}
+
+		if (rightRookMoved == brd.playedMoves.end())
+		{
+			//Make sure there are no pieces in the way
+			if (brd.blackPieces.count({ 5, 0 }) == 0 && brd.blackPieces.count({ 6, 0 }) == 0 &&
+				brd.whitePieces.count({ 5, 0 }) == 0 && brd.whitePieces.count({ 6, 0 }) == 0 &&
+				brd.whitePieceTargets.count({ 5, 0 }) == 0 && brd.whitePieceTargets.count({ 6, 0 }) == 0)
+			{
+				brd.SetRightCastling(true);
+			}
+		}
+	}
+}
+
 //Our first AI that will be random based
 void Opponent::GenerationZero()
 {
@@ -136,9 +174,45 @@ void Opponent::GenerationZero()
 		
 		//Check if we're moving our king, if so then update the king's position
 		kingInstance = dynamic_cast<King*>(piece->second.get());
-		if (kingInstance != nullptr)
+		TestForCastling();
+
+		if (kingInstance)
 		{
 			brd.UpdateBlackKingLoc({ newloc.x,newloc.y });
+
+			//Left castling
+			if (newloc.x == 2 && !hasCastled)
+			{
+				auto rook = brd.blackPieces.find({ 0,0 });
+				if (rook != brd.blackPieces.end())
+				{
+					rook->second.get()->MoveTo({ 3, 0 });
+					brd.blackPieces.insert_or_assign({ 3, 0 }, std::move(rook->second));
+					brd.blackPieces.erase(std::make_pair( 0,0));
+					brd.SetLeftCastling(false);
+					brd.SetRightCastling(false);
+					hasCastled = true;
+				}
+			}
+			//right castling
+			if (newloc.x == 6 && !hasCastled)
+			{
+				auto rook = brd.blackPieces.find({ 7,0 });
+				if (rook != brd.blackPieces.end())
+				{
+					rook->second.get()->MoveTo({ 5, 0 });
+					brd.blackPieces.insert_or_assign({ 5, 0 }, std::move(rook->second));
+					brd.blackPieces.erase({ 7,0 });
+					brd.SetLeftCastling(false);
+					brd.SetRightCastling(false);
+					hasCastled = true;
+				}
+			}
+			//If the King moves but doesn't castle then they cannot again
+			brd.SetLeftCastling(false);
+			brd.SetRightCastling(false);
+			hasCastled = true;
+
 		}
 		//Check if pawn for promotion
 		pawnInstance = dynamic_cast<Pawn*>(piece->second.get());

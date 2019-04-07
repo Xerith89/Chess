@@ -24,6 +24,7 @@ protected:
 	bool cMated = false;
 	bool promotion = false;
 	bool stalemate = false;
+	bool hasCastled = false;
 	Sprite target;
 	Sprite inCheck;
 	Window& wnd;
@@ -35,6 +36,7 @@ protected:
 	virtual void TestForCheck() = 0;
 	virtual bool TestForCheckMate() = 0;
 	virtual void TestForStaleMate() = 0;
+	virtual void TestForCastling() = 0;
 	virtual void Promote(Map* map) = 0;
 public:
 	bool GetCheckMated()const;

@@ -90,6 +90,17 @@ std::vector<std::pair<Coords, Coords>> King::GetMoves()
 			myTargetList.insert(Coords{ coords.x - new_x,coords.y });
 		}
 	}
+
+	if (brd.GetLeftCastling())
+	{
+		moves.push_back(std::make_pair(coords, Coords{ coords.x - 2,coords.y }));
+		myTargetList.insert(Coords{ coords.x - 2,coords.y });
+	}
+	if (brd.GetRightCastling())
+	{
+		moves.push_back(std::make_pair(coords, Coords{ coords.x + 2,coords.y }));
+		myTargetList.insert(Coords{ coords.x + 2,coords.y });
+	}
 	//check right
 	if (myPieces->count({ coords.x + new_x,coords.y }) == 0 && (coords.x + new_x) <= maxCoord.x && Coords{ coords.x + new_x,coords.y } != opponentKingPos)
 	{
@@ -125,6 +136,10 @@ std::vector<std::pair<Coords, Coords>> King::GetMoves()
 				myTargetList.insert(Coords{ coords.x,coords.y + new_y });
 		}
 	}
+
+	//Castling - if king is selected and its the first move, its going sideways,
+	//no pieces in the way of the rook, not in check, rook hasn't moved then add two steps left or right
+	//set castling to true
 
 	if (whitePiece)
 	{
