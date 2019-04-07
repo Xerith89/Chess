@@ -5,8 +5,6 @@
 BUG LIST
 .Padding issue for bitmap loading causing graphical glitch
 TODO LIST
-.Enpassant
-.Castling
 .Drawn games
 .Generational Minimax AI
 .Player best move
