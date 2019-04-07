@@ -20,9 +20,10 @@ Game::Game(Window & wnd)
 	:
 	wnd(wnd),
 	gfx(wnd.GetHandle()),
-	brd("./Sprites/board.bmp",100,25),
+	brd("./Sprites/board.bmp",30,25),
 	player(wnd,brd),
-	opponent(wnd,brd)
+	opponent(wnd,brd),
+	gui()
 {
 	//Kings
 	brd.whitePieces.emplace(std::make_pair(4, 7), std::make_shared<King>(4, 7, "./Sprites/kingW.bmp",true,brd));
@@ -115,6 +116,7 @@ void Game::Render()
 	switch  (gameStatus)
 	{
 	case GameState::NORMAL:
+		gui.DrawGUI(gfx);
 		brd.DrawBoard(gfx);
 		player.DrawPossibleMoves(gfx);
 		player.DrawChecked(gfx);

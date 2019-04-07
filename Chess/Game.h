@@ -11,6 +11,7 @@
 #include "Bishop.h"
 #include "Player.h"
 #include "Opponent.h"
+#include "GUI.h"
 
 class Game {
 private:
@@ -40,5 +41,6 @@ public:
 	Board brd;
 	Player player;
 	Opponent opponent;
+	GUI gui;
 	void Run();
 };

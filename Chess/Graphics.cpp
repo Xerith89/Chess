@@ -232,6 +232,16 @@ void Graphics::RenderFrame()
 	}
 }
 
+int Graphics::GetScreenWidth()
+{
+	return ScreenWidth;
+}
+
+int Graphics::GetScreenHeight()
+{
+	return ScreenHeight;
+}
+
 void Graphics::PrepareFrame()
 {
 	memset(pColorBuffer, 0, sizeof(Color) * ScreenHeight * ScreenWidth);

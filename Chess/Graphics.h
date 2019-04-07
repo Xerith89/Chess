@@ -15,6 +15,8 @@ public:
 	Graphics(const Graphics&) = delete;
 	Graphics& operator=(const Graphics&) = delete;
 	void RenderFrame();
+	static int GetScreenWidth();
+	static int GetScreenHeight();
 	void PrepareFrame();
 	void SetPixel(int x, int y, Color c);
 	void DrawSprite(int x, int y, const Sprite& sprite);

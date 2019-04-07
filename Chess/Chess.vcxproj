@@ -132,6 +132,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="Graph.h" />
     <ClInclude Include="Graphics.h" />
+    <ClInclude Include="GUI.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="King.h" />
     <ClInclude Include="Knight.h" />
@@ -155,6 +156,7 @@
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Graphics.cpp" />
+    <ClCompile Include="GUI.cpp" />
     <ClCompile Include="King.cpp" />
     <ClCompile Include="Knight.cpp" />
     <ClCompile Include="Main.cpp" />
