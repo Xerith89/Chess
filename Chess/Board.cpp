@@ -127,3 +127,23 @@ bool Board::CheckValidMove(const Coords from, const Coords to,const bool whitePi
 	return opponentTargets->count({ myKing }) == 0;
 }
 
+bool Board::GetWhiteEnpassant() const
+{
+	return whiteEnpassant;
+}
+
+bool Board::GetBlackEnpassant() const
+{
+	return blackEnpassant;
+}
+
+void Board::SetWhiteEnpassant(bool status)
+{
+	whiteEnpassant = status;
+}
+
+void Board::SetBlackEnpassant(bool status)
+{
+	blackEnpassant = status;
+}
+

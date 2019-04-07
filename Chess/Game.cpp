@@ -68,6 +68,7 @@ void Game::Update()
 		//Players turn and they are not promoting
 		if (player.PlayerTurn() && !player.GetPromotion())
 		{
+			player.TestForCheck();
 			player.DoTurn();
 		}
 
@@ -80,6 +81,7 @@ void Game::Update()
 		//Opponents turn and not promoting
 		if (!player.PlayerTurn() && !opponent.GetPromotion())
 		{
+			opponent.TestForCheck();
 			opponent.DoTurn();
 			player.SetPlayerTurn();
 		}

@@ -35,7 +35,13 @@ public:
 	Coords GetWhiteKingLoc()const;
 	void UpdateBlackKingLoc(Coords new_loc);
 	Coords GetBlackKingLoc()const;
+	//Move Validation
 	bool CheckValidMove(const Coords from, const Coords to,const bool whitePiece);
+	//Enpassant functions
+	bool GetWhiteEnpassant()const;
+	bool GetBlackEnpassant()const;
+	void SetWhiteEnpassant(bool status);
+	void SetBlackEnpassant(bool status);
 private:
 	Coords whiteKingLoc = { 4,7 };
 	Coords blackKingLoc = { 4,0 };
@@ -44,7 +50,8 @@ private:
 	Sprite BoardSprite;
 	Sprite numbersSprite;
 	Sprite lettersSprite;
-	
+	bool whiteEnpassant = false;
+	bool blackEnpassant = false;
 	static constexpr int cellsPerRow = 8;
 	const int cellWidth;
 	const int cellHeight;

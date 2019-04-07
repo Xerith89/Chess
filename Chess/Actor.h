@@ -35,9 +35,7 @@ protected:
 	virtual void TestForCheck() = 0;
 	virtual bool TestForCheckMate() = 0;
 	virtual void TestForStaleMate() = 0;
-	virtual void TestPawnPromotion() = 0;
 	virtual void Promote(Map* map) = 0;
-	
 public:
 	bool GetCheckMated()const;
 	bool GetStaleMated()const;

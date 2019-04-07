@@ -23,7 +23,6 @@ void Player::DoTurn()
 			auto piece = brd.whitePieces.find({ selectedPiece.x,selectedPiece.y });
 			if (piece != brd.whitePieces.end())
 			{
-				TestForCheck();
 				if (TestForCheckMate())
 				{
 					return;
@@ -67,9 +66,23 @@ void Player::DoTurn()
 				{
 					promotion = true;
 				}
+
+				//Enpassant - we're a pawn moving from initial position to 2 spaces up
+				if (selectedPiece.y == 6 && selectedTarget.y == 4 && pawnInstance != nullptr)
+				{
+					brd.SetWhiteEnpassant(true);
+				}
+
 				//Check for taking pieces
-				if (brd.blackPieces.count({ selectedTarget.x, selectedTarget.y }) > 0){brd.blackPieces.erase({ selectedTarget.x,selectedTarget.y });}
-						
+				if (brd.blackPieces.count({ selectedTarget.x, selectedTarget.y }) > 0)
+				{
+					brd.blackPieces.erase({ selectedTarget.x,selectedTarget.y });
+				}
+				//Enpassant take
+				if (brd.GetBlackEnpassant() && brd.blackPieces.count({ selectedTarget.x, selectedTarget.y+1 }) > 0)
+				{ 
+					brd.blackPieces.erase({ selectedTarget.x,selectedTarget.y+1 }); 
+				}
 				//end of turn cleanup
 				pieceSelected = false;
 				playerTurn = false;
@@ -81,7 +94,10 @@ void Player::DoTurn()
 			{
 				p.second->GetTargets(&brd.blackPieces);
 			}
-			TestForCheck();
+			//We can only get moves that result in not being checked so we can safely assume we're not checked now
+			checked = false;
+			//Enpassant lasts for one turn only
+			brd.SetBlackEnpassant(false);
 		}	
 	}
 		
@@ -208,9 +224,6 @@ bool Player::TestForCheckMate()
 	return cMated;
 }
 
-void Player::TestPawnPromotion()
-{
-}
 
 void Player::TestForStaleMate()
 {

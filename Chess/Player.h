@@ -12,11 +12,10 @@ public:
 	void Promote(Map* map)override;
 	bool PlayerTurn()const;
 	void SetPlayerTurn();
+	void TestForCheck()override;
 private:
 	GUI& gui;
-	void TestPawnPromotion()override;
 	void TestForStaleMate()override;
-	void TestForCheck()override;
 	bool TestForCheckMate()override;
 	Coords selectedPiece;
 	Coords selectedTarget;

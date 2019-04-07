@@ -89,9 +89,6 @@ bool Opponent::TestForCheckMate()
 	return cMated;
 }
 
-void Opponent::TestPawnPromotion()
-{
-}
 
 void Opponent::TestForStaleMate()
 {
@@ -106,7 +103,6 @@ void Opponent::GenerationZero()
 {
 	int maximum = 0;
 	movelist.clear();
-	TestForCheck();
 	std::vector<std::pair<Coords, Coords>> temp;
 
 	//Go through all our pieces, get moves for them. The returning vector is then amalgamated.
@@ -156,12 +152,24 @@ void Opponent::GenerationZero()
 		brd.blackPieces.erase({ currentloc.x,currentloc.y });	
 	}
 
+	//Add this move to the game played moves repository
 	brd.playedMoves.push_back(std::make_pair(currentloc, newloc));
 	
 	//If we take a piece then update that too
 	if (brd.whitePieces.count({ newloc.x, newloc.y }) > 0)
 	{
 		brd.whitePieces.erase({ newloc.x,newloc.y });
+	}
+	//Enpassant capture
+	if (brd.GetWhiteEnpassant() && brd.blackPieces.count({ newloc.x, newloc.y - 1 }) > 0)
+	{
+		brd.whitePieces.erase({ newloc.x,newloc.y - 1 });
+	}
+
+	//Enpassant - we're a pawn moving from initial position to 2 spaces up
+	if (currentloc.y == 1 && newloc.y == 3 && pawnInstance != nullptr)
+	{
+		brd.SetBlackEnpassant(true);
 	}
 
 	//recalculate our targets following our turn
@@ -170,7 +178,12 @@ void Opponent::GenerationZero()
 	{
 		p.second->GetTargets(&brd.whitePieces);
 	}
-	TestForCheck();
+	
+	//We can only get moves that result in not being checked so we can safely assume we're not checked now
+	checked = false;
+
+	//Enpassant lasts for one turn only so we can set white enpassant to false after we move
+	brd.SetWhiteEnpassant(false);
 }
 
 void Opponent::GenerationOne()
