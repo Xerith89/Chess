@@ -1,9 +1,9 @@
 #include "Player.h"
 
-Player::Player(Window & wnd, Board & brd)
+Player::Player(Window & wnd, Board & brd, GUI& gui)
 	:
 	Actor(wnd,brd),
-	promotionSprite("./Sprites/promoteW.bmp")
+	gui(gui)
 {
 }
 
@@ -124,14 +124,6 @@ void Player::DrawChecked(Graphics & gfx) const
 	}
 }
 
-void Player::DrawPromotion(Graphics & gfx) const
-{
-	if (promotion)
-	{
-		gfx.DrawSprite(200, 200, promotionSprite);
-	}
-}
-
 void Player::Promote(Map * map)
 {
 	int x = 0;
@@ -142,31 +134,30 @@ void Player::Promote(Map * map)
 		x = wnd.inpt.GetMseX();
 		y = wnd.inpt.GetMseY();
 	}
-
-	//Magic number use is not ideal but will go with it this one time
+	
 	//Bishop
-	if (x >= 225 && x <= 285 && y >= 275 && y <= 330)
+	if (x >= gui.GetPromoteGraphicX()+25 && x <= gui.GetPromoteGraphicX()+85 && y >= gui.GetPromoteGraphicY()+75 && y <= gui.GetPromoteGraphicY()+130)
 	{
 		map->insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Bishop>(pawnInstance->GetCoords().x, 0, "./Sprites/bishopW.bmp", true, brd));
 		promotion = false;
 		playerTurn = false;
 	}
 	//Knight
-	if (x >= 355 && x <= 415 && y >= 275 && y <= 330)
+	if (x >= gui.GetPromoteGraphicX() + 155 && x <= gui.GetPromoteGraphicX() + 215 && y >= gui.GetPromoteGraphicY() + 75 && y <= gui.GetPromoteGraphicY() + 130)
 	{
 		map->insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Knight>(pawnInstance->GetCoords().x, 0, "./Sprites/knightW.bmp", true, brd));
 		promotion = false;
 		playerTurn = false;
 	}
 	//Rook
-	if (x >= 225 && x <= 285 && y >= 355 && y <= 410)
+	if (x >= gui.GetPromoteGraphicX() + 25 && x <= gui.GetPromoteGraphicX() + 85 && y >= gui.GetPromoteGraphicY() + 155 && y <= gui.GetPromoteGraphicY() + 210)
 	{
 		map->insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Rook>(pawnInstance->GetCoords().x, 0, "./Sprites/rookW.bmp", true, brd));
 		promotion = false;
 		playerTurn = false;
 	}
 	//Queen
-	if (x >= 355 && x <= 415 && y >= 355 && y <= 410)
+	if (x >= gui.GetPromoteGraphicX()+155 && x <= gui.GetPromoteGraphicX()+215 && y >= gui.GetPromoteGraphicY() + 155 && y <= gui.GetPromoteGraphicY() + 210)
 	{
 		map->insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Queen>(pawnInstance->GetCoords().x, 0, "./Sprites/queenW.bmp", true, brd));
 

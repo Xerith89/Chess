@@ -41,14 +41,6 @@ void Opponent::DrawChecked(Graphics & gfx) const
 	}
 }
 
-void Opponent::DrawPromotion(Graphics & gfx) const
-{
-	if (promotion)
-	{
-		gfx.DrawSprite(300, 200, promotionSprite);
-	}
-}
-
 void Opponent::Promote(Map * map)
 {
 	std::uniform_int_distribution<int> promotedPiece(0, std::max(0,3));

@@ -21,9 +21,9 @@ Game::Game(Window & wnd)
 	wnd(wnd),
 	gfx(wnd.GetHandle()),
 	brd("./Sprites/board.bmp",30,25),
-	player(wnd,brd),
-	opponent(wnd,brd),
-	gui()
+	gui(),
+	player(wnd,brd,gui),
+	opponent(wnd,brd)	
 {
 	//Kings
 	brd.whitePieces.emplace(std::make_pair(4, 7), std::make_shared<King>(4, 7, "./Sprites/kingW.bmp",true,brd));
@@ -66,26 +66,26 @@ void Game::Update()
 	case GameState::NORMAL:
 		
 		//Players turn and they are not promoting
-		if (player.PlayerTurn() && !player.Promotion())
+		if (player.PlayerTurn() && !player.GetPromotion())
 		{
 			player.DoTurn();
 		}
 
 		//Player is promoting
-		if (player.Promotion())
+		if (player.GetPromotion())
 		{
 			player.Promote(&brd.whitePieces);
 		}
 
 		//Opponents turn and not promoting
-		if (!player.PlayerTurn() && !opponent.Promotion())
+		if (!player.PlayerTurn() && !opponent.GetPromotion())
 		{
 			opponent.DoTurn();
 			player.SetPlayerTurn();
 		}
 
 		//Opponent promoting
-		if (opponent.Promotion())
+		if (opponent.GetPromotion())
 		{
 			opponent.Promote(&brd.whitePieces);
 			player.SetPlayerTurn();
@@ -123,7 +123,10 @@ void Game::Render()
 		opponent.DrawChecked(gfx);
 		player.DrawPieces(gfx);
 		opponent.DrawPieces(gfx);
-		player.DrawPromotion(gfx);
+		if (player.GetPromotion())
+		{
+			gui.DrawPromotion(gfx);
+		}
 		break;
 	case GameState::OPPONENTCHECKMATED:
 		brd.DrawBoard(gfx);

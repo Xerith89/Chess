@@ -32,7 +32,6 @@ protected:
 	virtual void DoTurn() = 0;
 	virtual void DrawPieces(Graphics& gfx)const = 0;
 	virtual void DrawChecked(Graphics& gfx)const = 0;
-	virtual void DrawPromotion(Graphics& gfx)const = 0;
 	virtual void TestForCheck() = 0;
 	virtual bool TestForCheckMate() = 0;
 	virtual void TestForStaleMate() = 0;
@@ -42,5 +41,5 @@ protected:
 public:
 	bool GetCheckMated()const;
 	bool GetStaleMated()const;
-	bool Promotion()const;
+	bool GetPromotion()const;
 };

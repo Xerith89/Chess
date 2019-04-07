@@ -8,7 +8,6 @@ public:
 	void DoTurn() override;
 	void DrawPieces(Graphics& gfx)const override;
 	void DrawChecked(Graphics& gfx)const override;
-	void DrawPromotion(Graphics& gfx)const override;
 	void Promote(Map* map)override;
 private:
 	void TestForCheck() override;

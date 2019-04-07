@@ -19,7 +19,7 @@ bool Actor::GetStaleMated() const
 	return stalemate;
 }
 
-bool Actor::Promotion() const
+bool Actor::GetPromotion() const
 {
 	return promotion;
 }
