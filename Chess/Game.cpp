@@ -3,6 +3,7 @@
 
 /*
 BUG LIST
+.Padding issue for bitmap loading causing graphical glitch
 TODO LIST
 .Enpassant
 .Castling

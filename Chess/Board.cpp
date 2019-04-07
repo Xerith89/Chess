@@ -6,13 +6,17 @@ Board::Board(const std::string spritename, int x, int y)
 	x(x),
 	y(y),
 	cellWidth(BoardSprite.GetWidth() / cellsPerRow),
-	cellHeight(BoardSprite.GetHeight() / cellsPerRow)
+	cellHeight(BoardSprite.GetHeight() / cellsPerRow),
+	numbersSprite("./Sprites/numbers.bmp"),
+	lettersSprite("./Sprites/letters.bmp")
 {
 }
 
 void Board::DrawBoard(Graphics& gfx)
 {
 	gfx.DrawSprite(x, y, BoardSprite);
+	gfx.DrawSprite(x - numbersSprite.GetWidth(), y, numbersSprite);
+	gfx.DrawSprite(x, BoardSprite.GetHeight() + lettersSprite.GetHeight(), lettersSprite);
 }
 
 int Board::GetCellWidth()

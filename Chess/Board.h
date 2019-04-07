@@ -41,7 +41,9 @@ private:
 	Coords blackKingLoc = { 4,0 };
 	int x;
 	int y;
-	Sprite BoardSprite = nullptr;
+	Sprite BoardSprite;
+	Sprite numbersSprite;
+	Sprite lettersSprite;
 	static constexpr int cellsPerRow = 8;
 	const int cellWidth;
 	const int cellHeight;
