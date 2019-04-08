@@ -24,6 +24,9 @@ private:
 	void GenerationFour();
 	void GenerationFive();
 	void GenerationSix();
+	void TestMove(std::pair<Coords, Coords>);
+	void UndoTestMove();
+	int TestMoveScore()const;
 	bool humanOpponent;
 	std::pair<Coords,Coords> Minimax(int depth, bool isMaximising);
 	Sprite promotionSprite;
@@ -33,6 +36,10 @@ private:
 	//Minimax variables
 	Map initialState;
 	Map whiteInitialState;
+	std::set<Coords> initialWhitePieceTargets;
+	std::set<Coords> initialBlackPieceTargets;
+	Coords initialWhiteKingLoc;
+	Coords initialBlackKingLoc;
 	std::pair<Coords, Coords> bestMove;
 	int bestMoveValue;
 };

@@ -278,9 +278,17 @@ void Opponent::GenerationOne()
 		return;
 	}
 	TestForStaleMate();
+	
+	//Save our state before MiniMax
 	initialState = brd.blackPieces;
 	whiteInitialState = brd.whitePieces;
+	initialBlackPieceTargets = brd.blackPieceTargets;
+	initialWhitePieceTargets = brd.whitePieceTargets;
+	initialBlackKingLoc = brd.GetBlackKingLoc();
+	initialWhiteKingLoc = brd.GetWhiteKingLoc();
+
 	auto move = Minimax(2, true);
+
 	//Assign the current position and new position to variables
 	auto newloc = move.second;
 	auto currentloc = move.first;
@@ -406,12 +414,88 @@ void Opponent::GenerationSix()
 	//12 moves ahead
 }
 
+void Opponent::TestMove(std::pair<Coords, Coords> move)
+{
+	//Assign the current position and new position to variables
+	auto newloc = move.second;
+	auto currentloc = move.first;
+	//find the piece in the map based on the current position
+	auto piece = brd.blackPieces.find({ currentloc.x,currentloc.y });
+
+	//As long as we found the piece
+	if (piece != brd.blackPieces.end())
+	{
+	
+		//Check if we're moving our king, if so then update the king's position
+		kingInstance = dynamic_cast<King*>(piece->second.get());
+		TestForCastling();
+
+		if (kingInstance)
+		{
+			brd.UpdateBlackKingLoc({ newloc.x,newloc.y });
+
+		}
+		//If we take a piece then update that too
+		if (brd.whitePieces.count({ newloc.x, newloc.y }) > 0)
+		{
+			brd.whitePieces.erase({ newloc.x,newloc.y });
+		}
+		//Enpassant capture
+		if (brd.GetWhiteEnpassant() && brd.whitePieces.count({ newloc.x, newloc.y - 1 }) > 0)
+		{
+			brd.whitePieces.erase({ newloc.x,newloc.y - 1 });
+		}
+
+		//Enpassant - we're a pawn moving from initial position to 2 spaces up
+		if (currentloc.y == 1 && newloc.y == 3 && pawnInstance != nullptr)
+		{
+			brd.SetBlackEnpassant(true);
+		}
+
+		//recalculate our targets following our turn
+		brd.blackPieceTargets.clear();
+		for (const auto& p : brd.blackPieces)
+		{
+			p.second->GetTargets(&brd.whitePieces);
+		}
+
+		//We can only get moves that result in not being checked so we can safely assume we're not checked now
+		checked = false;
+
+		//Enpassant lasts for one turn only so we can set white enpassant to false after we move
+		brd.SetWhiteEnpassant(false);
+	}
+}
+
+void Opponent::UndoTestMove()
+{
+	brd.blackPieces = initialState;
+	brd.whitePieces = whiteInitialState;
+	brd.whitePieceTargets = initialWhitePieceTargets;
+	brd.blackPieceTargets = initialBlackPieceTargets;
+	brd.UpdateWhiteKingLoc(initialWhiteKingLoc);
+	brd.UpdateBlackKingLoc(initialBlackKingLoc);
+}
+
+int Opponent::TestMoveScore() const
+{
+	int score = 0;
+	for (const auto& p : brd.blackPieces)
+	{
+		score += p.second->GetScore();
+	}
+	for (const auto& p : brd.whitePieces)
+	{
+		score += -p.second->GetScore();
+	}
+	return score;
+}
+
 std::pair<Coords, Coords> Opponent::Minimax(int depth, bool isMaximising)
 {
 	
 	int value = 0;
 	
-
 	//Return the best move that has been found
 	if (depth == 0)
 	{
@@ -424,28 +508,34 @@ std::pair<Coords, Coords> Opponent::Minimax(int depth, bool isMaximising)
 	//for each move
 	//Do it
 	//Test its score
-
-	if (isMaximising)
+	for (const auto& m : movelist)
 	{
-		if (value > bestMoveValue)
+		TestMove(m);
+		value = TestMoveScore();
+		//Recurse until depth is 0 - take turns between maximiser and minimiser
+		Minimax(depth - 1, !isMaximising);
+		if (isMaximising)
 		{
-			bestMoveValue = value;
-			//bestMove = move;
+			if (value > bestMoveValue)
+			{
+				bestMoveValue = value;
+				bestMove = m;
+			}
 		}
-	}
-	else
-	{
-		if (value < bestMoveValue)
+		else
 		{
-			bestMoveValue = value;
-			//bestMove = move;
+			if (value < bestMoveValue)
+			{
+				bestMoveValue = value;
+				bestMove = m;
+			}
 		}
+		//undo move
+		UndoTestMove();
 	}
 
 	//undo move
-
-	//Recurse until depth is 0 - take turns between maximiser and minimiser
-	Minimax(depth-1,!isMaximising);
+	UndoTestMove();
 
 	return bestMove;
 }
