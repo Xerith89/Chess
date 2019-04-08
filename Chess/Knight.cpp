@@ -182,7 +182,7 @@ void Knight::GetTargets(Map* oppoPieces)
 	}
 }
 
-int Knight::GetScore() const
+int Knight::GetScore()
 {
 	return score;
 }

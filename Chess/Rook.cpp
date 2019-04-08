@@ -180,7 +180,7 @@ void Rook::GetTargets(Map* oppoPieces)
 	}
 }
 
-int Rook::GetScore() const
+int Rook::GetScore() 
 {
 	return score;
 }

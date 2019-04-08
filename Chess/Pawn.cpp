@@ -160,8 +160,321 @@ void Pawn::GetTargets(Map* oppoPieces)
 	}
 }
 
-int Pawn::GetScore() const
+int Pawn::GetScore()
 {
+	//Early/Mid Game
+	auto totalPieces = brd.blackPieces.size() + brd.whitePieces.size();
+	if (brd.playedMoves.size() < 50 || totalPieces >= 20)
+	{
+		//Switch on the column and adjust the value for the pawn depending on the row
+		//We also check for them being passed as value increases in endgame
+		switch (coords.x)
+		{
+		case 0:
+		case 7:
+			if (whitePiece)
+			{
+				if (coords.y >= 4)
+				{
+					score += 90;
+				}
+				else if (coords.y == 3)
+				{
+					score += 97;
+				}
+				else if (coords.y < 3)
+				{
+					score += 106;
+				}
+			}
+			else
+			{
+				if (coords.y <= 3)
+				{
+					score += 95;
+				}
+				else if (coords.y == 4)
+				{
+					score += 103;
+				}
+				else if (coords.y > 5)
+				{
+					score += 112;
+				}
+			}
+			break;
+		case 1:
+		case 6:
+			if (whitePiece)
+			{
+				if (coords.y >= 4)
+				{
+					score += 95;
+				}
+				else if (coords.y == 3)
+				{
+					score += 103;
+				}
+				else if (coords.y < 3)
+				{
+					score += 112;
+				}
+			}
+			else
+			{
+				if (coords.y <= 3)
+				{
+					score += 95;
+				}
+				else if (coords.y == 4)
+				{
+					score += 103;
+				}
+				else if (coords.y > 5)
+				{
+					score += 112;
+				}
+			}
+			break;
+		case 2:
+		case 5:
+			if (whitePiece)
+			{
+				if (coords.y < 3)
+				{
+					score += 105;
+				}
+				else if (coords.y == 3)
+				{
+					score += 110;
+				}
+				else if (coords.y == 5)
+				{
+					score += 117;
+				}
+				else if (coords.y > 5)
+				{
+					score += 125;
+				}
+			}
+			else
+			{
+				if (coords.y >= 5)
+				{
+					score += 105;
+				}
+				else if (coords.y == 4)
+				{
+					score += 110;
+				}
+				else if (coords.y == 3)
+				{
+					score += 117;
+				}
+				else if (coords.y < 3)
+				{
+					score += 125;
+				}
+			}
+			break;
+		case 3:
+		case 4:
+			if (whitePiece)
+			{
+				if (coords.y < 3)
+				{
+					score += 115;
+				}
+				else if (coords.y == 3)
+				{
+					score += 120;
+				}
+				else if (coords.y == 5)
+				{
+					score += 127;
+				}
+				else if (coords.y > 5)
+				{
+					score += 140;
+				}
+			}
+			else
+			{
+				if (coords.y >= 5)
+				{
+					score += 115;
+				}
+				else if (coords.y == 4)
+				{
+					score += 120;
+				}
+				else if (coords.y == 3)
+				{
+					score += 127;
+				}
+				else if (coords.y < 3)
+				{
+					score += 140;
+				}
+			}
+			break;
+		}
+	}
+	else
+	{
+	switch (coords.x)
+	{
+	case 0:
+	case 7:
+		if (whitePiece)
+		{
+			if (coords.y >= 4)
+			{
+				score += 120;
+			}
+			else if (coords.y == 3)
+			{
+				score += 125;
+			}
+			else if (coords.y < 3)
+			{
+				score += 145;
+			}
+		}
+		else
+		{
+			if (coords.y <= 3)
+			{
+				score += 120;
+			}
+			else if (coords.y == 4)
+			{
+				score += 125;
+			}
+			else if (coords.y > 5)
+			{
+				score += 145;
+			}
+		}
+		break;
+	case 1:
+	case 6:
+		if (whitePiece)
+		{
+			if (coords.y >= 4)
+			{
+				score += 110;
+			}
+			else if (coords.y == 3)
+			{
+				score += 117;
+			}
+			else if (coords.y < 3)
+			{
+				score += 129;
+			}
+		}
+		else
+		{
+			if (coords.y <= 3)
+			{
+				score += 110;
+			}
+			else if (coords.y == 4)
+			{
+				score += 117;
+			}
+			else if (coords.y > 5)
+			{
+				score += 129;
+			}
+		}
+		break;
+	case 2:
+	case 5:
+		if (whitePiece)
+		{
+			if (coords.y < 3)
+			{
+				score += 95;
+			}
+			else if (coords.y == 3)
+			{
+				score += 100;
+			}
+			else if (coords.y == 5)
+			{
+				score += 107;
+			}
+			else if (coords.y > 5)
+			{
+				score += 116;
+			}
+		}
+		else
+		{
+			if (coords.y >= 5)
+			{
+				score += 95;
+			}
+			else if (coords.y == 4)
+			{
+				score += 100;
+			}
+			else if (coords.y == 3)
+			{
+				score += 107;
+			}
+			else if (coords.y < 3)
+			{
+				score += 116;
+			}
+		}
+		break;
+	case 3:
+	case 4:
+		if (whitePiece)
+		{
+			if (coords.y < 3)
+			{
+				score += 90;
+			}
+			else if (coords.y == 3)
+			{
+				score += 95;
+			}
+			else if (coords.y == 5)
+			{
+				score += 100;
+			}
+			else if (coords.y > 5)
+			{
+				score += 105;
+			}
+		}
+		else
+		{
+			if (coords.y >= 5)
+			{
+				score += 90;
+			}
+			else if (coords.y == 4)
+			{
+				score += 95;
+			}
+			else if (coords.y == 3)
+			{
+				score += 100;
+			}
+			else if (coords.y < 3)
+			{
+				score += 105;
+			}
+		}
+		break;
+	}
+	}
+	
 	return score;
 }
 

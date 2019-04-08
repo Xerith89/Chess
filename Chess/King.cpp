@@ -159,7 +159,7 @@ void King::GetTargets(Map* oppoPieces)
 	GetMoves();
 }
 
-int King::GetScore() const
+int King::GetScore()
 {
 	return score;
 }

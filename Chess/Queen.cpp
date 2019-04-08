@@ -366,7 +366,7 @@ void Queen::GetTargets(Map* oppoPieces)
 
 }
 
-int Queen::GetScore() const
+int Queen::GetScore()
 {
 	return score;
 }

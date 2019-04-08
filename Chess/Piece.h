@@ -34,5 +34,5 @@ public:
 	Coords GetCoords()const;
 	Sprite& GetSprite();
 	void MoveTo(Coords new_coords);
-	virtual int GetScore()const = 0;
+	virtual int GetScore() = 0;
 };
