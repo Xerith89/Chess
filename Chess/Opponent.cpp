@@ -12,8 +12,8 @@ Opponent::Opponent(Window& wnd,Board & brd)
 void Opponent::DoTurn()
 {
 	//timer.Start();
-	GenerationZero();
-	//GenerationOne();
+	//GenerationZero();
+	GenerationOne();
 	//GenerationTwo();
 	//GenerationThree();
 	//GenerationFour();
@@ -262,7 +262,123 @@ void Opponent::GenerationZero()
 
 void Opponent::GenerationOne()
 {
-	//MiniMax with depth of 1
+	movelist.clear();
+	std::vector<std::pair<Coords, Coords>> temp;
+
+	//Go through all our pieces, get moves for them. The returning vector is then amalgamated.
+	for (const auto& p : brd.blackPieces)
+	{
+
+		temp = p.second->GetMoves();
+		movelist.insert(movelist.end(), temp.begin(), temp.end());
+	}
+	//If we have no moves and we're checked then its game over.
+	if (TestForCheckMate())
+	{
+		return;
+	}
+	TestForStaleMate();
+	initialState = brd.blackPieces;
+	whiteInitialState = brd.whitePieces;
+	auto move = Minimax(2, true);
+	//Assign the current position and new position to variables
+	auto newloc = move.second;
+	auto currentloc = move.first;
+	//find the piece in the map based on the current position
+	auto piece = brd.blackPieces.find({ currentloc.x,currentloc.y });
+
+	//As long as we found the piece
+	if (piece != brd.blackPieces.end())
+	{
+		piece->second->MoveTo(newloc);
+		//Set the new position
+
+		//Check if we're moving our king, if so then update the king's position
+		kingInstance = dynamic_cast<King*>(piece->second.get());
+		TestForCastling();
+
+		if (kingInstance)
+		{
+			brd.UpdateBlackKingLoc({ newloc.x,newloc.y });
+
+			//Left castling
+			if (newloc.x == 2 && !hasCastled)
+			{
+				auto rook = brd.blackPieces.find({ 0,0 });
+				if (rook != brd.blackPieces.end())
+				{
+					rook->second.get()->MoveTo({ 3, 0 });
+					brd.blackPieces.insert_or_assign({ 3, 0 }, std::move(rook->second));
+					brd.blackPieces.erase(std::make_pair(0, 0));
+					brd.SetLeftCastling(false);
+					brd.SetRightCastling(false);
+					hasCastled = true;
+				}
+			}
+			//right castling
+			if (newloc.x == 6 && !hasCastled)
+			{
+				auto rook = brd.blackPieces.find({ 7,0 });
+				if (rook != brd.blackPieces.end())
+				{
+					rook->second.get()->MoveTo({ 5, 0 });
+					brd.blackPieces.insert_or_assign({ 5, 0 }, std::move(rook->second));
+					brd.blackPieces.erase({ 7,0 });
+					brd.SetLeftCastling(false);
+					brd.SetRightCastling(false);
+					hasCastled = true;
+				}
+			}
+			//If the King moves but doesn't castle then they cannot again
+			brd.SetLeftCastling(false);
+			brd.SetRightCastling(false);
+			hasCastled = true;
+
+		}
+		//Check if pawn for promotion
+		pawnInstance = dynamic_cast<Pawn*>(piece->second.get());
+		if (pawnInstance != nullptr && currentloc.y == 6 && newloc.y == 7)
+		{
+			promotion = true;
+		}
+
+		//Reinsert into the map at the new position, remove the old entry
+		brd.blackPieces.insert_or_assign({ newloc.x, newloc.y }, std::move(piece->second));
+		brd.blackPieces.erase({ currentloc.x,currentloc.y });
+	}
+
+	//Add this move to the game played moves repository
+	brd.playedMoves.push_back(std::make_pair(currentloc, newloc));
+
+	//If we take a piece then update that too
+	if (brd.whitePieces.count({ newloc.x, newloc.y }) > 0)
+	{
+		brd.whitePieces.erase({ newloc.x,newloc.y });
+	}
+	//Enpassant capture
+	if (brd.GetWhiteEnpassant() && brd.whitePieces.count({ newloc.x, newloc.y - 1 }) > 0)
+	{
+		brd.whitePieces.erase({ newloc.x,newloc.y - 1 });
+	}
+
+	//Enpassant - we're a pawn moving from initial position to 2 spaces up
+	if (currentloc.y == 1 && newloc.y == 3 && pawnInstance != nullptr)
+	{
+		brd.SetBlackEnpassant(true);
+	}
+
+	//recalculate our targets following our turn
+	brd.blackPieceTargets.clear();
+	for (const auto& p : brd.blackPieces)
+	{
+		p.second->GetTargets(&brd.whitePieces);
+	}
+
+	//We can only get moves that result in not being checked so we can safely assume we're not checked now
+	checked = false;
+
+	//Enpassant lasts for one turn only so we can set white enpassant to false after we move
+	brd.SetWhiteEnpassant(false);
 }
 
 void Opponent::GenerationTwo()
@@ -288,4 +404,48 @@ void Opponent::GenerationFive()
 void Opponent::GenerationSix()
 {
 	//12 moves ahead
+}
+
+std::pair<Coords, Coords> Opponent::Minimax(int depth, bool isMaximising)
+{
+	
+	int value = 0;
+	
+
+	//Return the best move that has been found
+	if (depth == 0)
+	{
+		return bestMove;
+	}
+	
+	//If we're maximising then we want to make the biggest score. We'll start it low and vice versa for not maximising
+	(isMaximising) ? bestMoveValue = -99999 : bestMoveValue = 99999;
+
+	//for each move
+	//Do it
+	//Test its score
+
+	if (isMaximising)
+	{
+		if (value > bestMoveValue)
+		{
+			bestMoveValue = value;
+			//bestMove = move;
+		}
+	}
+	else
+	{
+		if (value < bestMoveValue)
+		{
+			bestMoveValue = value;
+			//bestMove = move;
+		}
+	}
+
+	//undo move
+
+	//Recurse until depth is 0 - take turns between maximiser and minimiser
+	Minimax(depth-1,!isMaximising);
+
+	return bestMove;
 }

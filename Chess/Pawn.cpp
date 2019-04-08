@@ -160,5 +160,10 @@ void Pawn::GetTargets(Map* oppoPieces)
 	}
 }
 
+int Pawn::GetScore() const
+{
+	return score;
+}
+
 
 

@@ -28,12 +28,11 @@ protected:
 	std::set<Coords> myTargetList;
 	std::set<Coords> opponentTargetList;
 	std::vector<std::pair<Coords, Coords>>  moves;
-	
 public:
 	virtual std::vector<std::pair<Coords, Coords>> GetMoves() = 0;
 	virtual void GetTargets(Map* oppoPieces) = 0;
 	Coords GetCoords()const;
 	Sprite& GetSprite();
-	void MoveBy(Coords delta);
 	void MoveTo(Coords new_coords);
+	virtual int GetScore()const = 0;
 };

@@ -25,8 +25,14 @@ private:
 	void GenerationFive();
 	void GenerationSix();
 	bool humanOpponent;
+	std::pair<Coords,Coords> Minimax(int depth, bool isMaximising);
 	Sprite promotionSprite;
 	std::random_device rd;
 	std::mt19937 rng;
 	Timer timer;
+	//Minimax variables
+	Map initialState;
+	Map whiteInitialState;
+	std::pair<Coords, Coords> bestMove;
+	int bestMoveValue;
 };

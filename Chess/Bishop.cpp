@@ -211,5 +211,10 @@ void Bishop::GetTargets(Map* oppoPieces)
 	}
 }
 
+int Bishop::GetScore() const
+{
+	return score;
+}
+
 
 
