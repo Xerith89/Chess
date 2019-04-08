@@ -268,7 +268,6 @@ void Opponent::GenerationOne()
 	//Go through all our pieces, get moves for them. The returning vector is then amalgamated.
 	for (const auto& p : brd.blackPieces)
 	{
-
 		temp = p.second->GetMoves();
 		movelist.insert(movelist.end(), temp.begin(), temp.end());
 	}
@@ -287,7 +286,7 @@ void Opponent::GenerationOne()
 	initialBlackKingLoc = brd.GetBlackKingLoc();
 	initialWhiteKingLoc = brd.GetWhiteKingLoc();
 
-	auto move = Minimax(2, true,movelist);
+	auto move = Minimax(3, true,movelist);
 
 	//Assign the current position and new position to variables
 	auto newloc = move.second;
@@ -495,13 +494,24 @@ std::pair<Coords, Coords> Opponent::Minimax(int depth, bool isMaximising,std::ve
 {
 	Map TestPieceMoves;
 	std::set<Coords> TestPieceTargets;
+	std::vector<std::pair<Coords, Coords>> equalMoves;
 	Map OpponentPieceMap;
 	int value = 0;
 	
 	//Return the best move that has been found
 	if (depth == 0)
 	{
-		return bestMove;
+		if (equalMoves.size() == 0)
+		{
+			return bestMove;
+		}
+		else
+		{
+			int maximum = equalMoves.size() - 1;
+			std::uniform_int_distribution<int> movepick(0, std::max(0, maximum));
+			int move_roll = movepick(rng);
+			return equalMoves.at(move_roll);
+		}
 	}
 	
 	//If we're maximising then we want to make the biggest score. We'll start it low and vice versa for not maximising
@@ -512,7 +522,6 @@ std::pair<Coords, Coords> Opponent::Minimax(int depth, bool isMaximising,std::ve
 	//for each move
 	//Do it
 	//Test its score
-
 	for (const auto& m : moves_in)
 	{
 		TestPieceTargets.clear();
@@ -525,7 +534,8 @@ std::pair<Coords, Coords> Opponent::Minimax(int depth, bool isMaximising,std::ve
 		std::vector<std::pair<Coords, Coords>> nextDepth;
 		for (const auto& p : TestPieceMoves)
 		{
-			nextDepth = p.second->GetMoves();
+			const auto temp = p.second->GetMoves();
+			nextDepth.insert(nextDepth.begin(),temp.begin(),temp.end());
 		}
 		//Recurse until depth is 0 - take turns between maximiser and minimiser
 		Minimax(depth - 1, !isMaximising, nextDepth);
@@ -538,6 +548,11 @@ std::pair<Coords, Coords> Opponent::Minimax(int depth, bool isMaximising,std::ve
 				bestMoveValue = value;
 				bestMove = m;
 			}
+			if (value == bestMoveValue)
+			{
+				bestMoveValue = value;
+				equalMoves.push_back(m);
+			}
 		}
 		else
 		{
@@ -545,6 +560,11 @@ std::pair<Coords, Coords> Opponent::Minimax(int depth, bool isMaximising,std::ve
 			{
 				bestMoveValue = value;
 				bestMove = m;
+			}
+			if (value == bestMoveValue)
+			{
+				bestMoveValue = value;
+				equalMoves.push_back(m);
 			}
 		}
 		//undo move
