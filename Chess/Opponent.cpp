@@ -235,7 +235,7 @@ void Opponent::GenerationZero()
 		brd.whitePieces.erase({ newloc.x,newloc.y });
 	}
 	//Enpassant capture
-	if (brd.GetWhiteEnpassant() && brd.blackPieces.count({ newloc.x, newloc.y - 1 }) > 0)
+	if (brd.GetWhiteEnpassant() && brd.whitePieces.count({ newloc.x, newloc.y - 1 }) > 0)
 	{
 		brd.whitePieces.erase({ newloc.x,newloc.y - 1 });
 	}
