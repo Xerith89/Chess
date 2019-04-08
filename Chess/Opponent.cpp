@@ -287,7 +287,7 @@ void Opponent::GenerationOne()
 	initialBlackKingLoc = brd.GetBlackKingLoc();
 	initialWhiteKingLoc = brd.GetWhiteKingLoc();
 
-	auto move = Minimax(2, true);
+	auto move = Minimax(2, true,movelist);
 
 	//Assign the current position and new position to variables
 	auto newloc = move.second;
@@ -491,9 +491,11 @@ int Opponent::TestMoveScore() const
 	return score;
 }
 
-std::pair<Coords, Coords> Opponent::Minimax(int depth, bool isMaximising)
+std::pair<Coords, Coords> Opponent::Minimax(int depth, bool isMaximising,std::vector < std::pair<Coords, Coords>> moves_in)
 {
-	
+	Map TestPieceMoves;
+	std::set<Coords> TestPieceTargets;
+	Map OpponentPieceMap;
 	int value = 0;
 	
 	//Return the best move that has been found
@@ -504,16 +506,31 @@ std::pair<Coords, Coords> Opponent::Minimax(int depth, bool isMaximising)
 	
 	//If we're maximising then we want to make the biggest score. We'll start it low and vice versa for not maximising
 	(isMaximising) ? bestMoveValue = -99999 : bestMoveValue = 99999;
-
+	(isMaximising) ? TestPieceMoves = brd.blackPieces : TestPieceMoves = brd.whitePieces;
+	(isMaximising) ? TestPieceTargets = brd.blackPieceTargets : TestPieceTargets = brd.whitePieceTargets;
+	(isMaximising) ? OpponentPieceMap = brd.whitePieces : OpponentPieceMap = brd.blackPieces;
 	//for each move
 	//Do it
 	//Test its score
-	for (const auto& m : movelist)
+
+	for (const auto& m : moves_in)
 	{
+		TestPieceTargets.clear();
+		for (const auto& p : TestPieceMoves)
+		{
+			p.second->GetTargets(&OpponentPieceMap);
+		}
 		TestMove(m);
 		value = TestMoveScore();
+		std::vector<std::pair<Coords, Coords>> nextDepth;
+		for (const auto& p : TestPieceMoves)
+		{
+			nextDepth = p.second->GetMoves();
+		}
 		//Recurse until depth is 0 - take turns between maximiser and minimiser
-		Minimax(depth - 1, !isMaximising);
+		Minimax(depth - 1, !isMaximising, nextDepth);
+		//undo move
+		UndoTestMove();
 		if (isMaximising)
 		{
 			if (value > bestMoveValue)
@@ -533,9 +550,6 @@ std::pair<Coords, Coords> Opponent::Minimax(int depth, bool isMaximising)
 		//undo move
 		UndoTestMove();
 	}
-
-	//undo move
-	UndoTestMove();
 
 	return bestMove;
 }

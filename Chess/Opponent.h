@@ -28,7 +28,7 @@ private:
 	void UndoTestMove();
 	int TestMoveScore()const;
 	bool humanOpponent;
-	std::pair<Coords,Coords> Minimax(int depth, bool isMaximising);
+	std::pair<Coords,Coords> Minimax(int depth, bool isMaximising, std::vector<std::pair<Coords,Coords>> moves_in);
 	Sprite promotionSprite;
 	std::random_device rd;
 	std::mt19937 rng;
