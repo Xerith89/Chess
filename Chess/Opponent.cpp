@@ -502,56 +502,74 @@ std::pair<Coords, Coords> Opponent::Minimax(int depth, bool isMaximising,std::ve
 	}
 	
 	//If we're maximising then we want to make the biggest score. We'll start it low and vice versa for not maximising
-	(isMaximising) ? bestMoveValue = -99999 : bestMoveValue = 99999;
 	(isMaximising) ? TestPieceMoves = brd.blackPieces : TestPieceMoves = brd.whitePieces;
 	(isMaximising) ? TestPieceTargets = brd.blackPieceTargets : TestPieceTargets = brd.whitePieceTargets;
 	(isMaximising) ? OpponentPieceMap = brd.whitePieces : OpponentPieceMap = brd.blackPieces;
 	//for each move
 	//Do it
 	//Test its score
-	for (const auto& m : moves_in)
-	{
-		TestPieceTargets.clear();
-		for (const auto& p : TestPieceMoves)
-		{
-			p.second->GetTargets(&OpponentPieceMap);
-		}
-		TestMove(m);
-		value = TestMoveScore();
-		for (const auto& p : TestPieceMoves)
-		{
-			const auto temp = p.second->GetMoves();
-			nextDepth.insert(nextDepth.begin(),temp.begin(),temp.end());
-		}
+	
 		
-		if (isMaximising)
+	if (isMaximising)
+	{
+		bestMoveValue = -99999;
+
+		for (const auto& m : moves_in)
 		{
+			TestPieceTargets.clear();
+			for (const auto& p : TestPieceMoves)
+			{
+				p.second->GetTargets(&OpponentPieceMap);
+			}
+			TestMove(m);
+			value = TestMoveScore();
+			for (const auto& p : TestPieceMoves)
+			{
+				const auto temp = p.second->GetMoves();
+				nextDepth.insert(nextDepth.begin(), temp.begin(), temp.end());
+			}
 			if (value > bestMoveValue)
 			{
+				bestMoveValue = std::max(value, bestMoveValue);
 				bestMoveValue = value;
 				bestMove = m;
 				//undo move
 				UndoTestMove();
 			}
 		}
-		else
+	}
+	else
+	{
+		for (const auto& m : moves_in)
 		{
+			TestPieceTargets.clear();
+			for (const auto& p : TestPieceMoves)
+			{
+				p.second->GetTargets(&OpponentPieceMap);
+			}
+			TestMove(m);
+			value = TestMoveScore();
+			for (const auto& p : TestPieceMoves)
+			{
+				const auto temp = p.second->GetMoves();
+				nextDepth.insert(nextDepth.begin(), temp.begin(), temp.end());
+			}
+			bestMoveValue = 99999;
 			if (value < bestMoveValue)
 			{
-				bestMoveValue = value;
+				bestMoveValue = std::min(value, bestMoveValue);
 				bestMove = m;
 				//undo move
 				UndoTestMove();
 			}
 		}
+	}
 		auto nxtDepth = nextDepth;
 		nextDepth.clear();
 		//Recurse until depth is 0 - take turns between maximiser and minimiser
 		Minimax(depth - 1, !isMaximising, nxtDepth);
 		//undo move
 		UndoTestMove();
-		
-	}
 	
 	return bestMove;
 }
