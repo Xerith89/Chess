@@ -48,8 +48,8 @@ public:
 	bool GetRightCastling()const;
 	void SetRightCastling(bool status);
 private:
-	Coords whiteKingLoc = { 4,7 };
-	Coords blackKingLoc = { 4,0 };
+	Coords whiteKingLoc = { 3,7 };
+	Coords blackKingLoc = { 3,0 };
 	int x;
 	int y;
 	Sprite BoardSprite;
