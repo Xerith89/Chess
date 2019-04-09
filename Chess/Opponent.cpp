@@ -241,7 +241,7 @@ void Opponent::GenerationZero()
 	}
 
 	//Enpassant - we're a pawn moving from initial position to 2 spaces up
-	if (currentloc.y == 1 && newloc.y == 3 && pawnInstance != nullptr)
+	if (currentloc.y == 1 && newloc.y == 3 && pawnInstance)
 	{
 		brd.SetBlackEnpassant(true);
 	}
@@ -369,7 +369,7 @@ void Opponent::GenerationOne()
 	}
 
 	//Enpassant - we're a pawn moving from initial position to 2 spaces up
-	if (currentloc.y == 1 && newloc.y == 3 && pawnInstance != nullptr)
+	if (currentloc.y == 1 && newloc.y == 3 && pawnInstance)
 	{
 		brd.SetBlackEnpassant(true);
 	}
@@ -460,9 +460,6 @@ void Opponent::TestMove(std::pair<Coords, Coords> move)
 
 		//We can only get moves that result in not being checked so we can safely assume we're not checked now
 		checked = false;
-
-		//Enpassant lasts for one turn only so we can set white enpassant to false after we move
-		brd.SetWhiteEnpassant(false);
 	}
 }
 
