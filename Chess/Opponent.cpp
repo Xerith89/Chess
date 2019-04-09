@@ -286,7 +286,7 @@ void Opponent::GenerationOne()
 	initialBlackKingLoc = brd.GetBlackKingLoc();
 	initialWhiteKingLoc = brd.GetWhiteKingLoc();
 
-	auto move = Minimax(3, true,movelist);
+	auto move = Minimax(1, true,movelist);
 
 	//Assign the current position and new position to variables
 	auto newloc = move.second;
@@ -492,10 +492,7 @@ int Opponent::TestMoveScore() const
 
 std::pair<Coords, Coords> Opponent::Minimax(int depth, bool isMaximising,std::vector < std::pair<Coords, Coords>> moves_in)
 {
-	Map TestPieceMoves;
-	std::set<Coords> TestPieceTargets;
-	std::vector<std::pair<Coords, Coords>> equalMoves;
-	Map OpponentPieceMap;
+	
 	int value = 0;
 	
 	//Return the best move that has been found
@@ -531,27 +528,28 @@ std::pair<Coords, Coords> Opponent::Minimax(int depth, bool isMaximising,std::ve
 		}
 		TestMove(m);
 		value = TestMoveScore();
-		std::vector<std::pair<Coords, Coords>> nextDepth;
+	
 		for (const auto& p : TestPieceMoves)
 		{
 			const auto temp = p.second->GetMoves();
 			nextDepth.insert(nextDepth.begin(),temp.begin(),temp.end());
 		}
-		//Recurse until depth is 0 - take turns between maximiser and minimiser
-		Minimax(depth - 1, !isMaximising, nextDepth);
-		//undo move
-		UndoTestMove();
+		
 		if (isMaximising)
 		{
 			if (value > bestMoveValue)
 			{
 				bestMoveValue = value;
 				bestMove = m;
+				//undo move
+				UndoTestMove();
 			}
 			if (value == bestMoveValue)
 			{
 				bestMoveValue = value;
 				equalMoves.push_back(m);
+				//undo move
+				UndoTestMove();
 			}
 		}
 		else
@@ -560,16 +558,23 @@ std::pair<Coords, Coords> Opponent::Minimax(int depth, bool isMaximising,std::ve
 			{
 				bestMoveValue = value;
 				bestMove = m;
+				//undo move
+				UndoTestMove();
 			}
 			if (value == bestMoveValue)
 			{
 				bestMoveValue = value;
 				equalMoves.push_back(m);
+				//undo move
+				UndoTestMove();
 			}
 		}
+		//Recurse until depth is 0 - take turns between maximiser and minimiser
+		Minimax(depth - 1, !isMaximising, nextDepth);
 		//undo move
 		UndoTestMove();
+		
 	}
-
+	
 	return bestMove;
 }

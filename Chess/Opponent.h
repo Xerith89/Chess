@@ -34,6 +34,7 @@ private:
 	std::mt19937 rng;
 	Timer timer;
 	//Minimax variables
+	int value = 0;
 	Map initialState;
 	Map whiteInitialState;
 	std::set<Coords> initialWhitePieceTargets;
@@ -41,5 +42,11 @@ private:
 	Coords initialWhiteKingLoc;
 	Coords initialBlackKingLoc;
 	std::pair<Coords, Coords> bestMove;
-	int bestMoveValue;
+	int bestMoveValueNeg = -99999;
+	int bestMoveValue = 99999;
+	Map TestPieceMoves;
+	std::set<Coords> TestPieceTargets;
+	std::vector<std::pair<Coords, Coords>> equalMoves;
+	std::vector<std::pair<Coords, Coords>> nextDepth;
+	Map OpponentPieceMap;
 };

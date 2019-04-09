@@ -87,7 +87,7 @@ void Game::Update()
 		//Opponent promoting
 		if (opponent.GetPromotion())
 		{
-			opponent.Promote(&brd.whitePieces);
+			opponent.Promote(&brd.blackPieces);
 			player.SetPlayerTurn();
 
 		}
