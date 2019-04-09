@@ -184,6 +184,7 @@ void Knight::GetTargets(Map* oppoPieces)
 
 int Knight::GetScore()
 {
+	(whitePiece) ? -score : score;
 	return score;
 }
 

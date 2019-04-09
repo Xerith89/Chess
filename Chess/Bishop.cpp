@@ -213,6 +213,7 @@ void Bishop::GetTargets(Map* oppoPieces)
 
 int Bishop::GetScore()
 {
+	(whitePiece) ? -score : score;
 	return score;
 }
 

@@ -286,7 +286,7 @@ void Opponent::GenerationOne()
 	initialBlackKingLoc = brd.GetBlackKingLoc();
 	initialWhiteKingLoc = brd.GetWhiteKingLoc();
 
-	auto move = Minimax(3, true,movelist);
+	auto move = Minimax(2, true,movelist);
 
 	//Assign the current position and new position to variables
 	auto newloc = move.second;
@@ -482,7 +482,7 @@ int Opponent::TestMoveScore() const
 	}
 	for (const auto& p : brd.whitePieces)
 	{
-		score += -p.second->GetScore();
+		score += p.second->GetScore();
 	}
 	return score;
 }
