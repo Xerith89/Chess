@@ -286,7 +286,7 @@ void Opponent::GenerationOne()
 	initialBlackKingLoc = brd.GetBlackKingLoc();
 	initialWhiteKingLoc = brd.GetWhiteKingLoc();
 
-	auto move = Minimax(1, true,movelist);
+	auto move = Minimax(3, true,movelist);
 
 	//Assign the current position and new position to variables
 	auto newloc = move.second;
@@ -499,13 +499,6 @@ std::pair<Coords, Coords> Opponent::Minimax(int depth, bool isMaximising,std::ve
 		{
 			return bestMove;
 		}
-		else
-		{
-			int maximum = equalMoves.size() - 1;
-			std::uniform_int_distribution<int> movepick(0, std::max(0, maximum));
-			int move_roll = movepick(rng);
-			return equalMoves.at(move_roll);
-		}
 	}
 	
 	//If we're maximising then we want to make the biggest score. We'll start it low and vice versa for not maximising
@@ -525,7 +518,6 @@ std::pair<Coords, Coords> Opponent::Minimax(int depth, bool isMaximising,std::ve
 		}
 		TestMove(m);
 		value = TestMoveScore();
-	
 		for (const auto& p : TestPieceMoves)
 		{
 			const auto temp = p.second->GetMoves();
@@ -541,13 +533,6 @@ std::pair<Coords, Coords> Opponent::Minimax(int depth, bool isMaximising,std::ve
 				//undo move
 				UndoTestMove();
 			}
-			if (value == bestMoveValue)
-			{
-				bestMoveValue = value;
-				equalMoves.push_back(m);
-				//undo move
-				UndoTestMove();
-			}
 		}
 		else
 		{
@@ -558,16 +543,11 @@ std::pair<Coords, Coords> Opponent::Minimax(int depth, bool isMaximising,std::ve
 				//undo move
 				UndoTestMove();
 			}
-			if (value == bestMoveValue)
-			{
-				bestMoveValue = value;
-				equalMoves.push_back(m);
-				//undo move
-				UndoTestMove();
-			}
 		}
+		auto nxtDepth = nextDepth;
+		nextDepth.clear();
 		//Recurse until depth is 0 - take turns between maximiser and minimiser
-		Minimax(depth - 1, !isMaximising, nextDepth);
+		Minimax(depth - 1, !isMaximising, nxtDepth);
 		//undo move
 		UndoTestMove();
 		
