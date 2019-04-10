@@ -182,12 +182,6 @@ void Rook::GetTargets(Map* oppoPieces)
 
 int Rook::GetScore() 
 {
-	
-	if (brd.playedMoves.size() < 15)
-	{
-		score = 50 + brd.playedMoves.size();
-	}
-	(whitePiece) ? -score : score;
 	return score;
 }
 

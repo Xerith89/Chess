@@ -161,7 +161,6 @@ void King::GetTargets(Map* oppoPieces)
 
 int King::GetScore()
 {
-	(whitePiece) ? -score : score;
 	return score;
 }
 

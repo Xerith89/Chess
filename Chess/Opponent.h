@@ -28,13 +28,12 @@ private:
 	void UndoTestMove();
 	int TestMoveScore()const;
 	bool humanOpponent;
-	std::pair<Coords,Coords> Minimax(int depth, bool isMaximising, std::vector<std::pair<Coords,Coords>> moves_in);
+	std::pair<Coords,Coords> Minimax(std::vector<std::pair<Coords,Coords>> moves_in);
 	Sprite promotionSprite;
 	std::random_device rd;
 	std::mt19937 rng;
 	Timer timer;
 	//Minimax variables
-	int value = 0;
 	Map initialState;
 	Map whiteInitialState;
 	std::set<Coords> initialWhitePieceTargets;
@@ -42,11 +41,11 @@ private:
 	Coords initialWhiteKingLoc;
 	Coords initialBlackKingLoc;
 	std::pair<Coords, Coords> bestMove;
-	int bestMoveValueNeg = -99999;
-	int bestMoveValue = 99999;
 	Map TestPieceMoves;
 	std::set<Coords> TestPieceTargets;
 	std::vector<std::pair<Coords, Coords>> equalMoves;
 	std::vector<std::pair<Coords, Coords>> nextDepth;
 	Map OpponentPieceMap;
+	void ResetWhiteMove();
+	void DoWhiteMove(const std::pair<Coords, Coords> input);
 };

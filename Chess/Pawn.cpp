@@ -164,7 +164,7 @@ int Pawn::GetScore()
 {
 	//Early/Mid Game
 	auto totalPieces = brd.blackPieces.size() + brd.whitePieces.size();
-	
+	score = 150;
 	if (brd.playedMoves.size() < 50 || totalPieces >= 20)
 	{
 		//Switch on the column and adjust the value for the pawn depending on the row
@@ -475,7 +475,6 @@ int Pawn::GetScore()
 		break;
 	}
 	}
-	(whitePiece) ? -score : score;
 	return score;
 }
 

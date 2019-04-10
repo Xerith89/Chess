@@ -368,7 +368,6 @@ void Queen::GetTargets(Map* oppoPieces)
 
 int Queen::GetScore()
 {
-	(whitePiece) ? -score : score;
 	return score;
 }
 
