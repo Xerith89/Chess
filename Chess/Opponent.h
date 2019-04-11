@@ -43,6 +43,8 @@ private:
 	std::pair<Coords, Coords> bestMove;
 	Map TestPieceMoves;
 	std::set<Coords> TestPieceTargets;
+	std::vector<std::pair<Coords, Coords>> equalMoves;
+	std::vector<std::pair<Coords, Coords>> nextDepth;
 	Map OpponentPieceMap;
 	void ResetWhiteMove();
 	void DoWhiteMove(const std::pair<Coords, Coords> input);
