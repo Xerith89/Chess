@@ -509,6 +509,7 @@ std::pair<Coords, Coords> Opponent::Minimax(std::vector < std::pair<Coords, Coor
 	//for evaluating score
 	int value = 0;
 	int bestMoveValue = -99999;
+	int bestMoveValueNeg = 99999;
 	std::vector<std::pair<Coords, Coords>> whiteMoves;
 	std::vector<std::pair<Coords, Coords>> temp;
 	std::set<std::pair<Coords, Coords>> bestMoves;
@@ -525,7 +526,6 @@ std::pair<Coords, Coords> Opponent::Minimax(std::vector < std::pair<Coords, Coor
 	bestMoves.clear();
 	for (const auto m : moves_in)
 	{
-		value = 0;
 		TestMove(m);
 		whiteMoves.clear();
 		for (const auto p : whiteInitialState)
@@ -536,17 +536,23 @@ std::pair<Coords, Coords> Opponent::Minimax(std::vector < std::pair<Coords, Coor
 
 		for (const auto k : whiteMoves)
 		{
+			value = 0;
 			//do white move
 			DoWhiteMove(k);
 			//Test the game board value
 			value = TestMoveScore();
 
 			//The higher the value, the better the move for black
-			if (value > bestMoveValue)
+			if (value < bestMoveValueNeg)
 			{
-				bestMoveValue = value;
-				bestMove = m;
+				if (value > bestMoveValue)
+				{
+					bestMoveValue = value;
+					bestMove = m;
+				}
+				bestMoveValueNeg = value;
 			}
+			
 			else if (value == bestMoveValue)
 			{
 				bestMoves.insert(m);
@@ -595,7 +601,7 @@ void Opponent::DoWhiteMove(const std::pair<Coords, Coords> input)
 		piece->second.get()->MoveTo({ input.second.x, input.second.y });
 		whiteInitialState.insert_or_assign({ input.second.x,input.second.y }, piece->second);
 		whiteInitialState.erase({ input.first.x,input.first.y });
-	//	kingInstance = dynamic_cast<King*>(piece->second.get());
+		kingInstance = dynamic_cast<King*>(piece->second.get());
 		//Update the king position if we've moved it - if we're castling we also need to move the relevent rook
 		if (kingInstance)
 		{
