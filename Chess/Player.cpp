@@ -66,7 +66,7 @@ void Player::DoTurn()
 				{
 					brd.UpdateWhiteKingLoc({ selectedTarget.x,selectedTarget.y });
 					//Left castling
-					if (selectedTarget.x == 2 && !hasCastled)
+					if (selectedTarget.x == 1 && !hasCastled)
 					{
 						auto rook = brd.whitePieces.find({ 0,7 });
 						if (rook != brd.whitePieces.end())
@@ -80,13 +80,13 @@ void Player::DoTurn()
 						}
 					}
 					//right castling
-					if (selectedTarget.x == 6 && !hasCastled)
+					if (selectedTarget.x == 5 && !hasCastled)
 					{
 						auto rook = brd.whitePieces.find({ 7,7 });
 						if (rook != brd.whitePieces.end())
 						{
-							rook->second.get()->MoveTo({ 5, 7 });
-							brd.whitePieces.insert_or_assign({ 5, 7 }, std::move(rook->second));
+							rook->second.get()->MoveTo({ 4, 7 });
+							brd.whitePieces.insert_or_assign({ 4, 7 }, std::move(rook->second));
 							brd.whitePieces.erase({ 7,7 });
 							brd.SetLeftCastling(false);
 							brd.SetRightCastling(false);
@@ -286,15 +286,15 @@ void Player::TestForCastling()
 			return rhs.first == leftRookStartLoc;
 		});
 		const auto rightRookMoved = std::find_if(brd.playedMoves.begin(), brd.playedMoves.end(), [&](const std::pair<Coords, Coords>& rhs) {
-			return rhs.first == startKingLoc;
+			return rhs.first == rightRookStartLoc;
 		});
 
 		//First we check the King and Left most rook
 		if (leftRookMoved == brd.playedMoves.end())
 		{
 			//Make sure there are no pieces in the way and that the squares we're moving through aren't under attack
-			if (brd.whitePieces.count({ 1, 7 }) == 0 && brd.whitePieces.count({ 2, 7 }) == 0 &&
-				brd.whitePieces.count({ 3, 7 }) == 0 && brd.blackPieces.count({ 1, 7 }) == 0 && brd.blackPieces.count({ 2, 7 }) == 0 &&
+			if (brd.whitePieces.count({ 1, 7 }) == 0 && brd.whitePieces.count({ 2, 7 }) == 0 
+				&& brd.blackPieces.count({ 1, 7 }) == 0 && brd.blackPieces.count({ 2, 7 }) == 0 &&
 				brd.blackPieces.count({ 3, 7 }) == 0 && brd.blackPieceTargets.count({ 2,7 }) == 0 && brd.blackPieceTargets.count({ 3,7 }) == 0)
 			{
 				brd.SetLeftCastling(true);
@@ -305,8 +305,8 @@ void Player::TestForCastling()
 		{
 			//Make sure there are no pieces in the way
 			if (brd.whitePieces.count({ 5, 7 }) == 0 && brd.whitePieces.count({ 6, 7 }) == 0 &&
-				brd.blackPieces.count({ 5, 7 }) == 0 && brd.blackPieces.count({ 6, 7 }) == 0 &&
-				brd.blackPieceTargets.count({ 5, 7 }) == 0 && brd.blackPieceTargets.count({ 6, 7 }) == 0)
+				brd.blackPieces.count({ 5, 7 }) == 0 && brd.blackPieces.count({ 6, 7 }) == 0 && brd.blackPieces.count({ 4, 7 }) == 0 && (brd.whitePieces.count({ 4, 7 }) == 0
+				&& brd.blackPieceTargets.count({ 5, 7 }) == 0 && brd.blackPieceTargets.count({ 6, 7 }) == 0 && brd.blackPieceTargets.count({ 4, 7 }) == 0))
 			{
 				brd.SetRightCastling(true);
 			}

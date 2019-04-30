@@ -109,7 +109,7 @@ void Opponent::TestForCastling()
 			return rhs.first == leftRookStartLoc;
 		});
 		const auto rightRookMoved = std::find_if(brd.playedMoves.begin(), brd.playedMoves.end(), [&](const std::pair<Coords, Coords>& rhs) {
-			return rhs.first == startKingLoc;
+			return rhs.first == rightRookStartLoc;
 		});
 
 		//First we check the King and Left most rook
@@ -117,8 +117,8 @@ void Opponent::TestForCastling()
 		{
 			//Make sure there are no pieces in the way and that the squares we're moving through aren't under attack
 			if (brd.blackPieces.count({ 1, 0 }) == 0 && brd.blackPieces.count({ 2, 0 }) == 0 &&
-				brd.blackPieces.count({ 3, 0 }) == 0 && brd.whitePieces.count({ 1, 0 }) == 0 && brd.whitePieces.count({ 2, 0 }) == 0 &&
-				brd.whitePieces.count({ 3, 0 }) == 0 && brd.whitePieceTargets.count({ 2,0 }) == 0 && brd.whitePieceTargets.count({ 3,0 }) == 0)
+				brd.whitePieces.count({ 1, 0 }) == 0 && brd.whitePieces.count({ 2, 0 }) == 0 &&
+				brd.whitePieces.count({ 3, 0 }) == 0 && brd.whitePieceTargets.count({ 2,0 }) == 0)
 			{
 				brd.SetLeftCastling(true);
 			}
@@ -127,9 +127,9 @@ void Opponent::TestForCastling()
 		if (rightRookMoved == brd.playedMoves.end())
 		{
 			//Make sure there are no pieces in the way
-			if (brd.blackPieces.count({ 5, 0 }) == 0 && brd.blackPieces.count({ 6, 0 }) == 0 &&
+			if (brd.blackPieces.count({ 5, 0 }) == 0 && brd.blackPieces.count({ 6, 0 }) == 0 && brd.blackPieces.count({ 4, 0 }) == 0 &&
 				brd.whitePieces.count({ 5, 0 }) == 0 && brd.whitePieces.count({ 6, 0 }) == 0 &&
-				brd.whitePieceTargets.count({ 5, 0 }) == 0 && brd.whitePieceTargets.count({ 6, 0 }) == 0)
+				brd.whitePieceTargets.count({ 4, 0 }) == 0 && brd.whitePieceTargets.count({ 5, 0 }) == 0 && brd.whitePieceTargets.count({ 6, 0 }) == 0)
 			{
 				brd.SetRightCastling(true);
 			}
@@ -201,8 +201,8 @@ void Opponent::GenerationZero()
 				auto rook = brd.blackPieces.find({ 7,0 });
 				if (rook != brd.blackPieces.end())
 				{
-					rook->second.get()->MoveTo({ 5, 0 });
-					brd.blackPieces.insert_or_assign({ 5, 0 }, std::move(rook->second));
+					rook->second.get()->MoveTo({ 4, 0 });
+					brd.blackPieces.insert_or_assign({ 4, 0 }, std::move(rook->second));
 					brd.blackPieces.erase({ 7,0 });
 					brd.SetLeftCastling(false);
 					brd.SetRightCastling(false);
@@ -470,7 +470,6 @@ void Opponent::TestMove(std::pair<Coords, Coords> move)
 
 void Opponent::UndoTestMove()
 {
-
 	for (const auto& p : brd.whitePieces)
 	{
 		p.second->MoveTo({ p.first.first,p.first.second });
@@ -576,10 +575,6 @@ std::pair<Coords, Coords> Opponent::Minimax(std::vector < std::pair<Coords, Coor
 
 void Opponent::ResetWhiteMove()
 {
-	for (const auto& p : brd.whitePieces)
-	{
-		p.second->MoveTo({ p.first.first,p.first.second });
-	}
 	initialWhitePieceTargets = brd.whitePieceTargets;
 	whiteInitialState = brd.whitePieces;
 	initialWhiteKingLoc = brd.GetWhiteKingLoc();
@@ -590,10 +585,11 @@ void Opponent::DoWhiteMove(const std::pair<Coords, Coords> input)
 	auto piece = whiteInitialState.find({ input.first.x,input.first.y });
 	if (piece != whiteInitialState.end())
 	{
+		kingInstance = dynamic_cast<King*>(piece->second.get());
 		piece->second.get()->MoveTo({ input.second.x, input.second.y });
 		whiteInitialState.insert_or_assign({ input.second.x,input.second.y }, piece->second);
 		whiteInitialState.erase({ input.first.x,input.first.y });
-	//	kingInstance = dynamic_cast<King*>(piece->second.get());
+		
 		//Update the king position if we've moved it - if we're castling we also need to move the relevent rook
 		if (kingInstance)
 		{

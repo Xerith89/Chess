@@ -8,7 +8,6 @@ TODO LIST
 .Drawn games
 .Generational Minimax AI
 .Player best move
-.Played moves written to screen
 .Menu Screens
 .Sounds
 .Multiplayer
