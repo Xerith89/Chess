@@ -26,11 +26,11 @@ Game::Game(Window & wnd)
 	opponent(wnd,brd)	
 {
 	//Kings
-	brd.whitePieces.emplace(std::make_pair(4, 7), std::make_shared<King>(4, 7, "./Sprites/kingW.bmp",true,brd));
-	brd.blackPieces.emplace(std::make_pair(4, 0), std::make_shared<King>(4, 0, "./Sprites/kingB.bmp",false,brd));
+	brd.whitePieces.emplace(std::make_pair(3, 7), std::make_shared<King>(3, 7, "./Sprites/kingW.bmp",true,brd));
+	brd.blackPieces.emplace(std::make_pair(3, 0), std::make_shared<King>(3, 0, "./Sprites/kingB.bmp",false,brd));
 	//Queens
-	brd.whitePieces.emplace(std::make_pair(3,7), std::make_shared<Queen>(3, 7, "./Sprites/queenW.bmp",true,brd));
-	brd.blackPieces.emplace(std::make_pair(3,0), std::make_shared<Queen>(3, 0, "./Sprites/queenB.bmp",false,brd));
+	brd.whitePieces.emplace(std::make_pair(4,7), std::make_shared<Queen>(4, 7, "./Sprites/queenW.bmp",true,brd));
+	brd.blackPieces.emplace(std::make_pair(4,0), std::make_shared<Queen>(4, 0, "./Sprites/queenB.bmp",false,brd));
 	//Bishops
 	brd.whitePieces.emplace(std::make_pair(2, 7), std::make_shared<Bishop>(2, 7, "./Sprites/bishopW.bmp",true,brd));
 	brd.whitePieces.emplace(std::make_pair(5, 7), std::make_shared<Bishop>(5, 7, "./Sprites/bishopW.bmp",true,brd));
@@ -89,7 +89,7 @@ void Game::Update()
 		//Opponent promoting
 		if (opponent.GetPromotion())
 		{
-			opponent.Promote(&brd.whitePieces);
+			opponent.Promote(&brd.blackPieces);
 			player.SetPlayerTurn();
 
 		}

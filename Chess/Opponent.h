@@ -24,9 +24,28 @@ private:
 	void GenerationFour();
 	void GenerationFive();
 	void GenerationSix();
+	void TestMove(std::pair<Coords, Coords>);
+	void UndoTestMove();
+	int TestMoveScore()const;
 	bool humanOpponent;
+	std::pair<Coords,Coords> Minimax(std::vector<std::pair<Coords,Coords>> moves_in);
 	Sprite promotionSprite;
 	std::random_device rd;
 	std::mt19937 rng;
 	Timer timer;
+	//Minimax variables
+	Map initialState;
+	Map whiteInitialState;
+	std::set<Coords> initialWhitePieceTargets;
+	std::set<Coords> initialBlackPieceTargets;
+	Coords initialWhiteKingLoc;
+	Coords initialBlackKingLoc;
+	std::pair<Coords, Coords> bestMove;
+	Map TestPieceMoves;
+	std::set<Coords> TestPieceTargets;
+	std::vector<std::pair<Coords, Coords>> equalMoves;
+	std::vector<std::pair<Coords, Coords>> nextDepth;
+	Map OpponentPieceMap;
+	void ResetWhiteMove();
+	void DoWhiteMove(const std::pair<Coords, Coords> input);
 };

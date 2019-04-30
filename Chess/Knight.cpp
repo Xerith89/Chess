@@ -182,3 +182,8 @@ void Knight::GetTargets(Map* oppoPieces)
 	}
 }
 
+int Knight::GetScore()
+{
+	return score;
+}
+

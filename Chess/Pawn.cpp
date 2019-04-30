@@ -160,5 +160,13 @@ void Pawn::GetTargets(Map* oppoPieces)
 	}
 }
 
+int Pawn::GetScore()
+{
+	//Early/Mid Game
+	auto totalPieces = brd.blackPieces.size() + brd.whitePieces.size();
+	score = 150;
+	return score;
+}
+
 
 

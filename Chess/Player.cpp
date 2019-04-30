@@ -106,7 +106,7 @@ void Player::DoTurn()
 				}
 
 				//Enpassant - we're a pawn moving from initial position to 2 spaces up
-				if (selectedPiece.y == 6 && selectedTarget.y == 4 && pawnInstance != nullptr)
+				if (selectedPiece.y == 6 && selectedTarget.y == 4 && pawnInstance)
 				{
 					brd.SetWhiteEnpassant(true);
 				}
