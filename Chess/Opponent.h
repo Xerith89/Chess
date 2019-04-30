@@ -24,11 +24,9 @@ private:
 	void GenerationFour();
 	void GenerationFive();
 	void GenerationSix();
-	void TestMove(std::pair<Coords, Coords>);
-	void UndoTestMove();
-	int TestMoveScore()const;
-	bool humanOpponent;
-	std::pair<Coords,Coords> Minimax(std::vector<std::pair<Coords,Coords>> moves_in);
+	
+	bool humanOpponent = false;
+	
 	Sprite promotionSprite;
 	std::random_device rd;
 	std::mt19937 rng;
@@ -38,14 +36,14 @@ private:
 	Map whiteInitialState;
 	std::set<Coords> initialWhitePieceTargets;
 	std::set<Coords> initialBlackPieceTargets;
-	Coords initialWhiteKingLoc;
-	Coords initialBlackKingLoc;
+	Coords initialWhiteKingLoc = brd.GetWhiteKingLoc();
+	Coords initialBlackKingLoc = brd.GetBlackKingLoc();
 	std::pair<Coords, Coords> bestMove;
-	Map TestPieceMoves;
-	std::set<Coords> TestPieceTargets;
 	std::vector<std::pair<Coords, Coords>> equalMoves;
-	std::vector<std::pair<Coords, Coords>> nextDepth;
-	Map OpponentPieceMap;
 	void ResetWhiteMove();
+	void TestMove(std::pair<Coords, Coords>);
+	void UndoTestMove();
+	int TestMoveScore()const;
 	void DoWhiteMove(const std::pair<Coords, Coords> input);
+	std::pair<Coords, Coords> Minimax(std::vector<std::pair<Coords, Coords>> moves_in);
 };

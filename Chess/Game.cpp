@@ -19,7 +19,7 @@ Game::Game(Window & wnd)
 	wnd(wnd),
 	gfx(wnd.GetHandle()),
 	brd("./Sprites/board.bmp",30,25),
-	gui(),
+	gui(brd),
 	player(wnd,brd,gui),
 	opponent(wnd,brd)	
 {
@@ -63,18 +63,7 @@ void Game::Update()
 	{
 	case GameState::NORMAL:
 		
-		//Players turn and they are not promoting
-		if (player.PlayerTurn() && !player.GetPromotion())
-		{
-			player.TestForCheck();
-			player.DoTurn();
-		}
-
-		//Player is promoting
-		if (player.GetPromotion())
-		{
-			player.Promote(&brd.whitePieces);
-		}
+		
 
 		//Opponents turn and not promoting
 		if (!player.PlayerTurn() && !opponent.GetPromotion())
@@ -90,6 +79,19 @@ void Game::Update()
 			opponent.Promote(&brd.blackPieces);
 			player.SetPlayerTurn();
 
+		}
+
+		//Players turn and they are not promoting
+		if (player.PlayerTurn() && !player.GetPromotion())
+		{
+			player.TestForCheck();
+			player.DoTurn();
+		}
+
+		//Player is promoting
+		if (player.GetPromotion())
+		{
+			player.Promote(&brd.whitePieces);
 		}
 
 		//End game status checks

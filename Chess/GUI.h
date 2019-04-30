@@ -1,21 +1,31 @@
 #pragma once
 #include "Sprite.h"
 #include "Graphics.h"
+#include "Board.h"
+#include <algorithm>
 
 class GUI {
 private:
 	Sprite playedMovesSprite;
 	Sprite helpPlayerSprite;
 	Sprite promotionSprite;
-	int const playedMovesX = Graphics::GetScreenWidth()-255;
-	int const playedMovesY = 10;
-	int const helpPlayerX = Graphics::GetScreenWidth() - 215;
-	int const helpPlayerY = Graphics::GetScreenHeight()-80;
-	int const promotionX = (Graphics::GetScreenWidth()/2) - promotionSprite.GetWidth();
-	int const promotionY = (Graphics::GetScreenHeight()/2) - promotionSprite.GetHeight();
-
+	Board& brd;
+	void TranslateCordToSprite(Coords in);
+	const int playedMovesX = Graphics::GetScreenWidth()-255;
+	const int playedMovesY = 10;
+	const int helpPlayerX = Graphics::GetScreenWidth() - 215;
+	const int helpPlayerY = Graphics::GetScreenHeight()-80;
+	const int promotionX = (Graphics::GetScreenWidth()/2) - promotionSprite.GetWidth();
+	const int promotionY = (Graphics::GetScreenHeight()/2) - promotionSprite.GetHeight();
+	//Character sprites
+	Sprite to;
+	std::vector<Sprite> letters;
+	std::vector<Sprite> numbers;
+	const int yOffset = 32;
+	const int xOffset = 32;
+	const int yStart = 100;
 public:
-	GUI();
+	GUI(Board& brd);
 	int GetPromoteGraphicX()const;
 	int GetPromoteGraphicY()const;
 	void DrawGUI(Graphics& gfx)const;
