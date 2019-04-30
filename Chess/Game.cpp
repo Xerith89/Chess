@@ -6,7 +6,9 @@ BUG LIST
 .Padding issue for bitmap loading causing graphical glitch
 TODO LIST
 .Drawn games
-.Generational Minimax AI
+.Smarter move evaluation
+.Deeper move searching
+.Alpha beta pruning
 .Player best move
 .Played moves written to screen
 .Menu Screens
