@@ -265,7 +265,7 @@ void Opponent::GenerationOne()
 {
 	movelist.clear();
 	std::vector<std::pair<Coords, Coords>> temp;
-	
+		
 	//Go through all our pieces, get moves for them. The returning vector is then amalgamated.
 	for (const auto& p : brd.blackPieces)
 	{
@@ -485,19 +485,16 @@ void Opponent::UndoTestMove()
 	initialBlackPieceTargets = brd.blackPieceTargets;
 	initialWhiteKingLoc = brd.GetWhiteKingLoc();
 	initialBlackKingLoc = brd.GetBlackKingLoc();
-
-	
-	
 }
 
 int Opponent::TestMoveScore() const
 {
 	int score = 0;
-	for (const auto& p : brd.blackPieces)
+	for (const auto& p : initialState)
 	{
 		score += p.second->GetScore();
 	}
-	for (const auto& p : brd.whitePieces)
+	for (const auto& p : whiteInitialState)
 	{
 		score -= p.second->GetScore();
 	}
@@ -525,7 +522,6 @@ std::pair<Coords, Coords> Opponent::Minimax(std::vector < std::pair<Coords, Coor
 	bestMoves.clear();
 	for (const auto m : moves_in)
 	{
-		value = 0;
 		TestMove(m);
 		whiteMoves.clear();
 		for (const auto p : whiteInitialState)
@@ -533,7 +529,7 @@ std::pair<Coords, Coords> Opponent::Minimax(std::vector < std::pair<Coords, Coor
 			temp = p.second->GetMoves();
 			whiteMoves.insert(whiteMoves.end(), temp.begin(), temp.end());
 		}
-
+		
 		for (const auto k : whiteMoves)
 		{
 			//do white move
@@ -546,6 +542,7 @@ std::pair<Coords, Coords> Opponent::Minimax(std::vector < std::pair<Coords, Coor
 			{
 				bestMoveValue = value;
 				bestMove = m;
+				bestMoves.clear();
 			}
 			else if (value == bestMoveValue)
 			{
@@ -556,6 +553,7 @@ std::pair<Coords, Coords> Opponent::Minimax(std::vector < std::pair<Coords, Coor
 			ResetWhiteMove();
 
 		}
+
 		//Undo everything
 		UndoTestMove();
 	}
@@ -565,7 +563,7 @@ std::pair<Coords, Coords> Opponent::Minimax(std::vector < std::pair<Coords, Coor
 
 	if (bestMoves.size() > 0)
 	{
-		int maximum = movelist.size() - 1;
+		int maximum = bestMoves.size() - 1;
 		std::uniform_int_distribution<int> movepick(0, std::max(0, maximum));
 		int move_roll = movepick(rng);
 		std::set<std::pair<Coords,Coords>>::const_iterator it(bestMoves.begin());
