@@ -12,6 +12,7 @@
 #include "Player.h"
 #include "Opponent.h"
 #include "GUI.h"
+#include "Menu.h"
 
 class Game {
 private:
@@ -22,25 +23,40 @@ private:
 	Sprite stalemate = ("./Sprites/stalemate.bmp");
 	void Render();
 	void Update();
+	//Controls the state of the overrall program
+	enum ProgramState {
+		MAINMENU,
+		PLAYING,
+		HOSTING,
+		JOINING,
+		QUIT
+	};
+	//Controls the state of the game being played
 	enum GameState {
 		NORMAL,
 		PLAYERCHECKED,
 		OPPONENTCHECKED,
 		PLAYERCHECKMATED,
 		OPPONENTCHECKMATED,
-		STALEMATE
+		STALEMATE,
+		DRAW
 	};
+	//variables for controlling enums
 	int gameStatus;
+	int programStatus;
+	//Turn controllers
 	bool playerTurn = true;
 	bool opponentTurn = false;
+	//Local objects
+	Board brd;
+	Player player;
+	Opponent opponent;
+	GUI gui;
+	Menu menu;
 public:
 	Game(Window& wnd);
 	~Game() = default;
 	Game(Game&) = delete;
 	Game& operator=(Game&) = delete;
-	Board brd;
-	Player player;
-	Opponent opponent;
-	GUI gui;
 	void Run();
 };

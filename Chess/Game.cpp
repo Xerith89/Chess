@@ -20,7 +20,8 @@ Game::Game(Window & wnd)
 	brd("./Sprites/board.bmp",30,25),
 	gui(brd),
 	player(wnd,brd,gui),
-	opponent(wnd,brd)	
+	opponent(wnd,brd),
+	menu()
 {
 	//Kings
 	brd.whitePieces.emplace(std::make_pair(3, 7), std::make_shared<King>(3, 7, "./Sprites/kingW.bmp",true,brd));
@@ -52,102 +53,128 @@ Game::Game(Window & wnd)
 		brd.whitePieces.emplace(std::make_pair(i,6), std::make_shared<Pawn>(i, 6, "./Sprites/pawnW.bmp",true,brd));
 		brd.blackPieces.emplace(std::make_pair(i,1), std::make_shared<Pawn>(i, 1, "./Sprites/pawnB.bmp",false,brd));
 	}
-
+	programStatus = ProgramState::MAINMENU;
 	gameStatus = GameState::NORMAL;
 }
 
 void Game::Update()
 {
-	switch(gameStatus)
+	switch (programStatus)
 	{
-	case GameState::NORMAL:
-		
-		
-
-		//Opponents turn and not promoting
-		if (!player.PlayerTurn() && !opponent.GetPromotion())
+	case MAINMENU:
+		menu.UpdateMenu(wnd);
+		if (wnd.inpt.LeftMsePressed())
 		{
-			opponent.TestForCheck();
-			opponent.DoTurn();
-			player.SetPlayerTurn();
+			programStatus += menu.GetSelectedState();
 		}
-
-		//Opponent promoting
-		if (opponent.GetPromotion())
+		break;
+	case PLAYING:
+		switch (gameStatus)
 		{
-			opponent.Promote(&brd.blackPieces);
-			player.SetPlayerTurn();
+		case GameState::NORMAL:
+			//Opponents turn and not promoting
+			if (!player.PlayerTurn() && !opponent.GetPromotion())
+			{
+				opponent.TestForCheck();
+				opponent.DoTurn();
+				player.SetPlayerTurn();
+			}
 
-		}
+			//Opponent promoting
+			if (opponent.GetPromotion())
+			{
+				opponent.Promote(&brd.blackPieces);
+				player.SetPlayerTurn();
 
-		//Players turn and they are not promoting
-		if (player.PlayerTurn() && !player.GetPromotion())
-		{
-			player.TestForCheck();
-			player.DoTurn();
-		}
+			}
 
-		//Player is promoting
-		if (player.GetPromotion())
-		{
-			player.Promote(&brd.whitePieces);
-		}
+			//Players turn and they are not promoting
+			if (player.PlayerTurn() && !player.GetPromotion())
+			{
+				player.TestForCheck();
+				player.DoTurn();
+			}
 
-		//End game status checks
-		if (opponent.GetCheckMated())
-		{
-			gameStatus = GameState::OPPONENTCHECKMATED;
-		}
+			//Player is promoting
+			if (player.GetPromotion())
+			{
+				player.Promote(&brd.whitePieces);
+			}
 
-		if (player.GetCheckMated())
-		{
-			gameStatus = GameState::PLAYERCHECKMATED;
-		}
+			//End game status checks
+			if (opponent.GetCheckMated())
+			{
+				gameStatus = GameState::OPPONENTCHECKMATED;
+			}
 
-		if (player.GetStaleMated() || opponent.GetStaleMated())
-		{
-			gameStatus = GameState::STALEMATE;
+			if (player.GetCheckMated())
+			{
+				gameStatus = GameState::PLAYERCHECKMATED;
+			}
+
+			if (player.GetStaleMated() || opponent.GetStaleMated())
+			{
+				gameStatus = GameState::STALEMATE;
+			}
+			break;
 		}
+		break;
+	case JOINING:
+		//do joining stuff
+		break;
+	case HOSTING:
+		//do hosting stuff
+		break;
+	case QUIT:
+		//do quit stuff
 		break;
 	}
 }
 
 void Game::Render()
 {
-	switch  (gameStatus)
+	switch (programStatus)
 	{
-	case GameState::NORMAL:
-		gui.DrawGUI(gfx);
-		brd.DrawBoard(gfx);
-		player.DrawPossibleMoves(gfx);
-		player.DrawChecked(gfx);
-		opponent.DrawChecked(gfx);
-		player.DrawPieces(gfx);
-		opponent.DrawPieces(gfx);
-		if (player.GetPromotion())
+	case MAINMENU:
+		menu.DrawMenuScreen(gfx);
+		break;
+	case PLAYING:
+		switch (gameStatus)
 		{
-			gui.DrawPromotion(gfx);
+		case GameState::NORMAL:
+			gui.DrawGUI(gfx);
+			brd.DrawBoard(gfx);
+			player.DrawPossibleMoves(gfx);
+			player.DrawChecked(gfx);
+			opponent.DrawChecked(gfx);
+			player.DrawPieces(gfx);
+			opponent.DrawPieces(gfx);
+			if (player.GetPromotion())
+			{
+				gui.DrawPromotion(gfx);
+			}
+			break;
+		case GameState::OPPONENTCHECKMATED:
+			brd.DrawBoard(gfx);
+			opponent.DrawChecked(gfx);
+			player.DrawPieces(gfx);
+			opponent.DrawPieces(gfx);
+			gfx.DrawSprite(200, 200, playerwin);
+			break;
+		case GameState::PLAYERCHECKMATED:
+			brd.DrawBoard(gfx);
+			player.DrawChecked(gfx);
+			player.DrawPieces(gfx);
+			opponent.DrawPieces(gfx);
+			gfx.DrawSprite(200, 200, playerlose);
+			break;
+		case GameState::STALEMATE:
+			brd.DrawBoard(gfx);
+			player.DrawPieces(gfx);
+			opponent.DrawPieces(gfx);
+			gfx.DrawSprite(200, 200, stalemate);
+			break;
 		}
-		break;
-	case GameState::OPPONENTCHECKMATED:
-		brd.DrawBoard(gfx);
-		opponent.DrawChecked(gfx);
-		player.DrawPieces(gfx);
-		opponent.DrawPieces(gfx);
-		gfx.DrawSprite(200, 200, playerwin);
-		break;
-	case GameState::PLAYERCHECKMATED:
-		brd.DrawBoard(gfx);
-		player.DrawChecked(gfx);
-		player.DrawPieces(gfx);
-		opponent.DrawPieces(gfx);
-		gfx.DrawSprite(200, 200, playerlose);
-		break;
-	case GameState::STALEMATE:
-		brd.DrawBoard(gfx);
-		player.DrawPieces(gfx);
-		opponent.DrawPieces(gfx);
-		gfx.DrawSprite(200, 200, stalemate);
 		break;
 	}
 }
