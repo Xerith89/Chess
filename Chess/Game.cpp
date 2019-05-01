@@ -8,7 +8,6 @@ TODO LIST
 .Drawn games
 .Generational Minimax AI
 .Player best move
-.Menu Screens
 .Sounds
 .Multiplayer
 */
@@ -126,7 +125,7 @@ void Game::Update()
 		//do hosting stuff
 		break;
 	case QUIT:
-		//do quit stuff
+		PostQuitMessage(0);
 		break;
 	}
 }
