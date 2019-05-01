@@ -45,7 +45,7 @@ Sprite::Sprite(const std::string Filename)
 	//Work out the padding for the alignment of the bits
 	const int padding = (4 - (width * 3) % 4) % 4;
 	//Start our loop through the image data and store the colors
-	for (int y = yStart; y > yEnd; y += yDir)//y for loop
+	for (int y = yStart; y != yEnd; y += yDir)//y for loop
 	{
 		for (int x = 0; x < width; x++) //x loop
 		{
@@ -64,7 +64,6 @@ Sprite::Sprite(const std::string Filename)
 		{
 			file.seekg(padding, std::ios::cur); 
 		}
-		file.seekg(padding, std::ios::cur);
 	}
 }
 
