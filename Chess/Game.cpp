@@ -3,7 +3,6 @@
 
 /*
 BUG LIST
-.Padding issue for bitmap loading causing graphical glitch
 TODO LIST
 .Drawn games
 .Generational Minimax AI

@@ -257,9 +257,9 @@ void Graphics::DrawSprite(int x, int y, const Sprite & sprite)
 	int width = sprite.GetWidth();
 	int height = sprite.GetHeight();
 
-	for (int i = 0; i <= height; i++)
+	for (int i = 0; i < height; i++)
 	{
-		for (int j = 0; j <= width; j++)
+		for (int j = 0; j < width; j++)
 		{
 			if (sprite.GetColor(j, i) != chroma)
 			{
