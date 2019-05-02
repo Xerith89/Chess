@@ -121,7 +121,10 @@ void Game::Update()
 		//do joining stuff
 		break;
 	case HOSTING:
-		//do hosting stuff
+		if (server.GetServerStatus() == 0)
+		{
+			server.CreateServer();
+		}
 		break;
 	case QUIT:
 		PostQuitMessage(0);
@@ -173,6 +176,12 @@ void Game::Render()
 			gfx.DrawSprite(200, 200, stalemate);
 			break;
 		}
+		break;
+	case HOSTING:
+		server.DrawStates(gfx);
+		break;
+	case JOINING:
+		//do something
 		break;
 	}
 }

@@ -167,6 +167,9 @@
     <ClCompile Include="Menu.cpp">
       <Filter>Source Files\Game Files</Filter>
     </ClCompile>
+    <ClCompile Include="Server.cpp">
+      <Filter>Source Files\Networking</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="chess.ico">
