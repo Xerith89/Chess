@@ -49,6 +49,8 @@ void Server::CreateServer()
 
 void Server::Cleanup()
 {
+	hostState = 0;
+	serverState = ServerStatus::STARTING;
 	enet_host_destroy(server);
 }
 

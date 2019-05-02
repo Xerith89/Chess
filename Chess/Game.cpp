@@ -134,7 +134,7 @@ void Game::Update()
 	case HOSTING:
 		if (wnd.inpt.KbdKeyPressed(VK_SPACE))
 		{
-		//	server.Cleanup();
+			server.Cleanup();
 			programStatus = ProgramState::MAINMENU;
 		}
 		switch (server.GetServerStatus())
