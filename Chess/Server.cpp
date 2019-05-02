@@ -1,9 +1,20 @@
 #include "Server.h"
 
+void Server::WaitForConnections()
+{
+	while (enet_host_service(server, &event, 1000) > 0)
+	{
+		if (event.type == ENET_EVENT_TYPE_CONNECT)
+		{
+			serverState = ServerStatus::CONNECTED;
+		}
+	}
+}
+
 void Server::DrawStates(Graphics& gfx) const
 {
 	gfx.DrawSprite(200, 180, hostStates.at(hostState));
-	gfx.DrawSprite(300, 420, cancel);
+	gfx.DrawSprite(300, 500, cancel);
 }
 
 void Server::CreateServer()
@@ -31,14 +42,19 @@ void Server::CreateServer()
 	}
 	else
 	{
-		serverStatus = 1;
+		serverState = ServerStatus::WAITING;
 		hostState = 1;
 	}
 }
 
+void Server::Cleanup()
+{
+	enet_host_destroy(server);
+}
+
 int Server::GetServerStatus() const
 {
-	return serverStatus;
+	return serverState;
 }
 
 Server::Server()

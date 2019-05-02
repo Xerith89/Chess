@@ -1,5 +1,6 @@
 #pragma once
 #include "Server.h"
+#include "Client.h"
 #include "Graphics.h"
 #include "Input.h"
 #include "Sprite.h"
@@ -55,6 +56,7 @@ private:
 	GUI gui;
 	Menu menu;
 	Server server;
+	Client client;
 public:
 	Game(Window& wnd);
 	~Game() = default;

@@ -64,6 +64,9 @@ void Menu::UpdateMenu(Window& wnd)
 	{
 		quitGameState = 0;
 		selectedState = 0;
+		newGameState = 0;
+		joinGameState = 0;
+		hostGameState = 0;
 	}
 }
 

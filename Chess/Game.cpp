@@ -19,7 +19,9 @@ Game::Game(Window & wnd)
 	gui(brd),
 	player(wnd,brd,gui),
 	opponent(wnd,brd),
-	menu()
+	menu(),
+	server(),
+	client()
 {
 	//Kings
 	brd.whitePieces.emplace(std::make_pair(3, 7), std::make_shared<King>(3, 7, "./Sprites/kingW.bmp",true,brd));
@@ -118,12 +120,34 @@ void Game::Update()
 		}
 		break;
 	case JOINING:
-		//do joining stuff
+		if (wnd.inpt.KbdKeyPressed(VK_SPACE))
+		{
+			programStatus = ProgramState::MAINMENU;
+		}
+		switch(client.GetStatus())
+		{
+			case 0:
+				client.JoinGame();
+				break;
+		}
 		break;
 	case HOSTING:
-		if (server.GetServerStatus() == 0)
+		if (wnd.inpt.KbdKeyPressed(VK_SPACE))
 		{
-			server.CreateServer();
+		//	server.Cleanup();
+			programStatus = ProgramState::MAINMENU;
+		}
+		switch (server.GetServerStatus())
+		{
+			case 0:
+				server.CreateServer();
+				break;
+			case 1:
+				server.WaitForConnections();
+				break;
+			case 2:
+				programStatus = ProgramState::PLAYING;
+				break;
 		}
 		break;
 	case QUIT:
@@ -181,7 +205,7 @@ void Game::Render()
 		server.DrawStates(gfx);
 		break;
 	case JOINING:
-		//do something
+		client.DrawStates(gfx);
 		break;
 	}
 }
