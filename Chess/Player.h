@@ -25,5 +25,6 @@ private:
 	Coords selectedTarget;
 	std::vector<std::pair<Coords, Coords>> selectedMoves;
 	bool playerTurn = true;
+	bool serverTurn = true;
 	bool pieceSelected = false;
 };

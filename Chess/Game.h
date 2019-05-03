@@ -49,6 +49,11 @@ private:
 	//Turn controllers
 	bool playerTurn = true;
 	bool opponentTurn = false;
+	//Multiplayer
+	bool isServer = false;
+	bool clientTurn = false;
+	bool isClient = false;
+	bool isMultiplayer = false;
 	//Local objects
 	Board brd;
 	Player player;

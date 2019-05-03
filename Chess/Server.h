@@ -18,12 +18,14 @@ private:
 	ENetAddress address;
 	ENetHost* server;
 	ENetEvent event;
+	ENetPeer* client;
 public:
 	void WaitForConnections();
 	void DrawStates(Graphics& gfx)const;
 	void CreateServer();
 	void Cleanup();
-	void SendReceive();
+	ENetEvent ReceivePacket();
+	void SendPacket(std::string data);
 	int GetServerStatus()const;
 	Server();
 	~Server();

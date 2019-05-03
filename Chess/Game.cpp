@@ -72,49 +72,89 @@ void Game::Update()
 		switch (gameStatus)
 		{
 		case GameState::NORMAL:
-			//Opponents turn and not promoting
-			if (!player.PlayerTurn() && !opponent.GetPromotion())
+			if (!isMultiplayer)
 			{
-				opponent.TestForCheck();
-				opponent.DoTurn();
-				player.SetPlayerTurn();
+				//Opponents turn and not promoting
+				if (!player.PlayerTurn() && !opponent.GetPromotion())
+				{
+					opponent.TestForCheck();
+					opponent.DoTurn();
+					player.SetPlayerTurn();
+				}
+
+				//Opponent promoting
+				if (opponent.GetPromotion())
+				{
+					opponent.Promote(&brd.blackPieces);
+					player.SetPlayerTurn();
+
+				}
+
+				//Players turn and they are not promoting
+				if (player.PlayerTurn() && !player.GetPromotion())
+				{
+					player.TestForCheck();
+					player.DoTurn();
+				}
+
+				//Player is promoting
+				if (player.GetPromotion())
+				{
+					player.Promote(&brd.whitePieces);
+				}
+
+				//End game status checks
+				if (opponent.GetCheckMated())
+				{
+					gameStatus = GameState::OPPONENTCHECKMATED;
+				}
+
+				if (player.GetCheckMated())
+				{
+					gameStatus = GameState::PLAYERCHECKMATED;
+				}
+
+				if (player.GetStaleMated() || opponent.GetStaleMated())
+				{
+					gameStatus = GameState::STALEMATE;
+				}
 			}
-
-			//Opponent promoting
-			if (opponent.GetPromotion())
+			else
+			//do a multiplayer loop
 			{
-				opponent.Promote(&brd.blackPieces);
-				player.SetPlayerTurn();
+				if (isServer)
+				{
+					server.ReceivePacket();
+					player.DoTurn();
+					std::string data;
+					if (brd.playedMoves.size() > 0)
+					{
+						data = std::to_string(brd.playedMoves.back().first.x) +
+							std::to_string(brd.playedMoves.back().first.y) + 
+							std::to_string(brd.playedMoves.back().second.x) + 
+							std::to_string(brd.playedMoves.back().second.y);
+						server.SendPacket(data);
+					}
+				}
+				else
+				{
+					//do something with the packet
+				}
 
-			}
-
-			//Players turn and they are not promoting
-			if (player.PlayerTurn() && !player.GetPromotion())
-			{
-				player.TestForCheck();
-				player.DoTurn();
-			}
-
-			//Player is promoting
-			if (player.GetPromotion())
-			{
-				player.Promote(&brd.whitePieces);
-			}
-
-			//End game status checks
-			if (opponent.GetCheckMated())
-			{
-				gameStatus = GameState::OPPONENTCHECKMATED;
-			}
-
-			if (player.GetCheckMated())
-			{
-				gameStatus = GameState::PLAYERCHECKMATED;
-			}
-
-			if (player.GetStaleMated() || opponent.GetStaleMated())
-			{
-				gameStatus = GameState::STALEMATE;
+				if (isClient)
+				{
+					client.ReceivePacket();
+					/*player.DoTurn();
+					std::string data;
+					if (brd.playedMoves.size() > 0)
+					{
+						data = std::to_string(brd.playedMoves.back().first.x) +
+							std::to_string(brd.playedMoves.back().first.y) +
+							std::to_string(brd.playedMoves.back().second.x) +
+							std::to_string(brd.playedMoves.back().second.y);
+						client.SendPacket(data);
+					}*/
+				}
 			}
 			break;
 		}
@@ -133,6 +173,8 @@ void Game::Update()
 				break;
 			case 2:
 				programStatus = ProgramState::PLAYING;
+				isMultiplayer = true;
+				isClient = true;
 				break;
 		}
 		break;
@@ -152,6 +194,8 @@ void Game::Update()
 				break;
 			case 2:
 				programStatus = ProgramState::PLAYING;
+				isMultiplayer = true;
+				isServer = true;
 				break;
 		}
 		break;

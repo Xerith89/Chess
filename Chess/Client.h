@@ -9,6 +9,9 @@ public:
 	void DrawStates(Graphics& gfx)const;
 	void JoinGame();
 	void SetState();
+	ENetPeer* GetPeer()const;
+	ENetEvent ReceivePacket();
+	void SendPacket(std::string data);
 	Client();
 	~Client();
 	int GetStatus()const;

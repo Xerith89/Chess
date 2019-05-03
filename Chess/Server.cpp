@@ -6,6 +6,7 @@ void Server::WaitForConnections()
 	{
 		if (event.type == ENET_EVENT_TYPE_CONNECT)
 		{
+			client = event.peer;
 			serverState = ServerStatus::CONNECTED;
 		}
 	}
@@ -52,6 +53,37 @@ void Server::Cleanup()
 	serverState = ServerStatus::STARTING;
 	enet_host_destroy(server);
 	enet_deinitialize();
+}
+
+ENetEvent Server::ReceivePacket()
+{
+	while (enet_host_service(server, &event, 0) > 0)
+	{
+		switch (event.type)
+		{
+		case ENET_EVENT_TYPE_RECEIVE:
+			printf("A packet of length %u containing %s was received from %s on channel %u.\n",
+				event.packet->dataLength,
+				event.packet->data,
+				event.peer->data,
+				event.channelID);
+			break;
+
+		case ENET_EVENT_TYPE_DISCONNECT:
+			/* Reset the peer's client information. */
+			event.peer->data = NULL;
+			break;
+		}
+	}
+	return event;
+}
+
+void Server::SendPacket(std::string data)
+{
+	ENetPacket* packet = enet_packet_create(data.c_str(),
+		data.size(),
+		ENET_PACKET_FLAG_RELIABLE);
+	enet_peer_send(client, 0, packet);
 }
 
 int Server::GetServerStatus() const

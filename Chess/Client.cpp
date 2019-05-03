@@ -38,7 +38,7 @@ void Client::JoinGame()
 	{
 		joinState = ClientStates::CONNECTED;
 		clientStatus = ClientStates::CONNECTED;
-		enet_host_flush(client);
+		enet_host_service(client, &event, 0);
 	}
 	else {
 		joinState = ClientStates::NONE;
@@ -52,6 +52,41 @@ void Client::SetState()
 {
 	clientStatus = ClientStates::NONE;
 	joinState = ClientStates::NONE;
+}
+
+ENetPeer* Client::GetPeer()const
+{
+	return peer;
+}
+
+ENetEvent Client::ReceivePacket()
+{
+	while (enet_host_service(client, &event, 0) > 0)
+	{
+		switch (event.type)
+		{
+		case ENET_EVENT_TYPE_RECEIVE:
+			printf("A packet of length %u containing %s was received from %s on channel %u.\n",
+				event.packet->dataLength,
+				event.packet->data,
+				event.peer->data,
+				event.channelID);
+			break;
+
+		case ENET_EVENT_TYPE_DISCONNECT:
+			event.peer->data = NULL;
+			break;
+		}
+	}
+	return event;
+}
+
+void Client::SendPacket(std::string data)
+{
+	ENetPacket* packet = enet_packet_create(data.c_str(),
+		data.size(),
+		ENET_PACKET_FLAG_RELIABLE);
+	enet_peer_send(peer, 0, packet);
 }
 
 Client::Client()
