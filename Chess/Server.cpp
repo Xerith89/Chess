@@ -2,7 +2,7 @@
 
 void Server::WaitForConnections()
 {
-	while (enet_host_service(server, &event, 1000) > 0)
+	while (enet_host_service(server, &event, 0) > 0)
 	{
 		if (event.type == ENET_EVENT_TYPE_CONNECT)
 		{
@@ -21,7 +21,7 @@ void Server::CreateServer()
 {
 	if (enet_initialize() != 0)
 	{
-		fprintf(stderr, "An error occurred while initializing ENet.\n");
+		throw std::runtime_error("An error occurred while initializing ENet.");
 	}
 
 	/* Bind the server to the default localhost.     */
@@ -37,8 +37,7 @@ void Server::CreateServer()
 		0      /* assume any amount of outgoing bandwidth */);
 	if (server == NULL)
 	{
-		fprintf(stderr,
-			"An error occurred while trying to create an ENet server host.\n");
+		throw std::runtime_error("An error occurred while trying to create an ENet server host.");
 	}
 	else
 	{
@@ -52,6 +51,7 @@ void Server::Cleanup()
 	hostState = 0;
 	serverState = ServerStatus::STARTING;
 	enet_host_destroy(server);
+	enet_deinitialize();
 }
 
 int Server::GetServerStatus() const

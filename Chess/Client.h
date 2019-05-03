@@ -8,6 +8,7 @@ class Client {
 public:
 	void DrawStates(Graphics& gfx)const;
 	void JoinGame();
+	void SetState();
 	Client();
 	~Client();
 	int GetStatus()const;
