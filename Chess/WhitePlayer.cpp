@@ -1,13 +1,13 @@
-#include "Player.h"
+#include "WhitePlayer.h"
 
-Player::Player(Window & wnd, Board & brd, GUI& gui)
+WhitePlayer::WhitePlayer(Window & wnd, Board & brd, GUI& gui)
 	:
 	Actor(wnd,brd),
 	gui(gui)
 {
 }
 
-void Player::DoTurn()
+void WhitePlayer::DoTurn()
 {
 	//Check for left mouse button
 	if (wnd.inpt.LeftMsePressed())
@@ -147,7 +147,8 @@ void Player::DoTurn()
 	}
 }
 
-void Player::DrawPossibleMoves(Graphics& gfx)
+
+void WhitePlayer::DrawPossibleMoves(Graphics& gfx)
 {
 	const auto moves = brd.whitePieces.find({ selectedPiece.x, selectedPiece.y });
 	if (moves != brd.whitePieces.end())
@@ -160,7 +161,7 @@ void Player::DrawPossibleMoves(Graphics& gfx)
 	}
 }
 
-void Player::DrawPieces(Graphics & gfx) const
+void WhitePlayer::DrawPieces(Graphics & gfx) const
 {
 	for (const auto& x : brd.whitePieces)
 	{
@@ -169,7 +170,7 @@ void Player::DrawPieces(Graphics & gfx) const
 	}
 }
 
-void Player::DrawChecked(Graphics & gfx) const
+void WhitePlayer::DrawChecked(Graphics & gfx) const
 {
 	if (checked)
 	{
@@ -178,7 +179,7 @@ void Player::DrawChecked(Graphics & gfx) const
 	}
 }
 
-void Player::Promote(Map * map)
+void WhitePlayer::Promote(Map * map)
 {
 	int x = 0;
 	int y = 0;
@@ -220,17 +221,17 @@ void Player::Promote(Map * map)
 	}
 }
 
-bool Player::PlayerTurn() const
+bool WhitePlayer::PlayerTurn() const
 {
 	return playerTurn;
 }
 
-void Player::SetPlayerTurn()
+void WhitePlayer::SetPlayerTurn(bool myTurn)
 {
-	playerTurn = true;
+	playerTurn = myTurn;
 }
 
-void Player::TestForCheck()
+void WhitePlayer::TestForCheck()
 {
 	//Go through the possible targets of the black pieces and see if we're checked.
 	const auto p = std::find(brd.blackPieceTargets.begin(), brd.blackPieceTargets.end(), brd.GetWhiteKingLoc());
@@ -242,7 +243,7 @@ void Player::TestForCheck()
 	checked = false;
 }
 
-bool Player::TestForCheckMate()
+bool WhitePlayer::TestForCheckMate()
 {
 	//If we have no possible moves and we're chcked then game over.
 	if (checked)
@@ -263,7 +264,7 @@ bool Player::TestForCheckMate()
 }
 
 
-void Player::TestForStaleMate()
+void WhitePlayer::TestForStaleMate()
 {
 	for (const auto& p : brd.whitePieces)
 	{
@@ -276,7 +277,7 @@ void Player::TestForStaleMate()
 	}
 }
 
-void Player::TestForCastling()
+void WhitePlayer::TestForCastling()
 {
 	//Castling checks - we only want to do this if we haven't castled yet
 	if (kingInstance && !checked && !hasCastled)

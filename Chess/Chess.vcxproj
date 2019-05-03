@@ -149,10 +149,10 @@
     <ClInclude Include="Coords.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Sprite.h" />
-    <ClInclude Include="Opponent.h" />
+    <ClInclude Include="BlackPlayer.h" />
     <ClInclude Include="Pawn.h" />
     <ClInclude Include="Piece.h" />
-    <ClInclude Include="Player.h" />
+    <ClInclude Include="WhitePlayer.h" />
     <ClInclude Include="Queen.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Rook.h" />
@@ -174,10 +174,10 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Menu.cpp" />
-    <ClCompile Include="Opponent.cpp" />
+    <ClCompile Include="BlackPlayer.cpp" />
     <ClCompile Include="Pawn.cpp" />
     <ClCompile Include="Piece.cpp" />
-    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="WhitePlayer.cpp" />
     <ClCompile Include="Queen.cpp" />
     <ClCompile Include="Rook.cpp" />
     <ClCompile Include="Server.cpp" />

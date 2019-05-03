@@ -1,8 +1,8 @@
-#include "Opponent.h"
+#include "BlackPlayer.h"
 
 
 
-Opponent::Opponent(Window& wnd,Board & brd)
+BlackPlayer::BlackPlayer(Window& wnd,Board & brd)
 	:
 	Actor(wnd,brd),
 	promotionSprite("./Sprites/promoteB.bmp"),
@@ -10,7 +10,7 @@ Opponent::Opponent(Window& wnd,Board & brd)
 {
 }
 
-void Opponent::DoTurn()
+void BlackPlayer::DoTurn()
 {
 	//timer.Start();
 	//GenerationZero();
@@ -24,7 +24,7 @@ void Opponent::DoTurn()
 	//MessageBox(wnd.GetHandle(), time.c_str(), "Speed", MB_OK);
 }
 
-void Opponent::DrawPieces(Graphics & gfx) const
+void BlackPlayer::DrawPieces(Graphics & gfx) const
 {
 	for (const auto& x : brd.blackPieces)
 	{
@@ -33,7 +33,7 @@ void Opponent::DrawPieces(Graphics & gfx) const
 	}
 }
 
-void Opponent::DrawChecked(Graphics & gfx) const
+void BlackPlayer::DrawChecked(Graphics & gfx) const
 {
 	if (checked)
 	{
@@ -42,7 +42,7 @@ void Opponent::DrawChecked(Graphics & gfx) const
 	}
 }
 
-void Opponent::Promote(Map * map)
+void BlackPlayer::Promote(Map * map)
 {
 	std::uniform_int_distribution<int> promotedPiece(0, std::max(0,3));
 	int piece = promotedPiece(rng);
@@ -68,7 +68,7 @@ void Opponent::Promote(Map * map)
 	}
 }
 
-void Opponent::TestForCheck()
+void BlackPlayer::TestForCheck()
 {
 	//Go through the possible targets of the white pieces and see if we're checked.
 	const auto p = std::find(brd.whitePieceTargets.begin(), brd.whitePieceTargets.end(), brd.GetBlackKingLoc());
@@ -80,7 +80,7 @@ void Opponent::TestForCheck()
 	checked = false;
 }
 
-bool Opponent::TestForCheckMate()
+bool BlackPlayer::TestForCheckMate()
 {
 	if (movelist.size() == 0 && checked)
 	{
@@ -91,7 +91,7 @@ bool Opponent::TestForCheckMate()
 }
 
 
-void Opponent::TestForStaleMate()
+void BlackPlayer::TestForStaleMate()
 {
 	if (movelist.size() == 0 && !checked)
 	{
@@ -99,7 +99,7 @@ void Opponent::TestForStaleMate()
 	}
 }
 
-void Opponent::TestForCastling()
+void BlackPlayer::TestForCastling()
 {
 	//Castling checks - we only want to do this if we haven't castled yet
 	if (kingInstance && !checked && !hasCastled)
@@ -138,7 +138,7 @@ void Opponent::TestForCastling()
 }
 
 //Our first AI that will be random based
-void Opponent::GenerationZero()
+void BlackPlayer::GenerationZero()
 {
 	int maximum = 0;
 	movelist.clear();
@@ -261,7 +261,7 @@ void Opponent::GenerationZero()
 	brd.SetWhiteEnpassant(false);
 }
 
-void Opponent::GenerationOne()
+void BlackPlayer::GenerationOne()
 {
 	movelist.clear();
 	std::vector<std::pair<Coords, Coords>> temp;
@@ -389,32 +389,32 @@ void Opponent::GenerationOne()
 	brd.SetWhiteEnpassant(false);
 }
 
-void Opponent::GenerationTwo()
+void BlackPlayer::GenerationTwo()
 {
 	//MiniMax with depth of 5
 }
 
-void Opponent::GenerationThree()
+void BlackPlayer::GenerationThree()
 {
 	//Introduce alphabeta to G2
 }
 
-void Opponent::GenerationFour()
+void BlackPlayer::GenerationFour()
 {
 	//Introduce nullMove
 }
 
-void Opponent::GenerationFive()
+void BlackPlayer::GenerationFive()
 {
 	//parallel MiniMax 
 }
 
-void Opponent::GenerationSix()
+void BlackPlayer::GenerationSix()
 {
 	//12 moves ahead
 }
 
-void Opponent::TestMove(std::pair<Coords, Coords> move)
+void BlackPlayer::TestMove(std::pair<Coords, Coords> move)
 {
 	//Assign the current position and new position to variables
 	auto newloc = move.second;
@@ -468,7 +468,7 @@ void Opponent::TestMove(std::pair<Coords, Coords> move)
 	}
 }
 
-void Opponent::UndoTestMove()
+void BlackPlayer::UndoTestMove()
 {
 	for (const auto& p : brd.whitePieces)
 	{
@@ -486,7 +486,7 @@ void Opponent::UndoTestMove()
 	initialBlackKingLoc = brd.GetBlackKingLoc();
 }
 
-int Opponent::TestMoveScore() const
+int BlackPlayer::TestMoveScore() const
 {
 	int score = 0;
 	for (const auto& p : initialState)
@@ -500,7 +500,7 @@ int Opponent::TestMoveScore() const
 	return score;
 }
 
-std::pair<Coords, Coords> Opponent::Minimax(std::vector < std::pair<Coords, Coords>> moves_in)
+std::pair<Coords, Coords> BlackPlayer::Minimax(std::vector < std::pair<Coords, Coords>> moves_in)
 {
 	//for evaluating score
 	int value = 0;
@@ -573,14 +573,14 @@ std::pair<Coords, Coords> Opponent::Minimax(std::vector < std::pair<Coords, Coor
 	return bestMove;
 }
 
-void Opponent::ResetWhiteMove()
+void BlackPlayer::ResetWhiteMove()
 {
 	initialWhitePieceTargets = brd.whitePieceTargets;
 	whiteInitialState = brd.whitePieces;
 	initialWhiteKingLoc = brd.GetWhiteKingLoc();
 }
 
-void Opponent::DoWhiteMove(const std::pair<Coords, Coords> input)
+void BlackPlayer::DoWhiteMove(const std::pair<Coords, Coords> input)
 {
 	auto piece = whiteInitialState.find({ input.first.x,input.first.y });
 	if (piece != whiteInitialState.end())

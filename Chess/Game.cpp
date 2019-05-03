@@ -17,8 +17,8 @@ Game::Game(Window & wnd)
 	gfx(wnd.GetHandle()),
 	brd("./Sprites/board.bmp",30,25),
 	gui(brd),
-	player(wnd,brd,gui),
-	opponent(wnd,brd),
+	whitePlayer(wnd,brd,gui),
+	blackPlayer(wnd,brd),
 	menu(),
 	server(),
 	client()
@@ -75,46 +75,46 @@ void Game::Update()
 			if (!isMultiplayer)
 			{
 				//Opponents turn and not promoting
-				if (!player.PlayerTurn() && !opponent.GetPromotion())
+				if (!whitePlayer.PlayerTurn() && !blackPlayer.GetPromotion())
 				{
-					opponent.TestForCheck();
-					opponent.DoTurn();
-					player.SetPlayerTurn();
+					blackPlayer.TestForCheck();
+					blackPlayer.DoTurn();
+					whitePlayer.SetPlayerTurn(true);
 				}
 
 				//Opponent promoting
-				if (opponent.GetPromotion())
+				if (blackPlayer.GetPromotion())
 				{
-					opponent.Promote(&brd.blackPieces);
-					player.SetPlayerTurn();
+					blackPlayer.Promote(&brd.blackPieces);
+					whitePlayer.SetPlayerTurn(true);
 
 				}
 
 				//Players turn and they are not promoting
-				if (player.PlayerTurn() && !player.GetPromotion())
+				if (whitePlayer.PlayerTurn() && !whitePlayer.GetPromotion())
 				{
-					player.TestForCheck();
-					player.DoTurn();
+					whitePlayer.TestForCheck();
+					whitePlayer.DoTurn();
 				}
 
 				//Player is promoting
-				if (player.GetPromotion())
+				if (whitePlayer.GetPromotion())
 				{
-					player.Promote(&brd.whitePieces);
+					whitePlayer.Promote(&brd.whitePieces);
 				}
 
 				//End game status checks
-				if (opponent.GetCheckMated())
+				if (blackPlayer.GetCheckMated())
 				{
 					gameStatus = GameState::OPPONENTCHECKMATED;
 				}
 
-				if (player.GetCheckMated())
+				if (whitePlayer.GetCheckMated())
 				{
 					gameStatus = GameState::PLAYERCHECKMATED;
 				}
 
-				if (player.GetStaleMated() || opponent.GetStaleMated())
+				if (whitePlayer.GetStaleMated() || blackPlayer.GetStaleMated())
 				{
 					gameStatus = GameState::STALEMATE;
 				}
@@ -125,7 +125,7 @@ void Game::Update()
 				if (isServer)
 				{
 					server.ReceivePacket();
-					player.DoTurn();
+					whitePlayer.DoTurn();
 					std::string data;
 					if (brd.playedMoves.size() > 0)
 					{
@@ -136,25 +136,11 @@ void Game::Update()
 						server.SendPacket(data);
 					}
 				}
-				else
-				{
-					//do something with the packet
-				}
-
 				if (isClient)
 				{
 					client.ReceivePacket();
-					/*player.DoTurn();
-					std::string data;
-					if (brd.playedMoves.size() > 0)
-					{
-						data = std::to_string(brd.playedMoves.back().first.x) +
-							std::to_string(brd.playedMoves.back().first.y) +
-							std::to_string(brd.playedMoves.back().second.x) +
-							std::to_string(brd.playedMoves.back().second.y);
-						client.SendPacket(data);
-					}*/
 				}
+
 			}
 			break;
 		}
@@ -218,34 +204,34 @@ void Game::Render()
 		case GameState::NORMAL:
 			gui.DrawGUI(gfx);
 			brd.DrawBoard(gfx);
-			player.DrawPossibleMoves(gfx);
-			player.DrawChecked(gfx);
-			opponent.DrawChecked(gfx);
-			player.DrawPieces(gfx);
-			opponent.DrawPieces(gfx);
-			if (player.GetPromotion())
+			whitePlayer.DrawPossibleMoves(gfx);
+			whitePlayer.DrawChecked(gfx);
+			blackPlayer.DrawChecked(gfx);
+			whitePlayer.DrawPieces(gfx);
+			blackPlayer.DrawPieces(gfx);
+			if (whitePlayer.GetPromotion())
 			{
 				gui.DrawPromotion(gfx);
 			}
 			break;
 		case GameState::OPPONENTCHECKMATED:
 			brd.DrawBoard(gfx);
-			opponent.DrawChecked(gfx);
-			player.DrawPieces(gfx);
-			opponent.DrawPieces(gfx);
+			blackPlayer.DrawChecked(gfx);
+			whitePlayer.DrawPieces(gfx);
+			blackPlayer.DrawPieces(gfx);
 			gfx.DrawSprite(200, 200, playerwin);
 			break;
 		case GameState::PLAYERCHECKMATED:
 			brd.DrawBoard(gfx);
-			player.DrawChecked(gfx);
-			player.DrawPieces(gfx);
-			opponent.DrawPieces(gfx);
+			whitePlayer.DrawChecked(gfx);
+			whitePlayer.DrawPieces(gfx);
+			blackPlayer.DrawPieces(gfx);
 			gfx.DrawSprite(200, 200, playerlose);
 			break;
 		case GameState::STALEMATE:
 			brd.DrawBoard(gfx);
-			player.DrawPieces(gfx);
-			opponent.DrawPieces(gfx);
+			whitePlayer.DrawPieces(gfx);
+			blackPlayer.DrawPieces(gfx);
 			gfx.DrawSprite(200, 200, stalemate);
 			break;
 		}

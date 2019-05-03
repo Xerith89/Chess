@@ -69,13 +69,7 @@
     <ClInclude Include="Bishop.h">
       <Filter>Header Files\Game Files</Filter>
     </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>Header Files\Game Files</Filter>
-    </ClInclude>
     <ClInclude Include="Board.h">
-      <Filter>Header Files\Game Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Opponent.h">
       <Filter>Header Files\Game Files</Filter>
     </ClInclude>
     <ClInclude Include="Server.h">
@@ -106,6 +100,12 @@
       <Filter>Header Files\Game Files</Filter>
     </ClInclude>
     <ClInclude Include="Menu.h">
+      <Filter>Header Files\Game Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WhitePlayer.h">
+      <Filter>Header Files\Game Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BlackPlayer.h">
       <Filter>Header Files\Game Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -149,13 +149,7 @@
     <ClCompile Include="Bishop.cpp">
       <Filter>Source Files\Game Files</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>Source Files\Game Files</Filter>
-    </ClCompile>
     <ClCompile Include="Game.cpp">
-      <Filter>Source Files\Game Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Opponent.cpp">
       <Filter>Source Files\Game Files</Filter>
     </ClCompile>
     <ClCompile Include="Actor.cpp">
@@ -172,6 +166,12 @@
     </ClCompile>
     <ClCompile Include="Client.cpp">
       <Filter>Source Files\Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="WhitePlayer.cpp">
+      <Filter>Source Files\Game Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BlackPlayer.cpp">
+      <Filter>Source Files\Game Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

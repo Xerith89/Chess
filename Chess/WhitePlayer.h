@@ -2,16 +2,17 @@
 #include "Actor.h"
 #include "GUI.h"
 
-class Player : public Actor {
+class WhitePlayer : public Actor {
 public:
-	Player(Window& wnd, Board& brd, GUI& gui);
+	WhitePlayer(Window& wnd, Board& brd, GUI& gui);
 	void DoTurn()override;
+	void DoMPlayTurn(std::pair<Coords, Coords> input);
 	void DrawPossibleMoves(Graphics& gfx);
 	void DrawPieces(Graphics& gfx)const override;
 	void DrawChecked(Graphics& gfx)const override;
 	void Promote(Map* map)override;
 	bool PlayerTurn()const;
-	void SetPlayerTurn();
+	void SetPlayerTurn(bool myTurn);
 	void TestForCheck()override;
 private:
 	GUI& gui;

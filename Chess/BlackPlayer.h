@@ -2,9 +2,9 @@
 #include "Actor.h"
 #include "Timer.h"
 
-class Opponent : public Actor{
+class BlackPlayer : public Actor{
 public:
-	Opponent(Window& wnd, Board& brd);
+	BlackPlayer(Window& wnd, Board& brd);
 	void DoTurn() override;
 	void DrawPieces(Graphics& gfx)const override;
 	void DrawChecked(Graphics& gfx)const override;

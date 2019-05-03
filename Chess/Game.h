@@ -11,8 +11,8 @@
 #include "Rook.h"
 #include "Knight.h"
 #include "Bishop.h"
-#include "Player.h"
-#include "Opponent.h"
+#include "BlackPlayer.h"
+#include "WhitePlayer.h"
 #include "GUI.h"
 #include "Menu.h"
 
@@ -56,8 +56,8 @@ private:
 	bool isMultiplayer = false;
 	//Local objects
 	Board brd;
-	Player player;
-	Opponent opponent;
+	WhitePlayer whitePlayer;
+	BlackPlayer blackPlayer;
 	GUI gui;
 	Menu menu;
 	Server server;

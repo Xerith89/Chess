@@ -29,5 +29,4 @@ private:
 	ENetAddress address;
 	ENetEvent event;
 	ENetPeer* peer = nullptr;
-
 };
