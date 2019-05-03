@@ -127,14 +127,7 @@ void Game::Update()
 		switch(client.GetStatus())
 		{
 			case 0:
-				if (server.GetServerStatus() > 0)
-				{
-					client.JoinGame();
-				}
-				else
-				{
-					client.SetState();
-				}
+				client.JoinGame();
 				break;
 			case 1:
 				break;

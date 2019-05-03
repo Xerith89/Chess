@@ -37,6 +37,8 @@ void Client::JoinGame()
 		event.type == ENET_EVENT_TYPE_CONNECT)
 	{
 		joinState = ClientStates::CONNECTED;
+		clientStatus = ClientStates::CONNECTED;
+		enet_host_flush(client);
 	}
 	else {
 		joinState = ClientStates::NONE;

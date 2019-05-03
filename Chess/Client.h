@@ -13,7 +13,7 @@ public:
 	~Client();
 	int GetStatus()const;
 private:
-	std::array<Sprite, 2> joinStates = { "./Sprites/Multiplayer/searching.bmp" , "./Sprites/Multiplayer/nogames.bmp" };
+	std::array<Sprite, 3> joinStates = { "./Sprites/Multiplayer/searching.bmp" , "./Sprites/Multiplayer/nogames.bmp","./Sprites/Multiplayer/searching.bmp" };
 	Sprite cancel;
 	enum ClientStates {
 		SEARCHING,
@@ -22,9 +22,9 @@ private:
 	};
 	int joinState = 0;
 	int clientStatus = 0;
-	ENetHost* client;
+	ENetHost* client = nullptr;
 	ENetAddress address;
 	ENetEvent event;
-	ENetPeer* peer;
+	ENetPeer* peer = nullptr;
 
 };
