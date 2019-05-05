@@ -57,22 +57,19 @@ void Server::Cleanup()
 
 ENetEvent Server::ReceivePacket()
 {
-	while (enet_host_service(server, &event, 0) > 0)
+	while (enet_host_service(server, &event, 1000) > 0)
 	{
-		switch (event.type)
+		if (event.type == ENET_EVENT_TYPE_RECEIVE)
 		{
-		case ENET_EVENT_TYPE_RECEIVE:
-			printf("A packet of length %u containing %s was received from %s on channel %u.\n",
-				event.packet->dataLength,
-				event.packet->data,
-				event.peer->data,
-				event.channelID);
-			break;
-
-		case ENET_EVENT_TYPE_DISCONNECT:
-			/* Reset the peer's client information. */
+			//Convert back to string and get our the coords
+			std::string s(event.packet->data, event.packet->data + event.packet->dataLength);
+			auto from = std::make_pair((s.at(0) - '0'), s.at(1) - '0');
+			auto to = std::make_pair((s.at(2) - '0'), s.at(3) - '0');
+			//Do black move with these coords
+		}
+		else if (event.type == ENET_EVENT_TYPE_DISCONNECT)
+		{
 			event.peer->data = NULL;
-			break;
 		}
 	}
 	return event;

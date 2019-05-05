@@ -124,21 +124,42 @@ void Game::Update()
 			{
 				if (isServer)
 				{
+					//If we're the server constantly check for packets.
 					server.ReceivePacket();
-					whitePlayer.DoTurn();
-					std::string data;
-					if (brd.playedMoves.size() > 0)
+					//Handle the logic for sending packets.
+					if (whitePlayer.PlayerTurn())
 					{
-						data = std::to_string(brd.playedMoves.back().first.x) +
-							std::to_string(brd.playedMoves.back().first.y) + 
-							std::to_string(brd.playedMoves.back().second.x) + 
-							std::to_string(brd.playedMoves.back().second.y);
-						server.SendPacket(data);
+						whitePlayer.DoTurn();
+						if (brd.playedMoves.size() > 0)
+						{
+							std::string data;
+							data = std::to_string(brd.playedMoves.back().first.x) +
+								std::to_string(brd.playedMoves.back().first.y) +
+								std::to_string(brd.playedMoves.back().second.x) +
+								std::to_string(brd.playedMoves.back().second.y);
+							server.SendPacket(data);
+						}
 					}
 				}
 				if (isClient)
 				{
-					client.ReceivePacket();
+				//If we're client then constantly check for packets
+				client.ReceivePacket();
+				/*
+				if (blackPlayer.PlayerTurn())
+				{
+					blackPlayer.DoTurn();
+					if (brd.playedMoves.size() > 0)
+					{
+						std::string data;
+						data = std::to_string(brd.playedMoves.back().first.x) +
+							std::to_string(brd.playedMoves.back().first.y) +
+							std::to_string(brd.playedMoves.back().second.x) +
+							std::to_string(brd.playedMoves.back().second.y);
+						server.SendPacket(data);
+					}
+				}*/
+				
 				}
 
 			}

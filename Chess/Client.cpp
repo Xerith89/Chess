@@ -63,19 +63,17 @@ ENetEvent Client::ReceivePacket()
 {
 	while (enet_host_service(client, &event, 1000) > 0)
 	{
-		switch (event.type)
+		if (event.type == ENET_EVENT_TYPE_RECEIVE)
 		{
-		case ENET_EVENT_TYPE_RECEIVE:
-			printf("A packet of length %u containing %s was received from %s on channel %u.\n",
-				event.packet->dataLength,
-				event.packet->data,
-				event.peer->data,
-				event.channelID);
-			break;
-
-		case ENET_EVENT_TYPE_DISCONNECT:
+			//Convert back to string and get our the coords
+			std::string s(event.packet->data, event.packet->data+event.packet->dataLength);
+			auto from = std::make_pair((s.at(0)-'0'),s.at(1)-'0');
+			auto to = std::make_pair((s.at(2) - '0'), s.at(3) - '0');
+			//Do white move with these coords
+		}
+		else if (event.type == ENET_EVENT_TYPE_DISCONNECT)
+		{
 			event.peer->data = NULL;
-			break;
 		}
 	}
 	return event;
