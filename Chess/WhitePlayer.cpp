@@ -124,6 +124,7 @@ void WhitePlayer::DoTurn()
 				//end of turn cleanup
 				pieceSelected = false;
 				playerTurn = false;
+				packetReady = true;
 				brd.playedMoves.push_back(std::make_pair(selectedPiece, selectedTarget));
 			}	
 			//Get our new targets for the black players turn
@@ -137,6 +138,7 @@ void WhitePlayer::DoTurn()
 			//Enpassant lasts for one turn only
 			brd.SetBlackEnpassant(false);
 		}	
+	
 	}
 		
 	//Remove any selected pieces
@@ -145,6 +147,127 @@ void WhitePlayer::DoTurn()
 			pieceSelected = false;
 			selectedPiece = { 0,0 };
 	}
+}
+
+void WhitePlayer::DoMPlayUpdate(std::pair<Coords, Coords> input)
+{
+	selectedPiece = input.first;
+	auto piece = brd.whitePieces.find({ selectedPiece.x,selectedPiece.y });
+	if (piece != brd.whitePieces.end())
+	{
+		if (TestForCheckMate())
+		{
+			return;
+		}
+		TestForStaleMate();
+		//If the piece exists then store it and get the moves for it - different moves depending on whether we are checked or not
+		pieceSelected = true;
+
+		//Check if we've clicked the King
+		kingInstance = dynamic_cast<King*>(brd.whitePieces.find({ selectedPiece.x, selectedPiece.y })->second.get());
+
+		TestForCastling();
+
+		selectedMoves = piece->second->GetMoves();
+
+		//We didn't click something with valid moves
+		if (selectedMoves.empty())
+		{
+			pieceSelected = false;
+			return;
+		}
+	
+		
+		//We already have a target so we're clicking on a new position - do the usual translate
+		selectedTarget = input.second;
+		auto it = (std::find_if(selectedMoves.begin(), selectedMoves.end(), [&](const std::pair<Coords, Coords> & rhs) {
+			return selectedTarget == rhs.second; }));
+
+		auto piece = brd.whitePieces.find({ selectedPiece.x,selectedPiece.y });
+		if (piece != brd.whitePieces.end() && it != selectedMoves.end())
+		{
+			//Insert at new position and delete old one
+			piece->second.get()->MoveTo({ selectedTarget.x, selectedTarget.y });
+			brd.whitePieces.insert_or_assign({ selectedTarget.x, selectedTarget.y }, std::move(piece->second));
+			brd.whitePieces.erase({ selectedPiece.x,selectedPiece.y });
+
+			//Update the king position if we've moved it - if we're castling we also need to move the relevent rook
+			if (kingInstance)
+			{
+				brd.UpdateWhiteKingLoc({ selectedTarget.x,selectedTarget.y });
+				//Left castling
+				if (selectedTarget.x == 1 && !hasCastled)
+				{
+					auto rook = brd.whitePieces.find({ 0,7 });
+					if (rook != brd.whitePieces.end())
+					{
+						rook->second.get()->MoveTo({ 3, 7 });
+						brd.whitePieces.insert_or_assign({ 3, 7 }, std::move(rook->second));
+						brd.whitePieces.erase({ 0,7 });
+						brd.SetLeftCastling(false);
+						brd.SetRightCastling(false);
+						hasCastled = true;
+					}
+				}
+				//right castling
+				if (selectedTarget.x == 5 && !hasCastled)
+				{
+					auto rook = brd.whitePieces.find({ 7,7 });
+					if (rook != brd.whitePieces.end())
+					{
+						rook->second.get()->MoveTo({ 4, 7 });
+						brd.whitePieces.insert_or_assign({ 4, 7 }, std::move(rook->second));
+						brd.whitePieces.erase({ 7,7 });
+						brd.SetLeftCastling(false);
+						brd.SetRightCastling(false);
+						hasCastled = true;
+					}
+				}
+				brd.SetLeftCastling(false);
+				brd.SetRightCastling(false);
+				hasCastled = true;
+			}
+
+			//Check if we're moving a pawn so we can check for promotion
+			pawnInstance = dynamic_cast<Pawn*>(brd.whitePieces.find({ selectedTarget.x, selectedTarget.y })->second.get());
+			if (pawnInstance != nullptr && selectedPiece.y == 1 && selectedTarget.y == 0)
+			{
+				promotion = true;
+			}
+
+			//Enpassant - we're a pawn moving from initial position to 2 spaces up
+			if (selectedPiece.y == 6 && selectedTarget.y == 4 && pawnInstance)
+			{
+				brd.SetWhiteEnpassant(true);
+			}
+
+			//Check for taking pieces
+			if (brd.blackPieces.count({ selectedTarget.x, selectedTarget.y }) > 0)
+			{
+				brd.blackPieces.erase({ selectedTarget.x,selectedTarget.y });
+			}
+			//Enpassant take
+			if (brd.GetBlackEnpassant() && brd.blackPieces.count({ selectedTarget.x, selectedTarget.y + 1 }) > 0)
+			{
+				brd.blackPieces.erase({ selectedTarget.x,selectedTarget.y + 1 });
+			}
+			//end of turn cleanup
+			pieceSelected = false;
+			playerTurn = false;
+			brd.playedMoves.push_back(std::make_pair(selectedPiece, selectedTarget));
+		}
+		//Get our new targets for the black players turn
+		brd.whitePieceTargets.clear();
+		for (const auto& p : brd.whitePieces)
+		{
+			p.second->GetTargets(&brd.blackPieces);
+		}
+		//We can only get moves that result in not being checked so we can safely assume we're not checked now
+		checked = false;
+		//Enpassant lasts for one turn only
+		brd.SetBlackEnpassant(false);
+		}
+		
 }
 
 
@@ -241,6 +364,16 @@ void WhitePlayer::TestForCheck()
 		return;
 	}
 	checked = false;
+}
+
+bool WhitePlayer::PacketReady() const
+{
+	return packetReady;
+}
+
+void WhitePlayer::SetPacketNotReady()
+{
+	packetReady = false;
 }
 
 bool WhitePlayer::TestForCheckMate()

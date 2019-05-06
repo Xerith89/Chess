@@ -6,7 +6,7 @@ class WhitePlayer : public Actor {
 public:
 	WhitePlayer(Window& wnd, Board& brd, GUI& gui);
 	void DoTurn()override;
-	void DoMPlayTurn(std::pair<Coords, Coords> input);
+	void DoMPlayUpdate(std::pair<Coords, Coords> input);
 	void DrawPossibleMoves(Graphics& gfx);
 	void DrawPieces(Graphics& gfx)const override;
 	void DrawChecked(Graphics& gfx)const override;
@@ -14,6 +14,8 @@ public:
 	bool PlayerTurn()const;
 	void SetPlayerTurn(bool myTurn);
 	void TestForCheck()override;
+	bool PacketReady()const;
+	void SetPacketNotReady();
 private:
 	GUI& gui;
 	Coords startKingLoc = { 4,7 };
@@ -28,4 +30,5 @@ private:
 	bool playerTurn = true;
 	bool serverTurn = true;
 	bool pieceSelected = false;
+	bool packetReady = false;
 };

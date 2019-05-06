@@ -130,7 +130,7 @@ void Game::Update()
 					if (whitePlayer.PlayerTurn())
 					{
 						whitePlayer.DoTurn();
-						if (brd.playedMoves.size() > 0)
+						if (whitePlayer.PacketReady())
 						{
 							std::string data;
 							data = std::to_string(brd.playedMoves.back().first.x) +
@@ -138,6 +138,7 @@ void Game::Update()
 								std::to_string(brd.playedMoves.back().second.x) +
 								std::to_string(brd.playedMoves.back().second.y);
 							server.SendPacket(data);
+							whitePlayer.SetPacketNotReady();
 						}
 					}
 				}
@@ -145,8 +146,15 @@ void Game::Update()
 				{
 				//If we're client then constantly check for packets
 				client.ReceivePacket();
+
+				if (client.CheckNewMessage())
+				{
+					whitePlayer.DoMPlayUpdate(client.GetLatestMove());
+					client.SetNewMessage(false);
+					clientTurn = true;
+				}
 				/*
-				if (blackPlayer.PlayerTurn())
+				if (clientTurn)
 				{
 					blackPlayer.DoTurn();
 					if (brd.playedMoves.size() > 0)
@@ -157,6 +165,8 @@ void Game::Update()
 							std::to_string(brd.playedMoves.back().second.x) +
 							std::to_string(brd.playedMoves.back().second.y);
 						server.SendPacket(data);
+						//no more black turn
+						//white turn
 					}
 				}*/
 				

@@ -3,6 +3,7 @@
 #include "Sprite.h"
 #include "Graphics.h"
 #include <array>
+#include "Coords.h"
 
 class Client {
 public:
@@ -15,6 +16,9 @@ public:
 	Client();
 	~Client();
 	int GetStatus()const;
+	std::pair<Coords, Coords> GetLatestMove()const;
+	bool CheckNewMessage()const;
+	void SetNewMessage(bool status);
 private:
 	std::array<Sprite, 3> joinStates = { "./Sprites/Multiplayer/searching.bmp" , "./Sprites/Multiplayer/nogames.bmp","./Sprites/Multiplayer/searching.bmp" };
 	Sprite cancel;
@@ -29,4 +33,7 @@ private:
 	ENetAddress address;
 	ENetEvent event;
 	ENetPeer* peer = nullptr;
+	std::pair<int, int> to;
+	std::pair<int, int> from;
+	bool newMessage = false;
 };

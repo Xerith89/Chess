@@ -61,14 +61,15 @@ ENetPeer* Client::GetPeer()const
 
 ENetEvent Client::ReceivePacket()
 {
-	while (enet_host_service(client, &event, 1000) > 0)
+	while (enet_host_service(client, &event, 0) > 0)
 	{
 		if (event.type == ENET_EVENT_TYPE_RECEIVE)
 		{
 			//Convert back to string and get our the coords
+			newMessage = true;
 			std::string s(event.packet->data, event.packet->data+event.packet->dataLength);
-			auto from = std::make_pair((s.at(0)-'0'),s.at(1)-'0');
-			auto to = std::make_pair((s.at(2) - '0'), s.at(3) - '0');
+			from = std::make_pair((s.at(0)-'0'),s.at(1)-'0');
+			to = std::make_pair((s.at(2) - '0'), s.at(3) - '0');
 			//Do white move with these coords
 		}
 		else if (event.type == ENET_EVENT_TYPE_DISCONNECT)
@@ -102,4 +103,19 @@ Client::~Client()
 int Client::GetStatus() const
 {
 	return clientStatus;
+}
+
+std::pair<Coords, Coords> Client::GetLatestMove() const
+{
+	return std::pair<Coords,Coords>(Coords{ from.first,from.second }, Coords{ to.first,to.second });
+}
+
+bool Client::CheckNewMessage() const
+{
+	return newMessage;
+}
+
+void Client::SetNewMessage(bool status)
+{
+	newMessage = status;
 }

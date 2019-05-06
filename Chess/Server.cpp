@@ -57,7 +57,7 @@ void Server::Cleanup()
 
 ENetEvent Server::ReceivePacket()
 {
-	while (enet_host_service(server, &event, 1000) > 0)
+	while (enet_host_service(server, &event, 0) > 0)
 	{
 		if (event.type == ENET_EVENT_TYPE_RECEIVE)
 		{
