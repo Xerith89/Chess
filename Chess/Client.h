@@ -20,7 +20,7 @@ public:
 	bool CheckNewMessage()const;
 	void SetNewMessage(bool status);
 private:
-	std::array<Sprite, 3> joinStates = { "./Sprites/Multiplayer/searching.bmp" , "./Sprites/Multiplayer/nogames.bmp","./Sprites/Multiplayer/searching.bmp" };
+	std::array<Sprite, 3> joinStates = { Sprite("./Sprites/Multiplayer/searching.bmp") , Sprite("./Sprites/Multiplayer/nogames.bmp"),Sprite("./Sprites/Multiplayer/searching.bmp") };
 	Sprite cancel;
 	enum ClientStates {
 		SEARCHING,

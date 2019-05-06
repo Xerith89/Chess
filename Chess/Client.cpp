@@ -70,7 +70,6 @@ ENetEvent Client::ReceivePacket()
 			std::string s(event.packet->data, event.packet->data+event.packet->dataLength);
 			from = std::make_pair((s.at(0)-'0'),s.at(1)-'0');
 			to = std::make_pair((s.at(2) - '0'), s.at(3) - '0');
-			//Do white move with these coords
 		}
 		else if (event.type == ENET_EVENT_TYPE_DISCONNECT)
 		{

@@ -10,7 +10,20 @@ public:
 	void DrawChecked(Graphics& gfx)const override;
 	void Promote(Map* map)override;
 	void TestForCheck() override;
+	void mDoTurn();
+	bool PacketReady()const;
+	void SetPacketNotReady();
+	bool PlayerTurn()const;
+	void SetPlayerTurn(bool myTurn);
+	void DoMPlayUpdate(std::pair<Coords, Coords> input);
+	void DrawPossibleMoves(Graphics& gfx);
 private:
+	Coords selectedPiece;
+	Coords selectedTarget;
+	std::vector<std::pair<Coords, Coords>> selectedMoves;
+	bool playerTurn = false;
+	bool pieceSelected = false;
+	bool packetReady = false;
 	Coords startKingLoc = { 4,0 };
 	Coords leftRookStartLoc = { 0,0 };
 	Coords rightRookStartLoc = { 7,0 };
@@ -23,10 +36,7 @@ private:
 	void GenerationThree();
 	void GenerationFour();
 	void GenerationFive();
-	void GenerationSix();
-	
-	bool humanOpponent = false;
-	
+	void GenerationSix();	
 	Sprite promotionSprite;
 	std::random_device rd;
 	std::mt19937 rng;

@@ -126,6 +126,14 @@ void Game::Update()
 				{
 					//If we're the server constantly check for packets.
 					server.ReceivePacket();
+
+					if (server.CheckNewMessage())
+					{
+						blackPlayer.DoMPlayUpdate(server.GetLatestMove());
+						server.SetNewMessage(false);
+						whitePlayer.SetPlayerTurn(true);
+					}
+
 					//Handle the logic for sending packets.
 					if (whitePlayer.PlayerTurn())
 					{
@@ -139,39 +147,38 @@ void Game::Update()
 								std::to_string(brd.playedMoves.back().second.y);
 							server.SendPacket(data);
 							whitePlayer.SetPacketNotReady();
+							blackPlayer.SetPlayerTurn(true);
 						}
 					}
 				}
 				if (isClient)
 				{
-				//If we're client then constantly check for packets
-				client.ReceivePacket();
+					//If we're client then constantly check for packets
+					client.ReceivePacket();
 
-				if (client.CheckNewMessage())
-				{
-					whitePlayer.DoMPlayUpdate(client.GetLatestMove());
-					client.SetNewMessage(false);
-					clientTurn = true;
-				}
-				/*
-				if (clientTurn)
-				{
-					blackPlayer.DoTurn();
-					if (brd.playedMoves.size() > 0)
+					if (client.CheckNewMessage())
 					{
-						std::string data;
-						data = std::to_string(brd.playedMoves.back().first.x) +
-							std::to_string(brd.playedMoves.back().first.y) +
-							std::to_string(brd.playedMoves.back().second.x) +
-							std::to_string(brd.playedMoves.back().second.y);
-						server.SendPacket(data);
-						//no more black turn
-						//white turn
+						whitePlayer.DoMPlayUpdate(client.GetLatestMove());
+						client.SetNewMessage(false);
+					    blackPlayer.SetPlayerTurn(true);
 					}
-				}*/
-				
-				}
 
+					if (blackPlayer.PlayerTurn())
+					{
+						blackPlayer.mDoTurn();
+						if (blackPlayer.PacketReady())
+						{
+							std::string data;
+							data = std::to_string(brd.playedMoves.back().first.x) +
+								std::to_string(brd.playedMoves.back().first.y) +
+								std::to_string(brd.playedMoves.back().second.x) +
+								std::to_string(brd.playedMoves.back().second.y);
+							client.SendPacket(data);
+							blackPlayer.SetPacketNotReady();
+							whitePlayer.SetPlayerTurn(true);
+						}
+					}
+				}
 			}
 			break;
 		}
@@ -236,6 +243,10 @@ void Game::Render()
 			gui.DrawGUI(gfx);
 			brd.DrawBoard(gfx);
 			whitePlayer.DrawPossibleMoves(gfx);
+			if (isClient)
+			{
+				blackPlayer.DrawPossibleMoves(gfx);
+			}
 			whitePlayer.DrawChecked(gfx);
 			blackPlayer.DrawChecked(gfx);
 			whitePlayer.DrawPieces(gfx);

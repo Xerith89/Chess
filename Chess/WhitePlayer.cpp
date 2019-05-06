@@ -266,7 +266,7 @@ void WhitePlayer::DoMPlayUpdate(std::pair<Coords, Coords> input)
 		checked = false;
 		//Enpassant lasts for one turn only
 		brd.SetBlackEnpassant(false);
-		}
+	}
 		
 }
 

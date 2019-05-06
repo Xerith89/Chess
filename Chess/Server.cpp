@@ -1,5 +1,15 @@
 #include "Server.h"
 
+bool Server::CheckNewMessage() const
+{
+	return newMessage;
+}
+
+void Server::SetNewMessage(bool status)
+{
+	newMessage = status;
+}
+
 void Server::WaitForConnections()
 {
 	while (enet_host_service(server, &event, 0) > 0)
@@ -61,11 +71,11 @@ ENetEvent Server::ReceivePacket()
 	{
 		if (event.type == ENET_EVENT_TYPE_RECEIVE)
 		{
+			newMessage = true;
 			//Convert back to string and get our the coords
 			std::string s(event.packet->data, event.packet->data + event.packet->dataLength);
-			auto from = std::make_pair((s.at(0) - '0'), s.at(1) - '0');
-			auto to = std::make_pair((s.at(2) - '0'), s.at(3) - '0');
-			//Do black move with these coords
+			from = std::make_pair((s.at(0) - '0'), s.at(1) - '0');
+			to = std::make_pair((s.at(2) - '0'), s.at(3) - '0');
 		}
 		else if (event.type == ENET_EVENT_TYPE_DISCONNECT)
 		{
@@ -86,6 +96,11 @@ void Server::SendPacket(std::string data)
 int Server::GetServerStatus() const
 {
 	return serverState;
+}
+
+std::pair<Coords, Coords> Server::GetLatestMove() const
+{
+	return std::pair<Coords, Coords>(Coords{ from.first,from.second }, Coords{ to.first,to.second });
 }
 
 Server::Server()
