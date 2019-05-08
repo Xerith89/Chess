@@ -218,7 +218,7 @@ void BlackPlayer::mDoTurn()
 	if (wnd.inpt.RightMsePressed())
 	{
 		pieceSelected = false;
-		selectedPiece = { 0,0 };
+		selectedPiece = { 7,7 };
 	}
 }
 
@@ -294,8 +294,8 @@ void BlackPlayer::DoMPlayUpdate(std::pair<Coords, Coords> input)
 					auto rook = brd.blackPieces.find({ 0,0 });
 					if (rook != brd.blackPieces.end())
 					{
-						rook->second.get()->MoveTo({ 3, 0 });
-						brd.blackPieces.insert_or_assign({ 3, 0 }, std::move(rook->second));
+						rook->second.get()->MoveTo({ 2, 0 });
+						brd.blackPieces.insert_or_assign({ 2, 0 }, std::move(rook->second));
 						brd.blackPieces.erase(std::make_pair(0, 0));
 						brd.SetLeftCastling(false);
 						brd.SetRightCastling(false);
@@ -611,8 +611,8 @@ void BlackPlayer::GenerationOne()
 				auto rook = brd.blackPieces.find({ 0,0 });
 				if (rook != brd.blackPieces.end())
 				{
-					rook->second.get()->MoveTo({ 3, 0 });
-					brd.blackPieces.insert_or_assign({ 3, 0 }, std::move(rook->second));
+					rook->second.get()->MoveTo({ 2, 0 });
+					brd.blackPieces.insert_or_assign({ 2, 0 }, std::move(rook->second));
 					brd.blackPieces.erase(std::make_pair(0, 0));
 					brd.SetLeftCastling(false);
 					brd.SetRightCastling(false);

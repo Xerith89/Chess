@@ -13,7 +13,8 @@ private:
 	enum ServerStatus {
 		STARTING,
 		WAITING,
-		CONNECTED
+		CONNECTED,
+		DISCONNECTED
 	};
 	int serverState = ServerStatus::STARTING;
 	ENetAddress address;

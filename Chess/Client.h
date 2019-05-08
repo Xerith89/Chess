@@ -25,7 +25,8 @@ private:
 	enum ClientStates {
 		SEARCHING,
 		NONE,
-		CONNECTED
+		CONNECTED,
+		DISCONNECTED
 	};
 	int joinState = 0;
 	int clientStatus = 0;

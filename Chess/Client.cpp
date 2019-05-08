@@ -4,6 +4,7 @@ void Client::DrawStates(Graphics& gfx) const
 {
 	gfx.DrawSprite(200, 180, joinStates.at(clientStatus));
 	gfx.DrawSprite(300, 500, cancel);
+
 }
 
 void Client::JoinGame()
@@ -74,6 +75,7 @@ ENetEvent Client::ReceivePacket()
 		else if (event.type == ENET_EVENT_TYPE_DISCONNECT)
 		{
 			event.peer->data = NULL;
+			clientStatus = ClientStates::DISCONNECTED;
 		}
 	}
 	return event;

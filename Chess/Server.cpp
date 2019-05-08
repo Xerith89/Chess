@@ -80,6 +80,7 @@ ENetEvent Server::ReceivePacket()
 		else if (event.type == ENET_EVENT_TYPE_DISCONNECT)
 		{
 			event.peer->data = NULL;
+			serverState = ServerStatus::DISCONNECTED;
 		}
 	}
 	return event;

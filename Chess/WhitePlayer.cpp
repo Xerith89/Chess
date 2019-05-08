@@ -71,8 +71,8 @@ void WhitePlayer::DoTurn()
 						auto rook = brd.whitePieces.find({ 0,7 });
 						if (rook != brd.whitePieces.end())
 						{
-							rook->second.get()->MoveTo({ 3, 7 });
-							brd.whitePieces.insert_or_assign({ 3, 7 }, std::move(rook->second));
+							rook->second.get()->MoveTo({ 2, 7 });
+							brd.whitePieces.insert_or_assign({ 2, 7 }, std::move(rook->second));
 							brd.whitePieces.erase({ 0,7 });
 							brd.SetLeftCastling(false);
 							brd.SetRightCastling(false);
@@ -201,8 +201,8 @@ void WhitePlayer::DoMPlayUpdate(std::pair<Coords, Coords> input)
 					auto rook = brd.whitePieces.find({ 0,7 });
 					if (rook != brd.whitePieces.end())
 					{
-						rook->second.get()->MoveTo({ 3, 7 });
-						brd.whitePieces.insert_or_assign({ 3, 7 }, std::move(rook->second));
+						rook->second.get()->MoveTo({ 2, 7 });
+						brd.whitePieces.insert_or_assign({ 2, 7 }, std::move(rook->second));
 						brd.whitePieces.erase({ 0,7 });
 						brd.SetLeftCastling(false);
 						brd.SetRightCastling(false);

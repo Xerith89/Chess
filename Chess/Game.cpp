@@ -127,6 +127,13 @@ void Game::Update()
 					//If we're the server constantly check for packets.
 					server.ReceivePacket();
 
+					if (server.GetServerStatus() == 3)
+					{
+						programStatus = ProgramState::MAINMENU;
+						isMultiplayer = false;
+						isClient = false;
+					}
+
 					if (server.CheckNewMessage())
 					{
 						blackPlayer.DoMPlayUpdate(server.GetLatestMove());
@@ -156,6 +163,16 @@ void Game::Update()
 					//If we're client then constantly check for packets
 					client.ReceivePacket();
 
+					//If packet contains disconnect message from server
+					if (client.GetStatus() == 3)
+					{
+						programStatus = ProgramState::MAINMENU;
+						isMultiplayer = false;
+						isClient = false;
+					}
+
+					//Read the message and update the white player from the data
+					//Nothing new to read, set client turn
 					if (client.CheckNewMessage())
 					{
 						whitePlayer.DoMPlayUpdate(client.GetLatestMove());
@@ -200,6 +217,11 @@ void Game::Update()
 				isMultiplayer = true;
 				isClient = true;
 				break;
+			case 3:
+				programStatus = ProgramState::MAINMENU;
+				isMultiplayer = false;
+				isClient = false;
+				break;
 		}
 		break;
 	case HOSTING:
@@ -220,6 +242,11 @@ void Game::Update()
 				programStatus = ProgramState::PLAYING;
 				isMultiplayer = true;
 				isServer = true;
+				break;
+			case 3:
+				programStatus = ProgramState::MAINMENU;
+				isMultiplayer = false;
+				isServer = false;
 				break;
 		}
 		break;
