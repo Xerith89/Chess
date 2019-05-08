@@ -15,14 +15,18 @@
 #include "WhitePlayer.h"
 #include "GUI.h"
 #include "Menu.h"
+#include "irrKlang.h"
+
+#pragma comment(lib, "irrKlang.lib")
 
 class Game {
 private:
 	Window& wnd;
 	Graphics gfx;
-	Sprite playerwin = ("./Sprites/checkmatepwin.bmp");
-	Sprite playerlose = ("./Sprites/checkmateplose.bmp");
-	Sprite stalemate = ("./Sprites/stalemate.bmp");
+	Sprite playerwin;
+	Sprite playerlose;
+	Sprite stalemate;
+	irrklang::ISoundEngine* engine;
 	void Render();
 	void Update();
 	//Controls the state of the overrall program

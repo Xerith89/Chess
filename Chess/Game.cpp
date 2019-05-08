@@ -3,12 +3,12 @@
 
 /*
 BUG LIST
+.Multiplayer enpassant take and promotion not synchronised
 TODO LIST
 .Drawn games
 .Generational Minimax AI
 .Player best move
 .Sounds
-.Multiplayer
 */
 
 Game::Game(Window & wnd)
@@ -17,6 +17,9 @@ Game::Game(Window & wnd)
 	gfx(wnd.GetHandle()),
 	brd("./Sprites/board.bmp",30,25),
 	gui(brd),
+	playerwin("./Sprites/checkmatepwin.bmp"),
+	playerlose("./Sprites/checkmateplose.bmp"),
+	stalemate("./Sprites/stalemate.bmp"),
 	whitePlayer(wnd,brd,gui),
 	blackPlayer(wnd,brd),
 	menu(),
@@ -55,6 +58,8 @@ Game::Game(Window & wnd)
 	}
 	programStatus = ProgramState::MAINMENU;
 	gameStatus = GameState::NORMAL;
+
+	engine = irrklang::createIrrKlangDevice();
 }
 
 void Game::Update()
@@ -251,6 +256,7 @@ void Game::Update()
 		}
 		break;
 	case QUIT:
+		engine->drop();
 		PostQuitMessage(0);
 		break;
 	}
