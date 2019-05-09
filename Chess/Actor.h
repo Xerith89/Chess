@@ -46,4 +46,5 @@ public:
 	bool GetCheckMated()const;
 	bool GetStaleMated()const;
 	bool GetPromotion()const;
+	bool GetChecked()const;
 };

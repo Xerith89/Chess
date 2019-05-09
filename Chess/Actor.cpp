@@ -23,3 +23,8 @@ bool Actor::GetPromotion() const
 {
 	return promotion;
 }
+
+bool Actor::GetChecked() const
+{
+	return checked;
+}

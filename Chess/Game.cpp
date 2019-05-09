@@ -83,6 +83,17 @@ void Game::Update()
 				if (!whitePlayer.PlayerTurn() && !blackPlayer.GetPromotion())
 				{
 					blackPlayer.TestForCheck();
+					//If we're checked and can play the sound then play it
+					if (blackPlayer.GetChecked() && checkSound)
+					{
+						engine->play2D("./Sounds/check.wav", false);
+						checkSound = false;
+					}
+					//If we're not checked and the sound can't be played then reset it
+					else if (!blackPlayer.GetChecked() && !checkSound)
+					{
+						checkSound = true;
+					}
 					blackPlayer.DoTurn();
 					engine->play2D("./Sounds/piecemove.wav", false);
 					whitePlayer.SetPlayerTurn(true);
@@ -99,6 +110,17 @@ void Game::Update()
 				if (whitePlayer.PlayerTurn() && !whitePlayer.GetPromotion())
 				{
 					whitePlayer.TestForCheck();
+					//If we're checked and can play the sound then play it
+					if (whitePlayer.GetChecked() && checkSound)
+					{
+						engine->play2D("./Sounds/check.wav", false);
+						checkSound = false;
+					}
+					//If we're not checked and the sound can't be played then reset it
+					else if (!whitePlayer.GetChecked() && !checkSound)
+					{
+						checkSound = true;
+					}
 					whitePlayer.DoTurn();
 					if (!whitePlayer.PlayerTurn())
 					{
