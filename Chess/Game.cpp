@@ -5,10 +5,9 @@
 BUG LIST
 .Multiplayer enpassant take and promotion not synchronised
 TODO LIST
-.Drawn games
 .Generational Minimax AI
 .Player best move
-.Sounds
+.GUI stuff
 */
 
 Game::Game(Window & wnd)
@@ -20,6 +19,7 @@ Game::Game(Window & wnd)
 	playerwin("./Sprites/checkmatepwin.bmp"),
 	playerlose("./Sprites/checkmateplose.bmp"),
 	stalemate("./Sprites/stalemate.bmp"),
+	draw("./Sprites/draw.bmp"),
 	whitePlayer(wnd,brd,gui),
 	blackPlayer(wnd,brd),
 	menu(),
@@ -108,7 +108,8 @@ void Game::Update()
 					whitePlayer.Promote(&brd.whitePieces);
 				}
 
-				//End game status checks
+				//End game status checks 
+				//Checkmate
 				if (blackPlayer.GetCheckMated())
 				{
 					gameStatus = GameState::OPPONENTCHECKMATED;
@@ -118,10 +119,15 @@ void Game::Update()
 				{
 					gameStatus = GameState::PLAYERCHECKMATED;
 				}
-
+				//Stalemate checks
 				if (whitePlayer.GetStaleMated() || blackPlayer.GetStaleMated())
 				{
 					gameStatus = GameState::STALEMATE;
+				}
+				//Draw
+				if (whitePlayer.TestForDraw() || blackPlayer.TestForDraw())
+				{
+					gameStatus = GameState::DRAW;
 				}
 			}
 			else
@@ -149,6 +155,7 @@ void Game::Update()
 					//Handle the logic for sending packets.
 					if (whitePlayer.PlayerTurn())
 					{
+						whitePlayer.TestForCheck();
 						whitePlayer.DoTurn();
 						if (whitePlayer.PacketReady())
 						{
@@ -160,6 +167,25 @@ void Game::Update()
 							server.SendPacket(data);
 							whitePlayer.SetPacketNotReady();
 							blackPlayer.SetPlayerTurn(true);
+						}
+						if (blackPlayer.GetCheckMated())
+						{
+							gameStatus = GameState::OPPONENTCHECKMATED;
+						}
+
+						if (whitePlayer.GetCheckMated())
+						{
+							gameStatus = GameState::PLAYERCHECKMATED;
+						}
+						//Stalemate checks
+						if (whitePlayer.GetStaleMated() || blackPlayer.GetStaleMated())
+						{
+							gameStatus = GameState::STALEMATE;
+						}
+						//Draw
+						if (whitePlayer.TestForDraw() || blackPlayer.TestForDraw())
+						{
+							gameStatus = GameState::DRAW;
 						}
 					}
 				}
@@ -187,6 +213,7 @@ void Game::Update()
 
 					if (blackPlayer.PlayerTurn())
 					{
+						blackPlayer.TestForCheck();
 						blackPlayer.mDoTurn();
 						if (blackPlayer.PacketReady())
 						{
@@ -198,6 +225,25 @@ void Game::Update()
 							client.SendPacket(data);
 							blackPlayer.SetPacketNotReady();
 							whitePlayer.SetPlayerTurn(true);
+						}
+						if (whitePlayer.GetCheckMated())
+						{
+							gameStatus = GameState::OPPONENTCHECKMATED;
+						}
+
+						if (blackPlayer.GetCheckMated())
+						{
+							gameStatus = GameState::PLAYERCHECKMATED;
+						}
+						//Stalemate checks
+						if (whitePlayer.GetStaleMated() || blackPlayer.GetStaleMated())
+						{
+							gameStatus = GameState::STALEMATE;
+						}
+						//Draw
+						if (whitePlayer.TestForDraw() || blackPlayer.TestForDraw())
+						{
+							gameStatus = GameState::DRAW;
 						}
 					}
 				}
@@ -308,6 +354,12 @@ void Game::Render()
 			whitePlayer.DrawPieces(gfx);
 			blackPlayer.DrawPieces(gfx);
 			gfx.DrawSprite(200, 200, stalemate);
+			break;
+		case GameState::DRAW:
+			brd.DrawBoard(gfx);
+			whitePlayer.DrawPieces(gfx);
+			blackPlayer.DrawPieces(gfx);
+			gfx.DrawSprite(200, 200, draw);
 			break;
 		}
 		break;

@@ -17,6 +17,7 @@ public:
 	void SetPlayerTurn(bool myTurn);
 	void DoMPlayUpdate(std::pair<Coords, Coords> input);
 	void DrawPossibleMoves(Graphics& gfx);
+	bool TestForDraw()override;
 private:
 	Coords selectedPiece;
 	Coords selectedTarget;

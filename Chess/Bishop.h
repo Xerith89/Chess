@@ -7,6 +7,8 @@ public:
 	virtual std::vector<std::pair<Coords, Coords>> GetMoves()override;
 	virtual void GetTargets( Map* oppoPieces)override;
 	virtual int GetScore();
+	bool GetBlackSquare()const;
 private:
 	int score = 350;
+	bool blackSquare = false;
 };

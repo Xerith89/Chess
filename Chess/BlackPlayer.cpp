@@ -386,6 +386,59 @@ bool BlackPlayer::TestForCheckMate()
 	return cMated;
 }
 
+bool BlackPlayer::TestForDraw()
+{
+
+	if (brd.blackPieces.size() == 1 && brd.whitePieces.size() == 1)
+	{
+		//Only kings left so we have a draw
+		return true;
+	}
+
+	if (brd.blackPieces.size() == 2 && brd.whitePieces.size() == 1)
+	{
+		//we've got two pieces left - check what they are
+		for (const auto& p : brd.blackPieces)
+		{
+			bishopInstance = dynamic_cast<Bishop*>(p.second.get());
+			knightInstance = dynamic_cast<Knight*>(p.second.get());
+		}
+
+		if (bishopInstance != nullptr || knightInstance != nullptr)
+		{
+			return true;
+		}
+	}
+
+	if (brd.whitePieces.size() == 2 && brd.blackPieces.size() == 2)
+	{
+		//Test the pieces left
+		for (const auto& p : brd.whitePieces)
+		{
+			oppoBishopInstance = dynamic_cast<Bishop*>(p.second.get());
+		}
+
+		for (const auto& p : brd.blackPieces)
+		{
+			bishopInstance = dynamic_cast<Bishop*>(p.second.get());
+		}
+
+		if (bishopInstance != nullptr && oppoBishopInstance != nullptr)
+		{
+			//If they are the on the same coloured square then we have a draw
+			if (bishopInstance->GetBlackSquare() && oppoBishopInstance->GetBlackSquare())
+			{
+				return true;
+			}
+			else if (!bishopInstance->GetBlackSquare() && !oppoBishopInstance->GetBlackSquare())
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
 
 void BlackPlayer::TestForStaleMate()
 {

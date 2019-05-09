@@ -26,6 +26,7 @@ private:
 	Sprite playerwin;
 	Sprite playerlose;
 	Sprite stalemate;
+	Sprite draw;
 	irrklang::ISoundEngine* engine;
 	void Render();
 	void Update();

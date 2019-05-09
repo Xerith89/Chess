@@ -16,6 +16,7 @@ public:
 	void TestForCheck()override;
 	bool PacketReady()const;
 	void SetPacketNotReady();
+	bool TestForDraw()override;
 private:
 	GUI& gui;
 	Coords startKingLoc = { 4,7 };

@@ -410,6 +410,64 @@ void WhitePlayer::TestForStaleMate()
 	}
 }
 
+bool WhitePlayer::TestForDraw()
+{
+	/*
+	We have a draw when there are not enough pieces for checkmate
+	king versus king
+	king and bishop versus king
+	king and knight versus king
+	king and bishop versus king and bishop with the bishops on the same color.*/
+	if (brd.blackPieces.size() == 1 && brd.whitePieces.size() == 1)
+	{
+		//Only kings left so we have a draw
+		return true;
+	}
+
+	if (brd.whitePieces.size() == 2 && brd.blackPieces.size() == 1)
+	{
+		//we've got two pieces left - check what they are
+		for (const auto& p : brd.whitePieces)
+		{
+			bishopInstance = dynamic_cast<Bishop*>(p.second.get());
+			knightInstance = dynamic_cast<Knight*>(p.second.get());
+		}
+
+		if (bishopInstance != nullptr || knightInstance != nullptr)
+		{
+			return true;
+		}
+	}
+
+	if (brd.whitePieces.size() == 2 && brd.blackPieces.size() == 2)
+	{
+		//Test the pieces left
+		for (const auto& p : brd.whitePieces)
+		{
+			bishopInstance = dynamic_cast<Bishop*>(p.second.get());
+		}
+
+		for (const auto& p : brd.blackPieces)
+		{
+			oppoBishopInstance = dynamic_cast<Bishop*>(p.second.get());
+		}
+
+		if (bishopInstance != nullptr && oppoBishopInstance != nullptr)
+		{
+			//If they are the on the same coloured square then we have a draw
+			if (bishopInstance->GetBlackSquare() && oppoBishopInstance->GetBlackSquare())
+			{
+				return true;
+			}
+			else if (!bishopInstance->GetBlackSquare() && !oppoBishopInstance->GetBlackSquare())
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
 void WhitePlayer::TestForCastling()
 {
 	//Castling checks - we only want to do this if we haven't castled yet

@@ -20,6 +20,9 @@ protected:
 	using Map = std::map<std::pair<int, int>, std::shared_ptr<Piece>>;
 	King* kingInstance = nullptr;
 	Pawn* pawnInstance = nullptr;
+	Bishop* bishopInstance = nullptr;
+	Bishop* oppoBishopInstance = nullptr;
+	Knight* knightInstance = nullptr;
 	bool checked = false;
 	bool cMated = false;
 	bool promotion = false;
@@ -38,6 +41,7 @@ protected:
 	virtual void TestForStaleMate() = 0;
 	virtual void TestForCastling() = 0;
 	virtual void Promote(Map* map) = 0;
+	virtual bool TestForDraw() = 0;
 public:
 	bool GetCheckMated()const;
 	bool GetStaleMated()const;
