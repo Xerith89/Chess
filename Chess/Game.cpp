@@ -67,7 +67,7 @@ void Game::Update()
 	switch (programStatus)
 	{
 	case MAINMENU:
-		menu.UpdateMenu(wnd);
+		menu.UpdateMenu(wnd, engine);
 		if (wnd.inpt.LeftMsePressed())
 		{
 			programStatus += menu.GetSelectedState();

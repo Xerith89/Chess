@@ -859,10 +859,8 @@ std::pair<Coords, Coords> BlackPlayer::Minimax(std::vector < std::pair<Coords, C
 	std::set<std::pair<Coords, Coords>> bestMoves;
 	//for every move in the input moves list
 	//We want to do that move
-	//Get the score and save the value of it
 	//We then want to go through the white piece moves based off of that move
 	//for each one we want to do each move
-	//Get the score and subtract it from the above score
 	//If it is greater than the current total (starting at -99999) then we want to save the move
 	//We then reset the white pieces and continue til the loop ends
 	//We then reset the black pieces and continue to the loop ends
