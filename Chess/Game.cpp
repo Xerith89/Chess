@@ -3,17 +3,11 @@
 
 /*
 BUG LIST
-.Padding issue for bitmap loading causing graphical glitch
+.Multiplayer enpassant take and promotion not synchronised
 TODO LIST
-.Drawn games
-.Smarter move evaluation
-.Deeper move searching
-.Alpha beta pruning
+.Generational Minimax AI
 .Player best move
-.Played moves written to screen
-.Menu Screens
-.Sounds
-.Multiplayer
+.GUI stuff
 */
 
 Game::Game(Window & wnd)
@@ -21,9 +15,16 @@ Game::Game(Window & wnd)
 	wnd(wnd),
 	gfx(wnd.GetHandle()),
 	brd("./Sprites/board.bmp",30,25),
-	gui(),
-	player(wnd,brd,gui),
-	opponent(wnd,brd)	
+	gui(brd),
+	playerwin("./Sprites/checkmatepwin.bmp"),
+	playerlose("./Sprites/checkmateplose.bmp"),
+	stalemate("./Sprites/stalemate.bmp"),
+	draw("./Sprites/draw.bmp"),
+	whitePlayer(wnd,brd,gui),
+	blackPlayer(wnd,brd),
+	menu(),
+	server(),
+	client()
 {
 	//Kings
 	brd.whitePieces.emplace(std::make_pair(3, 7), std::make_shared<King>(3, 7, "./Sprites/kingW.bmp",true,brd));
@@ -55,100 +56,318 @@ Game::Game(Window & wnd)
 		brd.whitePieces.emplace(std::make_pair(i,6), std::make_shared<Pawn>(i, 6, "./Sprites/pawnW.bmp",true,brd));
 		brd.blackPieces.emplace(std::make_pair(i,1), std::make_shared<Pawn>(i, 1, "./Sprites/pawnB.bmp",false,brd));
 	}
-
+	programStatus = ProgramState::MAINMENU;
 	gameStatus = GameState::NORMAL;
+
+	engine = irrklang::createIrrKlangDevice();
 }
 
 void Game::Update()
 {
-	switch(gameStatus)
+	switch (programStatus)
 	{
-	case GameState::NORMAL:
-		
-		//Players turn and they are not promoting
-		if (player.PlayerTurn() && !player.GetPromotion())
+	case MAINMENU:
+		menu.UpdateMenu(wnd);
+		if (wnd.inpt.LeftMsePressed())
 		{
-			player.TestForCheck();
-			player.DoTurn();
+			programStatus += menu.GetSelectedState();
 		}
-
-		//Player is promoting
-		if (player.GetPromotion())
+		break;
+	case PLAYING:
+		switch (gameStatus)
 		{
-			player.Promote(&brd.whitePieces);
-		}
+		case GameState::NORMAL:
+			if (!isMultiplayer)
+			{
+				//Opponents turn and not promoting
+				if (!whitePlayer.PlayerTurn() && !blackPlayer.GetPromotion())
+				{
+					blackPlayer.TestForCheck();
+					blackPlayer.DoTurn();
+					whitePlayer.SetPlayerTurn(true);
+				}
 
-		//Opponents turn and not promoting
-		if (!player.PlayerTurn() && !opponent.GetPromotion())
+				//Opponent promoting
+				if (blackPlayer.GetPromotion())
+				{
+					blackPlayer.Promote(&brd.blackPieces);
+					whitePlayer.SetPlayerTurn(true);
+
+				}
+
+				//Players turn and they are not promoting
+				if (whitePlayer.PlayerTurn() && !whitePlayer.GetPromotion())
+				{
+					whitePlayer.TestForCheck();
+					whitePlayer.DoTurn();
+				}
+
+				//Player is promoting
+				if (whitePlayer.GetPromotion())
+				{
+					whitePlayer.Promote(&brd.whitePieces);
+				}
+
+				//End game status checks 
+				//Checkmate
+				if (blackPlayer.GetCheckMated())
+				{
+					gameStatus = GameState::OPPONENTCHECKMATED;
+				}
+
+				if (whitePlayer.GetCheckMated())
+				{
+					gameStatus = GameState::PLAYERCHECKMATED;
+				}
+				//Stalemate checks
+				if (whitePlayer.GetStaleMated() || blackPlayer.GetStaleMated())
+				{
+					gameStatus = GameState::STALEMATE;
+				}
+				//Draw
+				if (whitePlayer.TestForDraw() || blackPlayer.TestForDraw())
+				{
+					gameStatus = GameState::DRAW;
+				}
+			}
+			else
+			//do a multiplayer loop
+			{
+				if (isServer)
+				{
+					//If we're the server constantly check for packets.
+					server.ReceivePacket();
+
+					if (server.GetServerStatus() == 3)
+					{
+						programStatus = ProgramState::MAINMENU;
+						isMultiplayer = false;
+						isClient = false;
+					}
+
+					if (server.CheckNewMessage())
+					{
+						blackPlayer.DoMPlayUpdate(server.GetLatestMove());
+						server.SetNewMessage(false);
+						whitePlayer.SetPlayerTurn(true);
+					}
+
+					//Handle the logic for sending packets.
+					if (whitePlayer.PlayerTurn())
+					{
+						whitePlayer.TestForCheck();
+						whitePlayer.DoTurn();
+						if (whitePlayer.PacketReady())
+						{
+							std::string data;
+							data = std::to_string(brd.playedMoves.back().first.x) +
+								std::to_string(brd.playedMoves.back().first.y) +
+								std::to_string(brd.playedMoves.back().second.x) +
+								std::to_string(brd.playedMoves.back().second.y);
+							server.SendPacket(data);
+							whitePlayer.SetPacketNotReady();
+							blackPlayer.SetPlayerTurn(true);
+						}
+						if (blackPlayer.GetCheckMated())
+						{
+							gameStatus = GameState::OPPONENTCHECKMATED;
+						}
+
+						if (whitePlayer.GetCheckMated())
+						{
+							gameStatus = GameState::PLAYERCHECKMATED;
+						}
+						//Stalemate checks
+						if (whitePlayer.GetStaleMated() || blackPlayer.GetStaleMated())
+						{
+							gameStatus = GameState::STALEMATE;
+						}
+						//Draw
+						if (whitePlayer.TestForDraw() || blackPlayer.TestForDraw())
+						{
+							gameStatus = GameState::DRAW;
+						}
+					}
+				}
+				if (isClient)
+				{
+					//If we're client then constantly check for packets
+					client.ReceivePacket();
+
+					//If packet contains disconnect message from server
+					if (client.GetStatus() == 3)
+					{
+						programStatus = ProgramState::MAINMENU;
+						isMultiplayer = false;
+						isClient = false;
+					}
+
+					//Read the message and update the white player from the data
+					//Nothing new to read, set client turn
+					if (client.CheckNewMessage())
+					{
+						whitePlayer.DoMPlayUpdate(client.GetLatestMove());
+						client.SetNewMessage(false);
+					    blackPlayer.SetPlayerTurn(true);
+					}
+
+					if (blackPlayer.PlayerTurn())
+					{
+						blackPlayer.TestForCheck();
+						blackPlayer.mDoTurn();
+						if (blackPlayer.PacketReady())
+						{
+							std::string data;
+							data = std::to_string(brd.playedMoves.back().first.x) +
+								std::to_string(brd.playedMoves.back().first.y) +
+								std::to_string(brd.playedMoves.back().second.x) +
+								std::to_string(brd.playedMoves.back().second.y);
+							client.SendPacket(data);
+							blackPlayer.SetPacketNotReady();
+							whitePlayer.SetPlayerTurn(true);
+						}
+						if (whitePlayer.GetCheckMated())
+						{
+							gameStatus = GameState::OPPONENTCHECKMATED;
+						}
+
+						if (blackPlayer.GetCheckMated())
+						{
+							gameStatus = GameState::PLAYERCHECKMATED;
+						}
+						//Stalemate checks
+						if (whitePlayer.GetStaleMated() || blackPlayer.GetStaleMated())
+						{
+							gameStatus = GameState::STALEMATE;
+						}
+						//Draw
+						if (whitePlayer.TestForDraw() || blackPlayer.TestForDraw())
+						{
+							gameStatus = GameState::DRAW;
+						}
+					}
+				}
+			}
+			break;
+		}
+		break;
+	case JOINING:
+		if (wnd.inpt.KbdKeyPressed(VK_SPACE))
 		{
-			opponent.TestForCheck();
-			opponent.DoTurn();
-			player.SetPlayerTurn();
+			programStatus = ProgramState::MAINMENU;
 		}
-
-		//Opponent promoting
-		if (opponent.GetPromotion())
+		switch(client.GetStatus())
 		{
-			opponent.Promote(&brd.blackPieces);
-			player.SetPlayerTurn();
-
+			case 0:
+				client.JoinGame();
+				break;
+			case 1:
+				break;
+			case 2:
+				programStatus = ProgramState::PLAYING;
+				isMultiplayer = true;
+				isClient = true;
+				break;
+			case 3:
+				programStatus = ProgramState::MAINMENU;
+				isMultiplayer = false;
+				isClient = false;
+				break;
 		}
-
-		//End game status checks
-		if (opponent.GetCheckMated())
+		break;
+	case HOSTING:
+		if (wnd.inpt.KbdKeyPressed(VK_SPACE))
 		{
-			gameStatus = GameState::OPPONENTCHECKMATED;
+			server.Cleanup();
+			programStatus = ProgramState::MAINMENU;
 		}
-
-		if (player.GetCheckMated())
+		switch (server.GetServerStatus())
 		{
-			gameStatus = GameState::PLAYERCHECKMATED;
+			case 0:
+				server.CreateServer();
+				break;
+			case 1:
+				server.WaitForConnections();
+				break;
+			case 2:
+				programStatus = ProgramState::PLAYING;
+				isMultiplayer = true;
+				isServer = true;
+				break;
+			case 3:
+				programStatus = ProgramState::MAINMENU;
+				isMultiplayer = false;
+				isServer = false;
+				break;
 		}
-
-		if (player.GetStaleMated() || opponent.GetStaleMated())
-		{
-			gameStatus = GameState::STALEMATE;
-		}
+		break;
+	case QUIT:
+		engine->drop();
+		PostQuitMessage(0);
 		break;
 	}
 }
 
 void Game::Render()
 {
-	switch  (gameStatus)
+	switch (programStatus)
 	{
-	case GameState::NORMAL:
-		gui.DrawGUI(gfx);
-		brd.DrawBoard(gfx);
-		player.DrawPossibleMoves(gfx);
-		player.DrawChecked(gfx);
-		opponent.DrawChecked(gfx);
-		player.DrawPieces(gfx);
-		opponent.DrawPieces(gfx);
-		if (player.GetPromotion())
+	case MAINMENU:
+		menu.DrawMenuScreen(gfx);
+		break;
+	case PLAYING:
+		switch (gameStatus)
 		{
-			gui.DrawPromotion(gfx);
+		case GameState::NORMAL:
+			gui.DrawGUI(gfx);
+			brd.DrawBoard(gfx);
+			whitePlayer.DrawPossibleMoves(gfx);
+			if (isClient)
+			{
+				blackPlayer.DrawPossibleMoves(gfx);
+			}
+			whitePlayer.DrawChecked(gfx);
+			blackPlayer.DrawChecked(gfx);
+			whitePlayer.DrawPieces(gfx);
+			blackPlayer.DrawPieces(gfx);
+			if (whitePlayer.GetPromotion())
+			{
+				gui.DrawPromotion(gfx);
+			}
+			break;
+		case GameState::OPPONENTCHECKMATED:
+			brd.DrawBoard(gfx);
+			blackPlayer.DrawChecked(gfx);
+			whitePlayer.DrawPieces(gfx);
+			blackPlayer.DrawPieces(gfx);
+			gfx.DrawSprite(200, 200, playerwin);
+			break;
+		case GameState::PLAYERCHECKMATED:
+			brd.DrawBoard(gfx);
+			whitePlayer.DrawChecked(gfx);
+			whitePlayer.DrawPieces(gfx);
+			blackPlayer.DrawPieces(gfx);
+			gfx.DrawSprite(200, 200, playerlose);
+			break;
+		case GameState::STALEMATE:
+			brd.DrawBoard(gfx);
+			whitePlayer.DrawPieces(gfx);
+			blackPlayer.DrawPieces(gfx);
+			gfx.DrawSprite(200, 200, stalemate);
+			break;
+		case GameState::DRAW:
+			brd.DrawBoard(gfx);
+			whitePlayer.DrawPieces(gfx);
+			blackPlayer.DrawPieces(gfx);
+			gfx.DrawSprite(200, 200, draw);
+			break;
 		}
 		break;
-	case GameState::OPPONENTCHECKMATED:
-		brd.DrawBoard(gfx);
-		opponent.DrawChecked(gfx);
-		player.DrawPieces(gfx);
-		opponent.DrawPieces(gfx);
-		gfx.DrawSprite(200, 200, playerwin);
+	case HOSTING:
+		server.DrawStates(gfx);
 		break;
-	case GameState::PLAYERCHECKMATED:
-		brd.DrawBoard(gfx);
-		player.DrawChecked(gfx);
-		player.DrawPieces(gfx);
-		opponent.DrawPieces(gfx);
-		gfx.DrawSprite(200, 200, playerlose);
-		break;
-	case GameState::STALEMATE:
-		brd.DrawBoard(gfx);
-		player.DrawPieces(gfx);
-		opponent.DrawPieces(gfx);
-		gfx.DrawSprite(200, 200, stalemate);
+	case JOINING:
+		client.DrawStates(gfx);
 		break;
 	}
 }
