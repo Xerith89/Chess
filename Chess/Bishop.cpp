@@ -5,6 +5,14 @@ Bishop::Bishop(int x, int y, const std::string spritename, bool white, Board& br
 	:
 	Piece({ x,y }, spritename,brd,white)
 {
+	if (white && x == 5)
+	{
+		blackSquare = true;
+	}
+	else if (!white && x == 2)
+	{
+		blackSquare = true;
+	}
 }
 
 std::vector<std::pair<Coords, Coords>> Bishop::GetMoves()
@@ -214,6 +222,11 @@ void Bishop::GetTargets(Map* oppoPieces)
 int Bishop::GetScore()
 {
 	return score;
+}
+
+bool Bishop::GetBlackSquare() const
+{
+	return blackSquare;
 }
 
 

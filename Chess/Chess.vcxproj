@@ -80,11 +80,12 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)enet;$(ProjectDir)ik;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86</AdditionalLibraryDirectories>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\paul\source\repos\Chess\Chess\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies);enet.lib;ws2_32.lib;winmm.lib</AdditionalDependencies>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -93,7 +94,13 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)enet;$(ProjectDir)ik;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>C:\Users\paul\source\repos\Chess\Chess\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies);enet.lib;ws2_32.lib;winmm.lib</AdditionalDependencies>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -103,10 +110,14 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)enet;$(ProjectDir)ik;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>C:\Users\paul\source\repos\Chess\Chess\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies);enet.lib;ws2_32.lib;winmm.lib</AdditionalDependencies>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -117,10 +128,14 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)enet;$(ProjectDir)ik;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>C:\Users\paul\source\repos\Chess\Chess\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies);enet.lib;ws2_32.lib;winmm.lib</AdditionalDependencies>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -136,11 +151,12 @@
     <ClInclude Include="King.h" />
     <ClInclude Include="Knight.h" />
     <ClInclude Include="Coords.h" />
+    <ClInclude Include="Menu.h" />
     <ClInclude Include="Sprite.h" />
-    <ClInclude Include="Opponent.h" />
+    <ClInclude Include="BlackPlayer.h" />
     <ClInclude Include="Pawn.h" />
     <ClInclude Include="Piece.h" />
-    <ClInclude Include="Player.h" />
+    <ClInclude Include="WhitePlayer.h" />
     <ClInclude Include="Queen.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Rook.h" />
@@ -153,6 +169,7 @@
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="Bishop.cpp" />
     <ClCompile Include="Board.cpp" />
+    <ClCompile Include="Client.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="GUI.cpp" />
@@ -160,12 +177,14 @@
     <ClCompile Include="Knight.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Input.cpp" />
-    <ClCompile Include="Opponent.cpp" />
+    <ClCompile Include="Menu.cpp" />
+    <ClCompile Include="BlackPlayer.cpp" />
     <ClCompile Include="Pawn.cpp" />
     <ClCompile Include="Piece.cpp" />
-    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="WhitePlayer.cpp" />
     <ClCompile Include="Queen.cpp" />
     <ClCompile Include="Rook.cpp" />
+    <ClCompile Include="Server.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
