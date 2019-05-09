@@ -84,6 +84,7 @@ void Game::Update()
 				{
 					blackPlayer.TestForCheck();
 					blackPlayer.DoTurn();
+					engine->play2D("./Sounds/piecemove.wav", false);
 					whitePlayer.SetPlayerTurn(true);
 				}
 
@@ -92,7 +93,6 @@ void Game::Update()
 				{
 					blackPlayer.Promote(&brd.blackPieces);
 					whitePlayer.SetPlayerTurn(true);
-
 				}
 
 				//Players turn and they are not promoting
@@ -100,6 +100,10 @@ void Game::Update()
 				{
 					whitePlayer.TestForCheck();
 					whitePlayer.DoTurn();
+					if (!whitePlayer.PlayerTurn())
+					{
+						engine->play2D("./Sounds/piecemove.wav", false);
+					}
 				}
 
 				//Player is promoting
@@ -113,21 +117,42 @@ void Game::Update()
 				if (blackPlayer.GetCheckMated())
 				{
 					gameStatus = GameState::OPPONENTCHECKMATED;
+					if (checkmateSound)
+					{
+						engine->play2D("./Sounds/checkmate.wav", false);
+						checkmateSound = false;
+					}					
 				}
 
 				if (whitePlayer.GetCheckMated())
 				{
 					gameStatus = GameState::PLAYERCHECKMATED;
+					if (checkmateSound)
+					{
+						engine->play2D("./Sounds/checkmate.wav", false);
+						checkmateSound = false;
+					}
 				}
 				//Stalemate checks
 				if (whitePlayer.GetStaleMated() || blackPlayer.GetStaleMated())
 				{
 					gameStatus = GameState::STALEMATE;
+					if (staleSound)
+					{
+						engine->play2D("./Sounds/stalemate.wav", false);
+						staleSound = false;
+					}
 				}
 				//Draw
 				if (whitePlayer.TestForDraw() || blackPlayer.TestForDraw())
 				{
 					gameStatus = GameState::DRAW;
+
+					if (drawSound)
+					{
+						engine->play2D("./Sounds/draw.wav", false);
+						drawSound = false;
+					}
 				}
 			}
 			else
@@ -168,24 +193,47 @@ void Game::Update()
 							whitePlayer.SetPacketNotReady();
 							blackPlayer.SetPlayerTurn(true);
 						}
+
+						//Endgame states
 						if (blackPlayer.GetCheckMated())
 						{
 							gameStatus = GameState::OPPONENTCHECKMATED;
+							if (checkmateSound)
+							{
+								engine->play2D("./Sounds/checkmate.wav", false);
+								checkmateSound = false;
+							}
 						}
 
 						if (whitePlayer.GetCheckMated())
 						{
 							gameStatus = GameState::PLAYERCHECKMATED;
+							if (checkmateSound)
+							{
+								engine->play2D("./Sounds/checkmate.wav", false);
+								checkmateSound = false;
+							}
 						}
 						//Stalemate checks
 						if (whitePlayer.GetStaleMated() || blackPlayer.GetStaleMated())
 						{
 							gameStatus = GameState::STALEMATE;
+							if (staleSound)
+							{
+								engine->play2D("./Sounds/stalemate.wav", false);
+								staleSound = false;
+							}
 						}
 						//Draw
 						if (whitePlayer.TestForDraw() || blackPlayer.TestForDraw())
 						{
 							gameStatus = GameState::DRAW;
+
+							if (drawSound)
+							{
+								engine->play2D("./Sounds/draw.wav", false);
+								drawSound = false;
+							}
 						}
 					}
 				}
@@ -229,21 +277,42 @@ void Game::Update()
 						if (whitePlayer.GetCheckMated())
 						{
 							gameStatus = GameState::OPPONENTCHECKMATED;
+							if (checkmateSound)
+							{
+								engine->play2D("./Sounds/checkmate.wav", false);
+								checkmateSound = false;
+							}
 						}
 
 						if (blackPlayer.GetCheckMated())
 						{
 							gameStatus = GameState::PLAYERCHECKMATED;
+							if (checkmateSound)
+							{
+								engine->play2D("./Sounds/checkmate.wav", false);
+								checkmateSound = false;
+							}
 						}
 						//Stalemate checks
 						if (whitePlayer.GetStaleMated() || blackPlayer.GetStaleMated())
 						{
 							gameStatus = GameState::STALEMATE;
+							if (staleSound)
+							{
+								engine->play2D("./Sounds/stalemate.wav", false);
+								staleSound = false;
+							}
 						}
 						//Draw
 						if (whitePlayer.TestForDraw() || blackPlayer.TestForDraw())
 						{
 							gameStatus = GameState::DRAW;
+
+							if (drawSound)
+							{
+								engine->play2D("./Sounds/draw.wav", false);
+								drawSound = false;
+							}
 						}
 					}
 				}

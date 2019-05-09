@@ -59,6 +59,12 @@ private:
 	bool clientTurn = false;
 	bool isClient = false;
 	bool isMultiplayer = false;
+	//Sounds
+	bool staleSound = true;
+	bool checkSound = true;
+	bool checkmateSound = true;
+	bool drawSound = true;
+	bool pieceSound = true;
 	//Local objects
 	Board brd;
 	WhitePlayer whitePlayer;
