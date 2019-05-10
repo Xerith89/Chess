@@ -3,14 +3,12 @@
 
 /*
 BUG LIST
-.Multiplayer enpassant take and promotion not synchronised
 .played moves overwrites after a while
-.You can enpassant after taking a diagonal piece
-.Other pieces can enpassant take
 TODO LIST
 .Generational Minimax AI
 .Player best move
 .GUI stuff
+.Multiplayer Promotion
 */
 
 Game::Game(Window & wnd)

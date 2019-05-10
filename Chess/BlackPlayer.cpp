@@ -179,7 +179,7 @@ void BlackPlayer::mDoTurn()
 				}
 
 				//Enpassant - we're a pawn moving from initial position to 2 spaces up
-				if (selectedPiece.y == 1 && selectedTarget.y == 3 && pawnInstance)
+				if (selectedPiece.y == 1 && selectedTarget.y == 3)
 				{
 					brd.SetBlackEnpassant(true);
 				}
@@ -190,28 +190,28 @@ void BlackPlayer::mDoTurn()
 					brd.whitePieces.erase({ selectedTarget.x,selectedTarget.y });
 				}
 				//Enpassant take
-				if (brd.GetWhiteEnpassant() && brd.whitePieces.count({ selectedTarget.x, selectedTarget.y + 1 }) > 0)
+				if (brd.GetWhiteEnpassant() && pawnInstance && brd.whitePieces.count({ selectedTarget.x, selectedTarget.y - 1 }) > 0)
 				{
-					brd.whitePieces.erase({ selectedTarget.x,selectedTarget.y + 1 });
+					brd.whitePieces.erase({ selectedTarget.x,selectedTarget.y - 1 });
 				}
 				//end of turn cleanup
 				pieceSelected = false;
 				playerTurn = false;
 				packetReady = true;
 				brd.playedMoves.push_back(std::make_pair(selectedPiece, selectedTarget));
+				
+				//Get our new targets for the black players turn
+				brd.blackPieceTargets.clear();
+				for (const auto& p : brd.blackPieces)
+				{
+					p.second->GetTargets(&brd.whitePieces);
+				}
+				//We can only get moves that result in not being checked so we can safely assume we're not checked now
+				checked = false;
+				//Enpassant lasts for one turn only
+				brd.SetWhiteEnpassant(false);
 			}
-			//Get our new targets for the black players turn
-			brd.blackPieceTargets.clear();
-			for (const auto& p : brd.blackPieces)
-			{
-				p.second->GetTargets(&brd.whitePieces);
-			}
-			//We can only get moves that result in not being checked so we can safely assume we're not checked now
-			checked = false;
-			//Enpassant lasts for one turn only
-			brd.SetWhiteEnpassant(false);
 		}
-
 	}
 
 	//Remove any selected pieces
@@ -329,7 +329,7 @@ void BlackPlayer::DoMPlayUpdate(std::pair<Coords, Coords> input)
 			}
 
 			//Enpassant - we're a pawn moving from initial position to 2 spaces up
-			if (selectedPiece.y == 1 && selectedTarget.y == 3 && pawnInstance)
+			if (selectedPiece.y == 1 && selectedTarget.y == 3)
 			{
 				brd.SetBlackEnpassant(true);
 			}
@@ -340,27 +340,29 @@ void BlackPlayer::DoMPlayUpdate(std::pair<Coords, Coords> input)
 				brd.whitePieces.erase({ selectedTarget.x,selectedTarget.y });
 			}
 			//Enpassant take
-			if (brd.GetWhiteEnpassant() && brd.whitePieces.count({ selectedTarget.x, selectedTarget.y + 1 }) > 0)
+			if (brd.GetWhiteEnpassant() && pawnInstance && brd.whitePieces.count({ selectedTarget.x, selectedTarget.y - 1 }) > 0)
 			{
-				brd.whitePieces.erase({ selectedTarget.x,selectedTarget.y + 1 });
+				brd.whitePieces.erase({ selectedTarget.x,selectedTarget.y - 1 });
 			}
 			//end of turn cleanup
 			pieceSelected = false;
 			playerTurn = false;
 			packetReady = true;
 			brd.playedMoves.push_back(std::make_pair(selectedPiece, selectedTarget));
+			
+			//Get our new targets for the black players turn
+			brd.blackPieceTargets.clear();
+			
+			for (const auto& p : brd.blackPieces)
+			{
+				p.second->GetTargets(&brd.whitePieces);
+			}
+			//We can only get moves that result in not being checked so we can safely assume we're not checked now
+			checked = false;
+			//Enpassant lasts for one turn only
+			brd.SetWhiteEnpassant(false);
 		}
-		//Get our new targets for the black players turn
-		brd.blackPieceTargets.clear();
-		for (const auto& p : brd.blackPieces)
-		{
-			p.second->GetTargets(&brd.whitePieces);
-		}
-		//We can only get moves that result in not being checked so we can safely assume we're not checked now
-		checked = false;
-		//Enpassant lasts for one turn only
-		brd.SetWhiteEnpassant(false);
-		}
+	}
 }
 
 void BlackPlayer::DrawPossibleMoves(Graphics& gfx)
@@ -442,6 +444,12 @@ bool BlackPlayer::TestForDraw()
 
 void BlackPlayer::TestForStaleMate()
 {
+	for (const auto& p : brd.blackPieces)
+	{
+		auto temp = p.second->GetMoves();
+		movelist.insert(movelist.end(), temp.begin(), temp.end());
+	}
+
 	if (movelist.size() == 0 && !checked)
 	{
 		stalemate = true;
@@ -585,7 +593,7 @@ void BlackPlayer::GenerationZero()
 		brd.whitePieces.erase({ newloc.x,newloc.y });
 	}
 	//Enpassant capture
-	if (brd.GetWhiteEnpassant() && brd.whitePieces.count({ newloc.x, newloc.y - 1 }) > 0)
+	if (brd.GetWhiteEnpassant() && pawnInstance && brd.whitePieces.count({ newloc.x, newloc.y - 1 }) > 0)
 	{
 		brd.whitePieces.erase({ newloc.x,newloc.y - 1 });
 	}
@@ -713,7 +721,7 @@ void BlackPlayer::GenerationOne()
 		brd.whitePieces.erase({ newloc.x,newloc.y });
 	}
 	//Enpassant capture
-	if (brd.GetWhiteEnpassant() && brd.whitePieces.count({ newloc.x, newloc.y - 1 }) > 0)
+	if (brd.GetWhiteEnpassant() && pawnInstance && brd.whitePieces.count({ newloc.x, newloc.y - 1 }) > 0)
 	{
 		brd.whitePieces.erase({ newloc.x,newloc.y - 1 });
 	}
@@ -785,7 +793,7 @@ void BlackPlayer::TestMove(std::pair<Coords, Coords> move)
 			brd.whitePieces.erase({ newloc.x,newloc.y });
 		}
 		//Enpassant capture
-		if (brd.GetWhiteEnpassant() && brd.whitePieces.count({ newloc.x, newloc.y - 1 }) > 0)
+		if (brd.GetWhiteEnpassant() && pawnInstance && brd.whitePieces.count({ newloc.x, newloc.y - 1 }) > 0)
 		{
 			brd.whitePieces.erase({ newloc.x,newloc.y - 1 });
 		}
@@ -936,6 +944,7 @@ void BlackPlayer::DoWhiteMove(const std::pair<Coords, Coords> input)
 	if (piece != brd.whitePieces.end())
 	{
 		kingInstance = dynamic_cast<King*>(piece->second.get());
+		pawnInstance = dynamic_cast<Pawn*>(piece->second.get());
 		piece->second.get()->MoveTo({ input.second.x, input.second.y });
 		brd.whitePieces.insert_or_assign({ input.second.x,input.second.y }, piece->second);
 		brd.whitePieces.erase({ input.first.x,input.first.y });
@@ -945,30 +954,31 @@ void BlackPlayer::DoWhiteMove(const std::pair<Coords, Coords> input)
 		{
 			brd.UpdateWhiteKingLoc(input.second);
 		}
-			//Enpassant - we're a pawn moving from initial position to 2 spaces up
-			if (input.first.y == 6 && input.second.y == 4 && pawnInstance)
-			{
-				brd.SetWhiteEnpassant(true);
-			}
 
-			//Check for taking pieces
-			if (brd.blackPieces.count({ input.second.x, input.second.y }) > 0)
-			{
-				brd.blackPieces.erase({ input.second.x, input.second.y });
-			}
-			//Enpassant take
-			if (brd.GetBlackEnpassant() && initialState.count({ input.second.x, input.second.y + 1 }) > 0)
-			{
-				brd.blackPieces.erase({ input.second.x, input.second.y + 1 });
-			}
+		//Enpassant - we're a pawn moving from initial position to 2 spaces up
+		if (input.first.y == 6 && input.second.y == 4 && pawnInstance)
+		{
+			brd.SetWhiteEnpassant(true);
+		}
 
-			//Get our new targets for the black players turn
-			brd.whitePieceTargets.clear();
-			for (const auto& p : brd.whitePieces)
-			{
-				p.second->GetTargets(&brd.blackPieces);
-			}
-			//We can only get moves that result in not being checked so we can safely assume we're not checked now
-			checked = false;
+		//Check for taking pieces
+		if (brd.blackPieces.count({ input.second.x, input.second.y }) > 0)
+		{
+			brd.blackPieces.erase({ input.second.x, input.second.y });
+		}
+		//Enpassant take
+		if (brd.GetBlackEnpassant() && pawnInstance && brd.blackPieces.count({ input.second.x, input.second.y + 1 }) > 0)
+		{
+			brd.blackPieces.erase({ input.second.x, input.second.y + 1 });
+		}
+
+		//Get our new targets for the black players turn
+		brd.whitePieceTargets.clear();
+		for (const auto& p : brd.whitePieces)
+		{
+			p.second->GetTargets(&brd.blackPieces);
+		}
+		//We can only get moves that result in not being checked so we can safely assume we're not checked now
+		checked = false;
 	}
 }

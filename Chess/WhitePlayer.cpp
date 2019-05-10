@@ -117,7 +117,7 @@ void WhitePlayer::DoTurn()
 					brd.blackPieces.erase({ selectedTarget.x,selectedTarget.y });
 				}
 				//Enpassant take
-				if (brd.GetBlackEnpassant() && brd.blackPieces.count({ selectedTarget.x, selectedTarget.y+1 }) > 0)
+				if (brd.GetBlackEnpassant() && pawnInstance && brd.blackPieces.count({ selectedTarget.x, selectedTarget.y+1 }) > 0)
 				{ 
 					brd.blackPieces.erase({ selectedTarget.x,selectedTarget.y+1 }); 
 				}
@@ -126,19 +126,19 @@ void WhitePlayer::DoTurn()
 				playerTurn = false;
 				packetReady = true;
 				brd.playedMoves.push_back(std::make_pair(selectedPiece, selectedTarget));
+
+				//Get our new targets for the black players turn
+				brd.whitePieceTargets.clear();
+				for (const auto& p : brd.whitePieces)
+				{
+					p.second->GetTargets(&brd.blackPieces);
+				}
+				//We can only get moves that result in not being checked so we can safely assume we're not checked now
+				checked = false;
+				//Enpassant lasts for one turn only
+				brd.SetBlackEnpassant(false);
 			}	
-			//Get our new targets for the black players turn
-			brd.whitePieceTargets.clear();
-			for (const auto& p : brd.whitePieces)
-			{
-				p.second->GetTargets(&brd.blackPieces);
-			}
-			//We can only get moves that result in not being checked so we can safely assume we're not checked now
-			checked = false;
-			//Enpassant lasts for one turn only
-			brd.SetBlackEnpassant(false);
 		}	
-	
 	}
 		
 	//Remove any selected pieces
@@ -247,7 +247,7 @@ void WhitePlayer::DoMPlayUpdate(std::pair<Coords, Coords> input)
 				brd.blackPieces.erase({ selectedTarget.x,selectedTarget.y });
 			}
 			//Enpassant take
-			if (brd.GetBlackEnpassant() && brd.blackPieces.count({ selectedTarget.x, selectedTarget.y + 1 }) > 0)
+			if (brd.GetBlackEnpassant() && pawnInstance && brd.blackPieces.count({ selectedTarget.x, selectedTarget.y + 1 }) > 0)
 			{
 				brd.blackPieces.erase({ selectedTarget.x,selectedTarget.y + 1 });
 			}
