@@ -19,7 +19,7 @@ void BlackPlayer::DoTurn()
 	//GenerationThree();
 	//GenerationFour();
 	//GenerationFive();
-	//GenerationSix();
+
 	//std::string time("AI executed in : " + std::to_string(timer.Mark()) + " milliseconds.");
 	//MessageBox(wnd.GetHandle(), time.c_str(), "Speed", MB_OK);
 }
@@ -758,21 +758,16 @@ void BlackPlayer::GenerationFive()
 	//parallel MiniMax 
 }
 
-void BlackPlayer::GenerationSix()
-{
-	//12 moves ahead
-}
-
 void BlackPlayer::TestMove(std::pair<Coords, Coords> move)
 {
 	//Assign the current position and new position to variables
 	auto newloc = move.second;
 	auto currentloc = move.first;
 	//find the piece in the map based on the current position
-	auto piece = initialState.find({ currentloc.x,currentloc.y });
+	auto piece = brd.blackPieces.find({ currentloc.x,currentloc.y });
 
 	//As long as we found the piece
-	if (piece != initialState.end())
+	if (piece != brd.blackPieces.end())
 	{
 	
 		//Check if we're moving our king, if so then update the king's position
@@ -781,18 +776,18 @@ void BlackPlayer::TestMove(std::pair<Coords, Coords> move)
 
 		if (kingInstance)
 		{
-			initialBlackKingLoc = newloc;
+			brd.UpdateBlackKingLoc(newloc);
 
 		}
 		//If we take a piece then update that too
-		if (whiteInitialState.count({ newloc.x, newloc.y }) > 0)
+		if (brd.whitePieces.count({ newloc.x, newloc.y }) > 0)
 		{
-			whiteInitialState.erase({ newloc.x,newloc.y });
+			brd.whitePieces.erase({ newloc.x,newloc.y });
 		}
 		//Enpassant capture
-		if (brd.GetWhiteEnpassant() && whiteInitialState.count({ newloc.x, newloc.y - 1 }) > 0)
+		if (brd.GetWhiteEnpassant() && brd.whitePieces.count({ newloc.x, newloc.y - 1 }) > 0)
 		{
-			whiteInitialState.erase({ newloc.x,newloc.y - 1 });
+			brd.whitePieces.erase({ newloc.x,newloc.y - 1 });
 		}
 
 		//Enpassant - we're a pawn moving from initial position to 2 spaces up
@@ -802,14 +797,14 @@ void BlackPlayer::TestMove(std::pair<Coords, Coords> move)
 		}
 
 		//Reinsert into the map at the new position, remove the old entry
-		initialState.insert_or_assign({ newloc.x, newloc.y }, piece->second);
-		initialState.erase({ currentloc.x,currentloc.y });
+		brd.blackPieces.insert_or_assign({ newloc.x, newloc.y }, piece->second);
+		brd.blackPieces.erase({ currentloc.x,currentloc.y });
 
 		//recalculate our targets following our turn
-		initialBlackPieceTargets.clear();
-		for (const auto& p : initialState)
+		brd.blackPieceTargets.clear();
+		for (const auto& p : brd.blackPieces)
 		{
-			p.second->GetTargets(&whiteInitialState);
+			p.second->GetTargets(&brd.whitePieces);
 		}
 
 		//We can only get moves that result in not being checked so we can safely assume we're not checked now
@@ -827,22 +822,22 @@ void BlackPlayer::UndoTestMove()
 	{
 		p.second->MoveTo({ p.first.first,p.first.second });
 	}
-	initialState = brd.blackPieces;
-	whiteInitialState = brd.whitePieces;
-	initialWhitePieceTargets = brd.whitePieceTargets;
-	initialBlackPieceTargets = brd.blackPieceTargets;
-	initialWhiteKingLoc = brd.GetWhiteKingLoc();
-	initialBlackKingLoc = brd.GetBlackKingLoc();
+	brd.blackPieces = initialState;
+	brd.whitePieces = whiteInitialState;
+	brd.whitePieceTargets = initialWhitePieceTargets;
+	brd.blackPieceTargets = initialBlackPieceTargets;
+	brd.UpdateWhiteKingLoc(initialWhiteKingLoc);
+	brd.UpdateBlackKingLoc(initialBlackKingLoc);
 }
 
 int BlackPlayer::TestMoveScore() const
 {
 	int score = 0;
-	for (const auto& p : initialState)
+	for (const auto& p : brd.blackPieces)
 	{
 		score += p.second->GetScore();
 	}
-	for (const auto& p : whiteInitialState)
+	for (const auto& p : brd.whitePieces)
 	{
 		score -= p.second->GetScore();
 	}
@@ -852,8 +847,9 @@ int BlackPlayer::TestMoveScore() const
 std::pair<Coords, Coords> BlackPlayer::Minimax(std::vector < std::pair<Coords, Coords>> moves_in)
 {
 	//for evaluating score
-	int value = 0;
+
 	int bestMoveValue = -99999;
+	int bestMoveWhiteValue = 99999;
 	std::vector<std::pair<Coords, Coords>> whiteMoves;
 	std::vector<std::pair<Coords, Coords>> temp;
 	std::set<std::pair<Coords, Coords>> bestMoves;
@@ -866,25 +862,32 @@ std::pair<Coords, Coords> BlackPlayer::Minimax(std::vector < std::pair<Coords, C
 	//We then reset the black pieces and continue to the loop ends
 	//We then reset the all maps and targets and return the best move
 	bestMoves.clear();
-	for (const auto m : moves_in)
+	for (const auto& m : moves_in)
 	{
 		TestMove(m);
 		whiteMoves.clear();
-		for (const auto p : whiteInitialState)
+		value = 0;
+		for (const auto& p : brd.whitePieces)
 		{
 			temp = p.second->GetMoves();
 			whiteMoves.insert(whiteMoves.end(), temp.begin(), temp.end());
 		}
 		
-		for (const auto k : whiteMoves)
+		for (const auto& k : whiteMoves)
 		{
 			//do white move
 			DoWhiteMove(k);
 			//Test the game board value
-			value = TestMoveScore();
 
+			value += TestMoveScore();
+
+			if (value < bestMoveWhiteValue)
+			{
+				bestMoveWhiteValue = value;
+				worstMove = m;
+			}
 			//The higher the value, the better the move for black
-			if (value > bestMoveValue)
+			else if (value > bestMoveValue)
 			{
 				bestMoveValue = value;
 				bestMove = m;
@@ -922,25 +925,25 @@ std::pair<Coords, Coords> BlackPlayer::Minimax(std::vector < std::pair<Coords, C
 
 void BlackPlayer::ResetWhiteMove()
 {
-	initialWhitePieceTargets = brd.whitePieceTargets;
-	whiteInitialState = brd.whitePieces;
-	initialWhiteKingLoc = brd.GetWhiteKingLoc();
+	brd.whitePieceTargets = initialWhitePieceTargets;
+	brd.whitePieces = whiteInitialState;
+	brd.UpdateWhiteKingLoc(initialWhiteKingLoc);
 }
 
 void BlackPlayer::DoWhiteMove(const std::pair<Coords, Coords> input)
 {
-	auto piece = whiteInitialState.find({ input.first.x,input.first.y });
-	if (piece != whiteInitialState.end())
+	auto piece = brd.whitePieces.find({ input.first.x,input.first.y });
+	if (piece != brd.whitePieces.end())
 	{
 		kingInstance = dynamic_cast<King*>(piece->second.get());
 		piece->second.get()->MoveTo({ input.second.x, input.second.y });
-		whiteInitialState.insert_or_assign({ input.second.x,input.second.y }, piece->second);
-		whiteInitialState.erase({ input.first.x,input.first.y });
+		brd.whitePieces.insert_or_assign({ input.second.x,input.second.y }, piece->second);
+		brd.whitePieces.erase({ input.first.x,input.first.y });
 		
 		//Update the king position if we've moved it - if we're castling we also need to move the relevent rook
 		if (kingInstance)
 		{
-			initialWhiteKingLoc = input.second;
+			brd.UpdateWhiteKingLoc(input.second);
 		}
 			//Enpassant - we're a pawn moving from initial position to 2 spaces up
 			if (input.first.y == 6 && input.second.y == 4 && pawnInstance)
@@ -949,21 +952,21 @@ void BlackPlayer::DoWhiteMove(const std::pair<Coords, Coords> input)
 			}
 
 			//Check for taking pieces
-			if (initialState.count({ input.second.x, input.second.y }) > 0)
+			if (brd.blackPieces.count({ input.second.x, input.second.y }) > 0)
 			{
-				initialState.erase({ input.second.x, input.second.y });
+				brd.blackPieces.erase({ input.second.x, input.second.y });
 			}
 			//Enpassant take
 			if (brd.GetBlackEnpassant() && initialState.count({ input.second.x, input.second.y + 1 }) > 0)
 			{
-				initialState.erase({ input.second.x, input.second.y + 1 });
+				brd.blackPieces.erase({ input.second.x, input.second.y + 1 });
 			}
 
 			//Get our new targets for the black players turn
-			initialWhitePieceTargets.clear();
-			for (const auto& p : whiteInitialState)
+			brd.whitePieceTargets.clear();
+			for (const auto& p : brd.whitePieces)
 			{
-				p.second->GetTargets(&initialState);
+				p.second->GetTargets(&brd.blackPieces);
 			}
 			//We can only get moves that result in not being checked so we can safely assume we're not checked now
 			checked = false;

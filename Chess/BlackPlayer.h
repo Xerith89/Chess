@@ -36,8 +36,7 @@ private:
 	void GenerationTwo();
 	void GenerationThree();
 	void GenerationFour();
-	void GenerationFive();
-	void GenerationSix();	
+	void GenerationFive();	
 	Sprite promotionSprite;
 	std::random_device rd;
 	std::mt19937 rng;
@@ -50,7 +49,9 @@ private:
 	Coords initialWhiteKingLoc = brd.GetWhiteKingLoc();
 	Coords initialBlackKingLoc = brd.GetBlackKingLoc();
 	std::pair<Coords, Coords> bestMove;
+	std::pair<Coords, Coords> worstMove;
 	std::vector<std::pair<Coords, Coords>> equalMoves;
+	int value = 0;
 	void ResetWhiteMove();
 	void TestMove(std::pair<Coords, Coords>);
 	void UndoTestMove();
