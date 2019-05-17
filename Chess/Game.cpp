@@ -417,7 +417,7 @@ void Game::Update()
 		break;
 	case QUIT:
 		engine->drop();
-		PostQuitMessage(0);
+		SendMessageA(wnd.GetHandle(), WM_CLOSE, 0, 0);
 		break;
 	}
 }
