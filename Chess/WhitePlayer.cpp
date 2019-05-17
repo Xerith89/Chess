@@ -124,7 +124,10 @@ void WhitePlayer::DoTurn()
 				//end of turn cleanup
 				pieceSelected = false;
 				playerTurn = false;
-				packetReady = true;
+				if (promotion == false)
+				{
+					packetReady = true;
+				}
 				brd.playedMoves.push_back(std::make_pair(selectedPiece, selectedTarget));
 
 				//Get our new targets for the black players turn
@@ -149,7 +152,7 @@ void WhitePlayer::DoTurn()
 	}
 }
 
-void WhitePlayer::DoMPlayUpdate(const std::pair<Coords, Coords> input, const char promoteType)
+void WhitePlayer::DoMPlayUpdate(const std::pair<Coords, Coords> input, const int promoteType)
 {
 	selectedPiece = input.first;
 	auto piece = brd.whitePieces.find({ selectedPiece.x,selectedPiece.y });
@@ -233,26 +236,31 @@ void WhitePlayer::DoMPlayUpdate(const std::pair<Coords, Coords> input, const cha
 			
 			if (pawnInstance != nullptr && selectedPiece.y == 1 && selectedTarget.y == 0)
 			{
-				//Switch on char received
-
-				//bishop
-				brd.whitePieces.insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Bishop>(pawnInstance->GetCoords().x, 0, "./Sprites/bishopW.bmp", true, brd));
-				playerTurn = false;
-				
-				//Knight
-				
-				brd.whitePieces.insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Knight>(pawnInstance->GetCoords().x, 0, "./Sprites/knightW.bmp", true, brd));
-				playerTurn = false;
-				
-				//Rook
-				
-				brd.whitePieces.insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Rook>(pawnInstance->GetCoords().x, 0, "./Sprites/rookW.bmp", true, brd));
-				playerTurn = false;
-				
-				//Queen
-				
-				brd.whitePieces.insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Queen>(pawnInstance->GetCoords().x, 0, "./Sprites/queenW.bmp", true, brd));
-				playerTurn = false;
+				switch (promoteType)
+				{
+				case 1:
+					//bishop
+					brd.whitePieces.insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Bishop>(pawnInstance->GetCoords().x, 0, "./Sprites/bishopW.bmp", true, brd));
+					playerTurn = false;
+					break;
+				case 2:
+					//Knight
+					brd.whitePieces.insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Knight>(pawnInstance->GetCoords().x, 0, "./Sprites/knightW.bmp", true, brd));
+					playerTurn = false;
+					break;
+				case 3:
+					//Rook
+					brd.whitePieces.insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Rook>(pawnInstance->GetCoords().x, 0, "./Sprites/rookW.bmp", true, brd));
+					playerTurn = false;
+					break;
+				case 4:
+					//Queen
+					brd.whitePieces.insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Queen>(pawnInstance->GetCoords().x, 0, "./Sprites/queenW.bmp", true, brd));
+					playerTurn = false;
+					break;
+				default:
+					break;
+				}
 			}
 
 			//Enpassant - we're a pawn moving from initial position to 2 spaces up
@@ -339,6 +347,8 @@ void WhitePlayer::Promote(Map * map)
 		map->insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Bishop>(pawnInstance->GetCoords().x, 0, "./Sprites/bishopW.bmp", true, brd));
 		promotion = false;
 		playerTurn = false;
+		promotedPiece = 1;
+		packetReady = true;
 	}
 	//Knight
 	if (x >= gui.GetPromoteGraphicX() + 155 && x <= gui.GetPromoteGraphicX() + 215 && y >= gui.GetPromoteGraphicY() + 75 && y <= gui.GetPromoteGraphicY() + 130)
@@ -346,6 +356,8 @@ void WhitePlayer::Promote(Map * map)
 		map->insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Knight>(pawnInstance->GetCoords().x, 0, "./Sprites/knightW.bmp", true, brd));
 		promotion = false;
 		playerTurn = false;
+		promotedPiece = 2;
+		packetReady = true;
 	}
 	//Rook
 	if (x >= gui.GetPromoteGraphicX() + 25 && x <= gui.GetPromoteGraphicX() + 85 && y >= gui.GetPromoteGraphicY() + 155 && y <= gui.GetPromoteGraphicY() + 210)
@@ -353,12 +365,15 @@ void WhitePlayer::Promote(Map * map)
 		map->insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Rook>(pawnInstance->GetCoords().x, 0, "./Sprites/rookW.bmp", true, brd));
 		promotion = false;
 		playerTurn = false;
+		promotedPiece = 3;
+		packetReady = true;
 	}
 	//Queen
 	if (x >= gui.GetPromoteGraphicX()+155 && x <= gui.GetPromoteGraphicX()+215 && y >= gui.GetPromoteGraphicY() + 155 && y <= gui.GetPromoteGraphicY() + 210)
 	{
 		map->insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Queen>(pawnInstance->GetCoords().x, 0, "./Sprites/queenW.bmp", true, brd));
-
+		promotedPiece = 4;
+		packetReady = true;
 		promotion = false;
 		playerTurn = false;
 	}
@@ -486,6 +501,11 @@ bool WhitePlayer::TestForDraw()
 		}
 	}
 	return false;
+}
+
+int WhitePlayer::GetPromotedPiece() const
+{
+	return promotedPiece;
 }
 
 void WhitePlayer::TestForCastling()

@@ -19,8 +19,9 @@ public:
 	std::pair<Coords, Coords> GetLatestMove()const;
 	bool CheckNewMessage()const;
 	void SetNewMessage(bool status);
-	char GetPromotedType()const;
+	int GetPromotedType()const;
 private:
+	int promotedPiece;
 	std::array<Sprite, 3> joinStates = { Sprite("./Sprites/Multiplayer/searching.bmp") , Sprite("./Sprites/Multiplayer/nogames.bmp"),Sprite("./Sprites/Multiplayer/searching.bmp") };
 	Sprite cancel;
 	enum ClientStates {

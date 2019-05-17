@@ -66,11 +66,24 @@ ENetEvent Client::ReceivePacket()
 	{
 		if (event.type == ENET_EVENT_TYPE_RECEIVE)
 		{
-			//Convert back to string and get our the coords
-			newMessage = true;
-			std::string s(event.packet->data, event.packet->data+event.packet->dataLength);
-			from = std::make_pair((s.at(0)-'0'),s.at(1)-'0');
-			to = std::make_pair((s.at(2) - '0'), s.at(3) - '0');
+			if (event.packet->dataLength == 4)
+			{
+				newMessage = true;
+				//Convert back to string and get our the coords
+				std::string s(event.packet->data, event.packet->data + event.packet->dataLength);
+				from = std::make_pair((s.at(0) - '0'), s.at(1) - '0');
+				to = std::make_pair((s.at(2) - '0'), s.at(3) - '0');
+			}
+			else if (event.packet->dataLength > 4)
+			{
+				//Find out what the other player chose to promote to
+				newMessage = true;
+				//Convert back to string and get our the coords
+				std::string s(event.packet->data, event.packet->data + event.packet->dataLength);
+				from = std::make_pair((s.at(0) - '0'), s.at(1) - '0');
+				to = std::make_pair((s.at(2) - '0'), s.at(3) - '0');
+				promotedPiece = (s.at(4) - '0');
+			}
 		}
 		else if (event.type == ENET_EVENT_TYPE_DISCONNECT)
 		{
@@ -121,7 +134,7 @@ void Client::SetNewMessage(bool status)
 	newMessage = status;
 }
 
-char Client::GetPromotedType() const
+int Client::GetPromotedType() const
 {
-	return 0;
+	return promotedPiece;
 }

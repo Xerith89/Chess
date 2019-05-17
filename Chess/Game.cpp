@@ -215,59 +215,76 @@ void Game::Update()
 						{
 							checkSound = true;
 						}
+
 						whitePlayer.DoTurn();
-						if (whitePlayer.PacketReady())
+
+						if (brd.playedMoves.size() > 0)
 						{
-							std::string data;
 							data = std::to_string(brd.playedMoves.back().first.x) +
 								std::to_string(brd.playedMoves.back().first.y) +
 								std::to_string(brd.playedMoves.back().second.x) +
 								std::to_string(brd.playedMoves.back().second.y);
-							server.SendPacket(data);
-							whitePlayer.SetPacketNotReady();
-							blackPlayer.SetPlayerTurn(true);
 						}
+					}
+						
+					//Promotion handling
+					if (whitePlayer.GetPromotion())
+					{
+						whitePlayer.Promote(&brd.whitePieces);
+						//Send our position and the piece we have become
+						if (whitePlayer.GetPromotedPiece() > 0)
+						{
+							data.append(std::to_string(whitePlayer.GetPromotedPiece()));
+						}
+					}
 
-						//Endgame states
-						if (blackPlayer.GetCheckMated())
-						{
-							gameStatus = GameState::OPPONENTCHECKMATED;
-							if (checkmateSound)
-							{
-								engine->play2D("./Sounds/checkmate.wav", false);
-								checkmateSound = false;
-							}
-						}
+					if (whitePlayer.PacketReady())
+					{
+						whitePlayer.SetPacketNotReady();
+						server.SendPacket(data);
+						blackPlayer.SetPlayerTurn(true);
+						data.clear();
+					}
 
-						if (whitePlayer.GetCheckMated())
+					//Endgame states
+					if (blackPlayer.GetCheckMated())
+					{
+						gameStatus = GameState::OPPONENTCHECKMATED;
+						if (checkmateSound)
 						{
-							gameStatus = GameState::PLAYERCHECKMATED;
-							if (checkmateSound)
-							{
-								engine->play2D("./Sounds/checkmate.wav", false);
-								checkmateSound = false;
-							}
+							engine->play2D("./Sounds/checkmate.wav", false);
+							checkmateSound = false;
 						}
-						//Stalemate checks
-						if (whitePlayer.GetStaleMated() || blackPlayer.GetStaleMated())
-						{
-							gameStatus = GameState::STALEMATE;
-							if (staleSound)
-							{
-								engine->play2D("./Sounds/stalemate.wav", false);
-								staleSound = false;
-							}
-						}
-						//Draw
-						if (whitePlayer.TestForDraw() || blackPlayer.TestForDraw())
-						{
-							gameStatus = GameState::DRAW;
+					}
 
-							if (drawSound)
-							{
-								engine->play2D("./Sounds/draw.wav", false);
-								drawSound = false;
-							}
+					if (whitePlayer.GetCheckMated())
+					{
+						gameStatus = GameState::PLAYERCHECKMATED;
+						if (checkmateSound)
+						{
+							engine->play2D("./Sounds/checkmate.wav", false);
+							checkmateSound = false;
+						}
+					}
+					//Stalemate checks
+					if (whitePlayer.GetStaleMated() || blackPlayer.GetStaleMated())
+					{
+						gameStatus = GameState::STALEMATE;
+						if (staleSound)
+						{
+							engine->play2D("./Sounds/stalemate.wav", false);
+							staleSound = false;
+						}
+					}
+					//Draw
+					if (whitePlayer.TestForDraw() || blackPlayer.TestForDraw())
+					{
+						gameStatus = GameState::DRAW;
+
+						if (drawSound)
+						{
+							engine->play2D("./Sounds/draw.wav", false);
+							drawSound = false;
 						}
 					}
 				}
