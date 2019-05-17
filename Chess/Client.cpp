@@ -55,6 +55,14 @@ void Client::SetState()
 	joinState = ClientStates::NONE;
 }
 
+void Client::Cleanup()
+{
+	joinState = ClientStates::SEARCHING;
+	clientStatus = ClientStates::SEARCHING;
+	enet_host_destroy(client);
+	enet_deinitialize();
+}
+
 ENetPeer* Client::GetPeer()const
 {
 	return peer;

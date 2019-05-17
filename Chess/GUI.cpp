@@ -43,7 +43,7 @@ int GUI::GetPromoteGraphicY() const
 	return promotionY;
 }
 
-void GUI::DrawGUI(Graphics & gfx) const
+void GUI::DrawGUI(Graphics & gfx,const bool multiplayer) const
 {
 	gfx.DrawSprite(playedMovesX, playedMovesY, playedMovesSprite);
 	size_t i = 0;
@@ -64,6 +64,7 @@ void GUI::DrawGUI(Graphics & gfx) const
 		gfx.DrawSprite(playedMovesX + (xOffset * 5), yStart + yPos * yOffset, letters.at(brd.playedMoves.at(i).second.x));
 		gfx.DrawSprite(playedMovesX + (xOffset * 6), yStart + yPos * yOffset, numbers.at(brd.playedMoves.at(i).second.y));
 	}
+	if (!multiplayer)
 	gfx.DrawSprite(helpPlayerX,helpPlayerY, helpPlayerSprite);
 }
 

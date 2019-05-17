@@ -29,7 +29,7 @@ public:
 	GUI(Board& brd);
 	int GetPromoteGraphicX()const;
 	int GetPromoteGraphicY()const;
-	void DrawGUI(Graphics& gfx)const;
+	void DrawGUI(Graphics& gfx,const bool multiplayer)const;
 	void DrawPromotionBlack(Graphics& gfx)const;
 	void DrawPromotion(Graphics& gfx)const;
 };

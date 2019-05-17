@@ -8,7 +8,6 @@ TODO LIST
 .Generational Minimax AI
 .Player best move
 .GUI stuff
-.Multiplayer Promotion
 */
 
 Game::Game(Window & wnd)
@@ -417,6 +416,7 @@ void Game::Update()
 				isClient = true;
 				break;
 			case 3:
+				client.Cleanup();
 				programStatus = ProgramState::MAINMENU;
 				isMultiplayer = false;
 				isClient = false;
@@ -443,6 +443,7 @@ void Game::Update()
 				isServer = true;
 				break;
 			case 3:
+				server.Cleanup();
 				programStatus = ProgramState::MAINMENU;
 				isMultiplayer = false;
 				isServer = false;
@@ -467,7 +468,7 @@ void Game::Render()
 		switch (gameStatus)
 		{
 		case GameState::NORMAL:
-			gui.DrawGUI(gfx);
+			gui.DrawGUI(gfx,isMultiplayer);
 			brd.DrawBoard(gfx);
 			whitePlayer.DrawPossibleMoves(gfx);
 			if (isClient)
