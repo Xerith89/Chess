@@ -12,6 +12,7 @@
 #include "Knight.h"
 #include "Queen.h"
 #include "Rook.h"
+#include "GUI.h"
 #include <algorithm>
 
 class Actor {

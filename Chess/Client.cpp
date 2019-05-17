@@ -120,3 +120,8 @@ void Client::SetNewMessage(bool status)
 {
 	newMessage = status;
 }
+
+char Client::GetPromotedType() const
+{
+	return 0;
+}

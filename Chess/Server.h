@@ -23,6 +23,7 @@ private:
 	ENetPeer* client;
 	std::pair<int, int> to;
 	std::pair<int, int> from;
+	int promotedPiece;
 	bool newMessage = false;
 public:
 	bool CheckNewMessage()const;
@@ -35,6 +36,7 @@ public:
 	void SendPacket(std::string data);
 	int GetServerStatus()const;
 	std::pair<Coords, Coords> GetLatestMove()const;
+	int GetPromotedType()const;
 	Server();
 	~Server();
 };

@@ -71,11 +71,24 @@ ENetEvent Server::ReceivePacket()
 	{
 		if (event.type == ENET_EVENT_TYPE_RECEIVE)
 		{
-			newMessage = true;
-			//Convert back to string and get our the coords
-			std::string s(event.packet->data, event.packet->data + event.packet->dataLength);
-			from = std::make_pair((s.at(0) - '0'), s.at(1) - '0');
-			to = std::make_pair((s.at(2) - '0'), s.at(3) - '0');
+			if (event.packet->dataLength == 4)
+			{
+				newMessage = true;
+				//Convert back to string and get our the coords
+				std::string s(event.packet->data, event.packet->data + event.packet->dataLength);
+				from = std::make_pair((s.at(0) - '0'), s.at(1) - '0');
+				to = std::make_pair((s.at(2) - '0'), s.at(3) - '0');
+			}
+			else if (event.packet->dataLength > 4)
+			{
+				//Find out what the other player chose to promote to
+				newMessage = true;
+				//Convert back to string and get our the coords
+				std::string s(event.packet->data, event.packet->data + event.packet->dataLength);
+				from = std::make_pair((s.at(0) - '0'), s.at(1) - '0');
+				to = std::make_pair((s.at(2) - '0'), s.at(3) - '0');
+				promotedPiece = (s.at(4) - '0');
+			}
 		}
 		else if (event.type == ENET_EVENT_TYPE_DISCONNECT)
 		{
@@ -102,6 +115,11 @@ int Server::GetServerStatus() const
 std::pair<Coords, Coords> Server::GetLatestMove() const
 {
 	return std::pair<Coords, Coords>(Coords{ from.first,from.second }, Coords{ to.first,to.second });
+}
+
+int Server::GetPromotedType() const
+{
+	return promotedPiece;
 }
 
 Server::Server()

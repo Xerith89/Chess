@@ -1,12 +1,12 @@
 #pragma once
 #include "Actor.h"
-#include "GUI.h"
+
 
 class WhitePlayer : public Actor {
 public:
 	WhitePlayer(Window& wnd, Board& brd, GUI& gui);
 	void DoTurn()override;
-	void DoMPlayUpdate(std::pair<Coords, Coords> input);
+	void DoMPlayUpdate(const std::pair<Coords, Coords> input, const char promoteType );
 	void DrawPossibleMoves(Graphics& gfx);
 	void DrawPieces(Graphics& gfx)const override;
 	void DrawChecked(Graphics& gfx)const override;

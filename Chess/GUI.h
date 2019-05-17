@@ -9,6 +9,7 @@ private:
 	Sprite playedMovesSprite;
 	Sprite helpPlayerSprite;
 	Sprite promotionSprite;
+	Sprite blackPromotionSprite;
 	Board& brd;
 	void TranslateCordToSprite(Coords in);
 	const int playedMovesX = Graphics::GetScreenWidth()-255;
@@ -29,5 +30,6 @@ public:
 	int GetPromoteGraphicX()const;
 	int GetPromoteGraphicY()const;
 	void DrawGUI(Graphics& gfx)const;
+	void DrawPromotionBlack(Graphics& gfx)const;
 	void DrawPromotion(Graphics& gfx)const;
 };

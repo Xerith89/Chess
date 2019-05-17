@@ -2,10 +2,11 @@
 
 
 
-BlackPlayer::BlackPlayer(Window& wnd,Board & brd)
+BlackPlayer::BlackPlayer(Window& wnd,Board & brd, GUI& gui)
 	:
 	Actor(wnd,brd),
 	promotionSprite("./Sprites/promoteB.bmp"),
+	gui(gui),
 	rng(rd())
 {
 }
@@ -176,6 +177,7 @@ void BlackPlayer::mDoTurn()
 				if (pawnInstance != nullptr && selectedPiece.y == 6 && selectedTarget.y == 7)
 				{
 					promotion = true;
+					mPromote(&brd.blackPieces);
 				}
 
 				//Enpassant - we're a pawn moving from initial position to 2 spaces up
@@ -197,7 +199,10 @@ void BlackPlayer::mDoTurn()
 				//end of turn cleanup
 				pieceSelected = false;
 				playerTurn = false;
-				packetReady = true;
+				if (promotion == false)
+				{
+					packetReady = true;
+				}
 				brd.playedMoves.push_back(std::make_pair(selectedPiece, selectedTarget));
 				
 				//Get our new targets for the black players turn
@@ -222,6 +227,57 @@ void BlackPlayer::mDoTurn()
 	}
 }
 
+void BlackPlayer::mPromote(Map* map)
+{
+	int x = 0;
+	int y = 0;
+
+	if (wnd.inpt.LeftMsePressed())
+	{
+		x = wnd.inpt.GetMseX();
+		y = wnd.inpt.GetMseY();
+	}
+
+	//Bishop
+	if (x >= gui.GetPromoteGraphicX() + 25 && x <= gui.GetPromoteGraphicX() + 85 && y >= gui.GetPromoteGraphicY() + 75 && y <= gui.GetPromoteGraphicY() + 130)
+	{
+		map->insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Bishop>(pawnInstance->GetCoords().x, 7, "./Sprites/bishopB.bmp", false, brd));
+		promotion = false;
+		playerTurn = false;
+		promotedPiece = 1;
+		packetReady = true;
+	}
+	//Knight
+	if (x >= gui.GetPromoteGraphicX() + 155 && x <= gui.GetPromoteGraphicX() + 215 && y >= gui.GetPromoteGraphicY() + 75 && y <= gui.GetPromoteGraphicY() + 130)
+	{
+		map->insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Knight>(pawnInstance->GetCoords().x, 7, "./Sprites/knightB.bmp", false, brd));
+		promotion = false;
+		playerTurn = false;
+		promotedPiece = 2;
+		packetReady = true;
+	}
+	//Rook
+	if (x >= gui.GetPromoteGraphicX() + 25 && x <= gui.GetPromoteGraphicX() + 85 && y >= gui.GetPromoteGraphicY() + 155 && y <= gui.GetPromoteGraphicY() + 210)
+	{
+		map->insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Rook>(pawnInstance->GetCoords().x, 7, "./Sprites/rookB.bmp", false, brd));
+		promotion = false;
+		playerTurn = false;
+		promotedPiece = 3;
+		packetReady = true;
+	}
+	//Queen
+	
+	if (x >= gui.GetPromoteGraphicX() + 155 && x <= gui.GetPromoteGraphicX() + 215 && y >= gui.GetPromoteGraphicY() + 155 && y <= gui.GetPromoteGraphicY() + 210)
+	{
+		map->insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Queen>(pawnInstance->GetCoords().x, 7, "./Sprites/queenB.bmp", false, brd));
+
+		promotion = false;
+		playerTurn = false;
+		promotedPiece = 4;
+		packetReady = true;
+	}
+}
+
 bool BlackPlayer::PacketReady() const
 {
 	return packetReady;
@@ -242,7 +298,7 @@ void BlackPlayer::SetPlayerTurn(bool myTurn)
 	playerTurn = myTurn;
 }
 
-void BlackPlayer::DoMPlayUpdate(std::pair<Coords, Coords> input)
+void BlackPlayer::DoMPlayUpdate(const std::pair<Coords, Coords> input, const int promoteType)
 {
 	//Translate the mouse position to board coords
 	selectedPiece = input.first;
@@ -325,7 +381,31 @@ void BlackPlayer::DoMPlayUpdate(std::pair<Coords, Coords> input)
 			pawnInstance = dynamic_cast<Pawn*>(brd.blackPieces.find({ selectedTarget.x, selectedTarget.y })->second.get());
 			if (pawnInstance != nullptr && selectedPiece.y == 6 && selectedTarget.y == 7)
 			{
-				promotion = true;
+				switch (promoteType)
+				{
+				case 1:
+					//bishop
+					brd.blackPieces.insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Bishop>(pawnInstance->GetCoords().x, 7, "./Sprites/bishopB.bmp", false, brd));
+					playerTurn = false;
+					break;
+				case 2:
+					//Knight
+					brd.blackPieces.insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Knight>(pawnInstance->GetCoords().x, 7, "./Sprites/knightB.bmp", false, brd));
+					playerTurn = false;
+					break;
+				case 3:
+					//Rook
+					brd.blackPieces.insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Rook>(pawnInstance->GetCoords().x, 7, "./Sprites/rookB.bmp", false, brd));
+					playerTurn = false;
+					break;
+				case 4:
+					//Queen
+					brd.blackPieces.insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Queen>(pawnInstance->GetCoords().x, 7, "./Sprites/queenB.bmp", false, brd));
+					playerTurn = false;
+					break;
+				default:
+					break;
+				}
 			}
 
 			//Enpassant - we're a pawn moving from initial position to 2 spaces up
@@ -439,6 +519,11 @@ bool BlackPlayer::TestForDraw()
 		}
 	}
 	return false;
+}
+
+int BlackPlayer::GetPromotedPiece() const
+{
+	return promotedPiece;
 }
 
 

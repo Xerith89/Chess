@@ -72,6 +72,7 @@ private:
 	GUI gui;
 	Menu menu;
 	Server server;
+	std::string data;
 	Client client;
 public:
 	Game(Window& wnd);

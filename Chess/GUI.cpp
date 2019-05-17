@@ -9,6 +9,7 @@ GUI::GUI(Board& brd)
 	playedMovesSprite("./Sprites/playedmoves.bmp"),
 	helpPlayerSprite("./Sprites/help.bmp"),
 	promotionSprite("./Sprites/promoteW.bmp"),
+	blackPromotionSprite("./Sprites/promoteB.bmp"),
 	to("./Sprites/Characters/to.bmp"),
 	brd(brd)
 {
@@ -64,6 +65,11 @@ void GUI::DrawGUI(Graphics & gfx) const
 		gfx.DrawSprite(playedMovesX + (xOffset * 6), yStart + yPos * yOffset, numbers.at(brd.playedMoves.at(i).second.y));
 	}
 	gfx.DrawSprite(helpPlayerX,helpPlayerY, helpPlayerSprite);
+}
+
+void GUI::DrawPromotionBlack(Graphics& gfx) const
+{
+	gfx.DrawSprite(promotionX, promotionY, blackPromotionSprite);
 }
 
 void GUI::DrawPromotion(Graphics & gfx) const

@@ -149,7 +149,7 @@ void WhitePlayer::DoTurn()
 	}
 }
 
-void WhitePlayer::DoMPlayUpdate(std::pair<Coords, Coords> input)
+void WhitePlayer::DoMPlayUpdate(const std::pair<Coords, Coords> input, const char promoteType)
 {
 	selectedPiece = input.first;
 	auto piece = brd.whitePieces.find({ selectedPiece.x,selectedPiece.y });
@@ -230,9 +230,29 @@ void WhitePlayer::DoMPlayUpdate(std::pair<Coords, Coords> input)
 
 			//Check if we're moving a pawn so we can check for promotion
 			pawnInstance = dynamic_cast<Pawn*>(brd.whitePieces.find({ selectedTarget.x, selectedTarget.y })->second.get());
+			
 			if (pawnInstance != nullptr && selectedPiece.y == 1 && selectedTarget.y == 0)
 			{
-				promotion = true;
+				//Switch on char received
+
+				//bishop
+				brd.whitePieces.insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Bishop>(pawnInstance->GetCoords().x, 0, "./Sprites/bishopW.bmp", true, brd));
+				playerTurn = false;
+				
+				//Knight
+				
+				brd.whitePieces.insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Knight>(pawnInstance->GetCoords().x, 0, "./Sprites/knightW.bmp", true, brd));
+				playerTurn = false;
+				
+				//Rook
+				
+				brd.whitePieces.insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Rook>(pawnInstance->GetCoords().x, 0, "./Sprites/rookW.bmp", true, brd));
+				playerTurn = false;
+				
+				//Queen
+				
+				brd.whitePieces.insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Queen>(pawnInstance->GetCoords().x, 0, "./Sprites/queenW.bmp", true, brd));
+				playerTurn = false;
 			}
 
 			//Enpassant - we're a pawn moving from initial position to 2 spaces up
