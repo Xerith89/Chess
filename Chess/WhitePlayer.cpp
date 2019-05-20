@@ -660,7 +660,7 @@ std::pair<Coords, Coords> WhitePlayer::MinimaxAB(std::vector<std::pair<Coords, C
 		advance(it, move_roll);
 		bestMove = *it;
 	}
-
+	showBest = true;
 	return bestMove;
 }
 
@@ -761,7 +761,6 @@ void WhitePlayer::GetBestMove()
 		movelist.insert(movelist.end(), temp.begin(), temp.end());
 	}
 	MinimaxAB(movelist);
-	showBest = true;
 }
 
 void WhitePlayer::TestForCastling()

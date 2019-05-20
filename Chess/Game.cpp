@@ -4,7 +4,6 @@
 /*
 BUG LIST
 .played moves overwrites after a while
-.Player best move changes 
 TODO LIST
 .Generational Minimax AI
 .Hook up to ImGUI
