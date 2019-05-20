@@ -4,10 +4,10 @@
 /*
 BUG LIST
 .played moves overwrites after a while
+.Player best move changes 
 TODO LIST
 .Generational Minimax AI
-.Player best move
-.GUI stuff
+.Hook up to ImGUI
 */
 
 Game::Game(Window & wnd)
@@ -121,7 +121,14 @@ void Game::Update()
 					{
 						checkSound = true;
 					}
+
+					if (wnd.inpt.KbdKeyPressed(VK_SPACE))
+					{
+						whitePlayer.GetBestMove();
+					}
+
 					whitePlayer.DoTurn();
+
 					if (!whitePlayer.PlayerTurn())
 					{
 						engine->play2D("./Sounds/piecemove.wav", false);
@@ -477,6 +484,7 @@ void Game::Render()
 			}
 			whitePlayer.DrawChecked(gfx);
 			blackPlayer.DrawChecked(gfx);
+			whitePlayer.DrawBestMove(gfx);
 			whitePlayer.DrawPieces(gfx);
 			blackPlayer.DrawPieces(gfx);
 			if (whitePlayer.GetPromotion() && isServer)

@@ -92,22 +92,22 @@ std::vector<std::pair<Coords, Coords>> Pawn::GetMoves()
 	if (whitePiece)
 	{
 		//Enpassant
-		if (brd.GetBlackEnpassant() && (coords.x - 1) == brd.playedMoves.back().second.x && coords.y == brd.playedMoves.back().second.y)
+		if (brd.playedMoves.size() > 0 &&  brd.GetBlackEnpassant() && (coords.x - 1) == brd.playedMoves.back().second.x && coords.y == brd.playedMoves.back().second.y)
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x - 1,coords.y - 1 }));
 		}
-		if (brd.GetBlackEnpassant() && (coords.x + 1) == brd.playedMoves.back().second.x && coords.y == brd.playedMoves.back().second.y)
+		if (brd.playedMoves.size() > 0 &&  brd.GetBlackEnpassant() && (coords.x + 1) == brd.playedMoves.back().second.x && coords.y == brd.playedMoves.back().second.y)
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x + 1,coords.y - 1 }));
 		}
 	}
 	else
 	{
-		if (brd.GetWhiteEnpassant() && (coords.x - 1) == brd.playedMoves.back().second.x && coords.y == brd.playedMoves.back().second.y)
+		if (brd.playedMoves.size() > 0 && brd.GetWhiteEnpassant() && (coords.x - 1) == brd.playedMoves.back().second.x && coords.y == brd.playedMoves.back().second.y)
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x - 1,coords.y + 1 }));
 		}
-		if (brd.GetWhiteEnpassant() && (coords.x + 1) == brd.playedMoves.back().second.x && coords.y == brd.playedMoves.back().second.y)
+		if (brd.playedMoves.size() > 0 && brd.GetWhiteEnpassant() && (coords.x + 1) == brd.playedMoves.back().second.x && coords.y == brd.playedMoves.back().second.y)
 		{
 			moves.push_back(std::make_pair(coords, Coords{ coords.x + 1,coords.y + 1 }));
 		}
@@ -126,11 +126,11 @@ void Pawn::GetTargets(Map* oppoPieces)
 		myTargetList.insert(Coords{ coords.x + 1,coords.y - 1 });
 		//Enpassant - black enpassant is true, our ycoord is equal to the y coord of the last played move
 		//and our x is plus 1 or -1...add to target list
-		if (brd.GetBlackEnpassant() && (coords.x - 1) == brd.playedMoves.back().second.x && coords.y == brd.playedMoves.back().second.y)
+		if (brd.playedMoves.size() > 0 && brd.GetBlackEnpassant() && (coords.x - 1) == brd.playedMoves.back().second.x && coords.y == brd.playedMoves.back().second.y)
 		{
 			myTargetList.insert(Coords{ coords.x - 1,coords.y - 1 });
 		}
-		if (brd.GetBlackEnpassant() && (coords.x  +1) == brd.playedMoves.back().second.x && coords.y == brd.playedMoves.back().second.y)
+		if (brd.playedMoves.size() > 0 && brd.GetBlackEnpassant() && (coords.x  +1) == brd.playedMoves.back().second.x && coords.y == brd.playedMoves.back().second.y)
 		{
 			myTargetList.insert(Coords{ coords.x + 1,coords.y - 1 });
 		}
@@ -140,11 +140,11 @@ void Pawn::GetTargets(Map* oppoPieces)
 		myTargetList.insert(Coords{ coords.x - 1,coords.y + 1 });
 		myTargetList.insert(Coords{ coords.x + 1,coords.y + 1 });
 		//Enpassant
-		if (brd.GetWhiteEnpassant() && (coords.x - 1) == brd.playedMoves.back().second.x && coords.y == brd.playedMoves.back().second.y)
+		if (brd.playedMoves.size() > 0 &&  brd.GetWhiteEnpassant() && (coords.x - 1) == brd.playedMoves.back().second.x && coords.y == brd.playedMoves.back().second.y)
 		{
 			myTargetList.insert(Coords{ coords.x - 1,coords.y + 1 });
 		}
-		if (brd.GetWhiteEnpassant() && (coords.x + 1) == brd.playedMoves.back().second.x && coords.y == brd.playedMoves.back().second.y)
+		if (brd.playedMoves.size() > 0 && brd.GetWhiteEnpassant() && (coords.x + 1) == brd.playedMoves.back().second.x && coords.y == brd.playedMoves.back().second.y)
 		{
 			myTargetList.insert(Coords{ coords.x + 1,coords.y + 1 });
 		}

@@ -851,7 +851,7 @@ void BlackPlayer::GenerationFive()
 	//parallel MiniMax 
 }
 
-void BlackPlayer::TestMove(std::pair<Coords, Coords> move)
+void BlackPlayer::TestBlackMove(std::pair<Coords, Coords> move)
 {
 	//Assign the current position and new position to variables
 	auto newloc = move.second;
@@ -905,7 +905,7 @@ void BlackPlayer::TestMove(std::pair<Coords, Coords> move)
 	}
 }
 
-void BlackPlayer::UndoTestMove()
+void BlackPlayer::UndoBlackMove()
 {
 	for (const auto& p : brd.whitePieces)
 	{
@@ -957,7 +957,7 @@ std::pair<Coords, Coords> BlackPlayer::Minimax(std::vector < std::pair<Coords, C
 	bestMoves.clear();
 	for (const auto& m : moves_in)
 	{
-		TestMove(m);
+		TestBlackMove(m);
 		whiteMoves.clear();
 		value = 0;
 		for (const auto& p : brd.whitePieces)
@@ -992,16 +992,16 @@ std::pair<Coords, Coords> BlackPlayer::Minimax(std::vector < std::pair<Coords, C
 			}
 
 			//Undo any moves
-			ResetWhiteMove();
+			UndoWhiteMove();
 
 		}
 
 		//Undo everything
-		UndoTestMove();
+		UndoBlackMove();
 	}
 			
 	//Undo everything
-	UndoTestMove();
+	UndoBlackMove();
 
 	if (bestMoves.size() > 0)
 	{
@@ -1016,7 +1016,7 @@ std::pair<Coords, Coords> BlackPlayer::Minimax(std::vector < std::pair<Coords, C
 	return bestMove;
 }
 
-void BlackPlayer::ResetWhiteMove()
+void BlackPlayer::UndoWhiteMove()
 {
 	brd.whitePieceTargets = initialWhitePieceTargets;
 	brd.whitePieces = whiteInitialState;

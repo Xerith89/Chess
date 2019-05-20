@@ -56,9 +56,9 @@ private:
 	std::pair<Coords, Coords> worstMove;
 	std::vector<std::pair<Coords, Coords>> equalMoves;
 	int value = 0;
-	void ResetWhiteMove();
-	void TestMove(std::pair<Coords, Coords>);
-	void UndoTestMove();
+	void UndoWhiteMove();
+	void TestBlackMove(std::pair<Coords, Coords>);
+	void UndoBlackMove();
 	int TestMoveScore()const;
 	void DoWhiteMove(const std::pair<Coords, Coords> input);
 	std::pair<Coords, Coords> Minimax(std::vector<std::pair<Coords, Coords>> moves_in);

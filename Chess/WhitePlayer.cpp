@@ -3,7 +3,9 @@
 WhitePlayer::WhitePlayer(Window & wnd, Board & brd, GUI& gui)
 	:
 	Actor(wnd,brd),
-	gui(gui)
+	gui(gui),
+	bestSprite("./Sprites/best.bmp"),
+	rng(rd())
 {
 }
 
@@ -124,6 +126,7 @@ void WhitePlayer::DoTurn()
 				//end of turn cleanup
 				pieceSelected = false;
 				playerTurn = false;
+				showBest = false;
 				if (promotion == false)
 				{
 					packetReady = true;
@@ -330,6 +333,15 @@ void WhitePlayer::DrawChecked(Graphics & gfx) const
 	}
 }
 
+void WhitePlayer::DrawBestMove(Graphics& gfx) const
+{
+	if (showBest)
+	{
+		gfx.DrawSprite(brd.TranslateCoords(bestMove.first).first, brd.TranslateCoords(bestMove.first).second, bestSprite);
+		gfx.DrawSprite(brd.TranslateCoords(bestMove.second).first, brd.TranslateCoords(bestMove.second).second, bestSprite);
+	}
+}
+
 void WhitePlayer::Promote(Map * map)
 {
 	int x = 0;
@@ -431,6 +443,227 @@ bool WhitePlayer::TestForCheckMate()
 	return cMated;
 }
 
+void WhitePlayer::UndoWhiteMove()
+{
+	for (const auto& p : brd.whitePieces)
+	{
+		p.second->MoveTo({ p.first.first,p.first.second });
+	}
+	for (const auto& p : brd.blackPieces)
+	{
+		p.second->MoveTo({ p.first.first,p.first.second });
+	}
+	brd.blackPieces = blackInitialState;
+	brd.whitePieces = whiteInitialState;
+	brd.whitePieceTargets = initialWhitePieceTargets;
+	brd.blackPieceTargets = initialBlackPieceTargets;
+	brd.UpdateWhiteKingLoc(initialWhiteKingLoc);
+	brd.UpdateBlackKingLoc(initialBlackKingLoc);
+}
+
+void WhitePlayer::DoBlackMove(std::pair<Coords, Coords> input)
+{
+	//Assign the current position and new position to variables
+	auto newloc = input.second;
+	auto currentloc = input.first;
+	//find the piece in the map based on the current position
+	auto piece = brd.blackPieces.find({ currentloc.x,currentloc.y });
+
+	//As long as we found the piece
+	if (piece != brd.blackPieces.end())
+	{
+
+		//Check if we're moving our king, if so then update the king's position
+		kingInstance = dynamic_cast<King*>(piece->second.get());
+		//TestForCastling();
+
+		if (kingInstance)
+		{
+			brd.UpdateBlackKingLoc(newloc);
+
+		}
+		//If we take a piece then update that too
+		if (brd.whitePieces.count({ newloc.x, newloc.y }) > 0)
+		{
+			brd.whitePieces.erase({ newloc.x,newloc.y });
+		}
+		//Enpassant capture
+		if (brd.GetWhiteEnpassant() && pawnInstance && brd.whitePieces.count({ newloc.x, newloc.y - 1 }) > 0)
+		{
+			brd.whitePieces.erase({ newloc.x,newloc.y - 1 });
+		}
+
+		//Enpassant - we're a pawn moving from initial position to 2 spaces up
+		if (currentloc.y == 1 && newloc.y == 3 && pawnInstance != nullptr)
+		{
+			brd.SetBlackEnpassant(true);
+		}
+
+		//Reinsert into the map at the new position, remove the old entry
+		brd.blackPieces.insert_or_assign({ newloc.x, newloc.y }, piece->second);
+		brd.blackPieces.erase({ currentloc.x,currentloc.y });
+
+		//recalculate our targets following our turn
+		brd.blackPieceTargets.clear();
+		for (const auto& p : brd.blackPieces)
+		{
+			p.second->GetTargets(&brd.whitePieces);
+		}
+
+		//We can only get moves that result in not being checked so we can safely assume we're not checked now
+		checked = false;
+	}
+}
+
+void WhitePlayer::UndoBlackMove()
+{
+	brd.blackPieceTargets = initialBlackPieceTargets;
+	brd.blackPieces = blackInitialState;
+	brd.UpdateBlackKingLoc(initialBlackKingLoc);
+}
+
+int WhitePlayer::TestMoveScore() const
+{
+	int score = 0;
+	for (const auto& p : brd.blackPieces)
+	{
+		score -= p.second->GetScore();
+	}
+	for (const auto& p : brd.whitePieces)
+	{
+		score += p.second->GetScore();
+	}
+	return score;
+}
+
+void WhitePlayer::DoWhiteMove(const std::pair<Coords, Coords> input)
+{
+	auto piece = brd.whitePieces.find({ input.first.x,input.first.y });
+	if (piece != brd.whitePieces.end())
+	{
+		kingInstance = dynamic_cast<King*>(piece->second.get());
+		pawnInstance = dynamic_cast<Pawn*>(piece->second.get());
+		piece->second.get()->MoveTo({ input.second.x, input.second.y });
+		brd.whitePieces.insert_or_assign({ input.second.x,input.second.y }, piece->second);
+		brd.whitePieces.erase({ input.first.x,input.first.y });
+
+		//Update the king position if we've moved it - if we're castling we also need to move the relevent rook
+		if (kingInstance)
+		{
+			brd.UpdateWhiteKingLoc(input.second);
+		}
+
+		//Enpassant - we're a pawn moving from initial position to 2 spaces up
+		if (input.first.y == 6 && input.second.y == 4 && pawnInstance)
+		{
+			brd.SetWhiteEnpassant(true);
+		}
+
+		//Check for taking pieces
+		if (brd.blackPieces.count({ input.second.x, input.second.y }) > 0)
+		{
+			brd.blackPieces.erase({ input.second.x, input.second.y });
+		}
+		//Enpassant take
+		if (brd.GetBlackEnpassant() && pawnInstance && brd.blackPieces.count({ input.second.x, input.second.y + 1 }) > 0)
+		{
+			brd.blackPieces.erase({ input.second.x, input.second.y + 1 });
+		}
+
+		//Get our new targets for the black players turn
+		brd.whitePieceTargets.clear();
+		for (const auto& p : brd.whitePieces)
+		{
+			p.second->GetTargets(&brd.blackPieces);
+		}
+		//We can only get moves that result in not being checked so we can safely assume we're not checked now
+		checked = false;
+	}
+}
+
+std::pair<Coords, Coords> WhitePlayer::MinimaxAB(std::vector<std::pair<Coords, Coords>> moves_in)
+{
+	int bestMoveMaxValue = -99999;
+	int bestMoveMinValue = 99999;
+	int alpha = bestMoveMaxValue;
+	int beta = bestMoveMinValue;
+	std::vector<std::pair<Coords, Coords>> blackMoves;
+	std::vector<std::pair<Coords, Coords>> temp;
+	std::set<std::pair<Coords, Coords>> bestMoves;
+	//for every move in the input moves list
+	//We want to do that move
+	//We then want to go through the white piece moves based off of that move
+	//for each one we want to do each move
+	//If it is greater than the current total (starting at -99999) then we want to save the move
+	//We then reset the white pieces and continue til the loop ends
+	//We then reset the black pieces and continue to the loop ends
+	//We then reset the all maps and targets and return the best move
+	bestMoves.clear();
+	for (const auto& m : moves_in)
+	{
+		DoWhiteMove(m);
+		blackMoves.clear();
+		value = 0;
+		for (const auto& p : brd.blackPieces)
+		{
+			temp = p.second->GetMoves();
+			blackMoves.insert(blackMoves.end(), temp.begin(), temp.end());
+		}
+
+		for (const auto& k : blackMoves)
+		{
+			//do white move
+			DoBlackMove(k);
+			//Test the game board value
+
+			value += TestMoveScore();
+
+			if (value < bestMoveMinValue)
+			{
+				bestMoveMinValue = value;
+				beta = value;
+			}
+			//The higher the value, the better the move for black
+			else if (value > bestMoveMaxValue)
+			{
+				bestMoveMaxValue = value;
+				alpha = value;
+				bestMove = m;
+				bestMoves.clear();
+			}
+			else if (value == bestMoveMaxValue)
+			{
+				bestMoves.insert(m);
+			}
+
+			//Undo any moves
+			UndoBlackMove();
+
+			//We don't need to explore further for this move
+			if (bestMoveMaxValue > beta)
+				break;
+		}
+
+		//Undo everything
+		UndoWhiteMove();
+	}
+
+	//Undo everything
+	UndoWhiteMove();
+
+	if (bestMoves.size() > 0)
+	{
+		int maximum = bestMoves.size() - 1;
+		std::uniform_int_distribution<int> movepick(0, std::max(0, maximum));
+		int move_roll = movepick(rng);
+		std::set<std::pair<Coords, Coords>>::const_iterator it(bestMoves.begin());
+		advance(it, move_roll);
+		bestMove = *it;
+	}
+
+	return bestMove;
+}
+
 
 void WhitePlayer::TestForStaleMate()
 {
@@ -506,6 +739,29 @@ bool WhitePlayer::TestForDraw()
 int WhitePlayer::GetPromotedPiece() const
 {
 	return promotedPiece;
+}
+
+void WhitePlayer::GetBestMove()
+{
+	//Save our state before MiniMax
+	blackInitialState = brd.blackPieces;
+	whiteInitialState = brd.whitePieces;
+	initialBlackPieceTargets = brd.blackPieceTargets;
+	initialWhitePieceTargets = brd.whitePieceTargets;
+	initialBlackKingLoc = brd.GetBlackKingLoc();
+	initialWhiteKingLoc = brd.GetWhiteKingLoc();
+
+	movelist.clear();
+	std::vector<std::pair<Coords, Coords>> temp;
+
+	//Go through all our pieces, get moves for them. The returning vector is then amalgamated.
+	for (const auto& p : brd.whitePieces)
+	{
+		temp = p.second->GetMoves();
+		movelist.insert(movelist.end(), temp.begin(), temp.end());
+	}
+	MinimaxAB(movelist);
+	showBest = true;
 }
 
 void WhitePlayer::TestForCastling()
