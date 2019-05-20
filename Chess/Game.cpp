@@ -121,7 +121,7 @@ void Game::Update()
 						checkSound = true;
 					}
 
-					if (wnd.inpt.KbdKeyPressed(VK_SPACE))
+					if (wnd.inpt.KbdKeyReleased(VK_SPACE))
 					{
 						whitePlayer.GetBestMove();
 					}
@@ -493,6 +493,10 @@ void Game::Render()
 			else if (blackPlayer.GetPromotion() && isClient)
 			{
 				gui.DrawPromotionBlack(gfx);
+			}
+			else if (!isMultiplayer)
+			{
+				gui.DrawPromotion(gfx);
 			}
 			break;
 		case GameState::OPPONENTCHECKMATED:
