@@ -229,5 +229,10 @@ bool Bishop::GetBlackSquare() const
 	return blackSquare;
 }
 
+int Bishop::GetBetterScore()
+{
+	return 0;
+}
+
 
 

@@ -371,3 +371,8 @@ int Queen::GetScore()
 	return score;
 }
 
+int Queen::GetBetterScore()
+{
+	return 0;
+}
+

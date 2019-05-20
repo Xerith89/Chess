@@ -185,3 +185,8 @@ int Rook::GetScore()
 	return score;
 }
 
+int Rook::GetBetterScore()
+{
+	return 0;
+}
+

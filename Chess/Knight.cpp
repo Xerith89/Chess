@@ -187,3 +187,8 @@ int Knight::GetScore()
 	return score;
 }
 
+int Knight::GetBetterScore()
+{
+	return 0;
+}
+

@@ -6,6 +6,7 @@
 #include <set>
 #include <assert.h>
 #include <algorithm>
+#include <array>
 
 class Board;
 class Piece {
@@ -16,7 +17,6 @@ protected:
 	Sprite pieceSprite;
 	Coords maxCoord = { 7,7 };
 	Coords minCoord = { 0,0 };
-	
 	using Map = std::map<std::pair<int,int>, std::shared_ptr<Piece>>;
 	bool whitePiece;
 	Coords opponentKingPos;
@@ -35,4 +35,5 @@ public:
 	Sprite& GetSprite();
 	void MoveTo(Coords new_coords);
 	virtual int GetScore() = 0;
+	virtual int GetBetterScore() = 0;
 };

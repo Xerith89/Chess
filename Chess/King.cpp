@@ -164,4 +164,9 @@ int King::GetScore()
 	return score;
 }
 
+int King::GetBetterScore()
+{
+	return 0;
+}
+
 
