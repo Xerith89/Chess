@@ -3,9 +3,11 @@
 
 /*
 BUG LIST
-.played moves overwrites after a while
 TODO LIST
-.Generational Minimax AI
+.Six depth minimax
+.Alpha beta
+.Improved evaluation function
+.Move ordering/null move pruning
 .Hook up to ImGUI
 */
 
