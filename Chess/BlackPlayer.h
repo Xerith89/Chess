@@ -6,20 +6,22 @@ class BlackPlayer : public Actor{
 public:
 	BlackPlayer(Window& wnd, Board& brd, GUI& gui);
 	void DoTurn() override;
-	void DrawPieces(Graphics& gfx)const override;
-	void DrawChecked(Graphics& gfx)const override;
 	void Promote(Map* map)override;
 	void TestForCheck() override;
+	bool TestForDraw()override;
+	int GetPromotedPiece()const;
+	//Draw Funcs
+	void DrawPieces(Graphics& gfx)const override;
+	void DrawChecked(Graphics& gfx)const override;
+	void DrawPossibleMoves(Graphics& gfx);
+	//Multiplayer Funcs
 	void mDoTurn();
 	void mPromote(Map* map);
+	void SetPlayerTurn(bool myTurn);
+	void DoMPlayUpdate(const std::pair<Coords, Coords> input, const int promoteType);
 	bool PacketReady()const;
 	void SetPacketNotReady();
 	bool PlayerTurn()const;
-	void SetPlayerTurn(bool myTurn);
-	void DoMPlayUpdate(const std::pair<Coords, Coords> input, const int promoteType);
-	void DrawPossibleMoves(Graphics& gfx);
-	bool TestForDraw()override;
-	int GetPromotedPiece()const;
 private:
 	int promotedPiece;
 	GUI& gui;
