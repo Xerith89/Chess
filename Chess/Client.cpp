@@ -7,7 +7,7 @@ void Client::DrawStates(Graphics& gfx) const
 
 }
 
-void Client::JoinGame()
+void Client::JoinGame(std::string address_in)
 {
 	if (enet_initialize() != 0)
 	{
@@ -24,7 +24,7 @@ void Client::JoinGame()
 		throw std::runtime_error("An error occurred while trying to create an ENet client host.");
 	}
 	/* Connect to some.server.net:1234. */
-	enet_address_set_host(&address, "127.0.0.1");
+	enet_address_set_host(&address, address_in.c_str());
 	address.port = 1234;
 	/* Initiate the connection, allocating the two channels 0 and 1. */
 	peer = enet_host_connect(client, &address, 1, 0);
@@ -147,12 +147,3 @@ int Client::GetPromotedType() const
 	return promotedPiece;
 }
 
-bool Client::GetEnterAddress()const
-{
-	return enterAddress;
-}
-
-void Client::SetEnterAddress(bool input)
-{
-	enterAddress = input;
-}

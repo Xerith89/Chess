@@ -410,16 +410,13 @@ void Game::Update()
 		{
 			programStatus = ProgramState::MAINMENU;
 		}
+
+		if (wnd.inpt.KbdKeyReleased(VK_RETURN))
+		{
+			client.JoinGame(gui.GetBuffer());
+		}
 		switch(client.GetStatus())
 		{
-			case 0:
-				if (client.GetEnterAddress())
-				{
-					client.JoinGame();
-				}
-				break;
-			case 1:
-				break;
 			case 2:
 				programStatus = ProgramState::PLAYING;
 				isMultiplayer = true;
@@ -540,10 +537,7 @@ void Game::Render()
 		server.DrawStates(gfx);
 		break;
 	case JOINING:
-		if (!client.GetEnterAddress())
-		{
-			gui.GetAddress();
-		}
+		gui.GetAddress();
 		client.DrawStates(gfx);
 		break;
 	}

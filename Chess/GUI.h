@@ -16,6 +16,7 @@ public:
 	void DrawMoves();
 	void DrawHint();
 	void GetAddress();
+	std::string GetBuffer();
 	int GetPromoteGraphicX()const;
 	int GetPromoteGraphicY()const;
 	void DrawPromotionBlack(Graphics& gfx)const;

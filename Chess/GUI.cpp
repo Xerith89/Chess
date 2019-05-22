@@ -51,5 +51,10 @@ void GUI::GetAddress()
 	ImGui::End();
 }
 
+std::string GUI::GetBuffer()
+{
+	return buffer;
+}
+
 
 
