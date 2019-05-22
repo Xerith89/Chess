@@ -14,13 +14,8 @@ BlackPlayer::BlackPlayer(Window& wnd,Board & brd, GUI& gui)
 void BlackPlayer::DoTurn()
 {
 	//timer.Start();
-	//GenerationZero();
-	GenerationOne();
-	//GenerationTwo();
-	//GenerationThree();
-	//GenerationFour();
-	//GenerationFive();
-
+	//RandomMoves();
+	MinimaxMoves();
 	//std::string time("AI executed in : " + std::to_string(timer.Mark()) + " milliseconds.");
 	//MessageBox(wnd.GetHandle(), time.c_str(), "Speed", MB_OK);
 }
@@ -580,7 +575,7 @@ void BlackPlayer::TestForCastling()
 }
 
 //Our first AI that will be random based
-void BlackPlayer::GenerationZero()
+void BlackPlayer::RandomMoves()
 {
 	int maximum = 0;
 	movelist.clear();
@@ -703,7 +698,7 @@ void BlackPlayer::GenerationZero()
 	brd.SetWhiteEnpassant(false);
 }
 
-void BlackPlayer::GenerationOne()
+void BlackPlayer::MinimaxMoves()
 {
 	movelist.clear();
 	std::vector<std::pair<Coords, Coords>> temp;
@@ -829,26 +824,6 @@ void BlackPlayer::GenerationOne()
 
 	//Enpassant lasts for one turn only so we can set white enpassant to false after we move
 	brd.SetWhiteEnpassant(false);
-}
-
-void BlackPlayer::GenerationTwo()
-{
-	//MiniMax with depth of 5
-}
-
-void BlackPlayer::GenerationThree()
-{
-	//Introduce alphabeta to G2
-}
-
-void BlackPlayer::GenerationFour()
-{
-	//Introduce nullMove
-}
-
-void BlackPlayer::GenerationFive()
-{
-	//parallel MiniMax 
 }
 
 void BlackPlayer::TestBlackMove(std::pair<Coords, Coords> move)

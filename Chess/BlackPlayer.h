@@ -37,12 +37,8 @@ private:
 	bool TestForCheckMate()override;
 	void TestForStaleMate() override;
 	void TestForCastling()override;
-	void GenerationZero();
-	void GenerationOne();
-	void GenerationTwo();
-	void GenerationThree();
-	void GenerationFour();
-	void GenerationFive();	
+	void RandomMoves();
+	void MinimaxMoves();
 	Sprite promotionSprite;
 	std::random_device rd;
 	std::mt19937 rng;
