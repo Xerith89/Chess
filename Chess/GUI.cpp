@@ -1,9 +1,10 @@
 #include "GUI.h"
 
-GUI::GUI()
+GUI::GUI(Board& brd)
 	:
 	promotionSprite("./Sprites/promoteW.bmp"),
-	blackPromotionSprite("./Sprites/promoteB.bmp")
+	blackPromotionSprite("./Sprites/promoteB.bmp"),
+	brd(brd)
 {
 	
 }
@@ -32,7 +33,15 @@ void GUI::DrawMoves()
 {
 	if (ImGui::Begin("Played Moves"))
 	{
+		ImGui::SetWindowPos(ImVec2(550, 20));
+		ImGui::SetWindowSize(ImVec2(240, 450));
 
+		for (const auto& m : brd.playedMoves)
+		{
+			std::stringstream text;
+			text << letters.at(m.first.x) << numbers.at(m.first.y) << " to " << letters.at(m.second.x) << numbers.at(m.second.y);
+			ImGui::Text(text.str().c_str());
+		}
 	}
 	ImGui::End();
 }

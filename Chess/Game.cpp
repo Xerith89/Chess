@@ -12,10 +12,10 @@ TODO LIST
 
 Game::Game(Window & wnd)
 	:
-	gui(),
 	wnd(wnd),
 	gfx(wnd.GetHandle()),
 	brd("./Sprites/board.bmp",30,25),
+	gui(brd),
 	playerwin("./Sprites/checkmatepwin.bmp"),
 	playerlose("./Sprites/checkmateplose.bmp"),
 	stalemate("./Sprites/stalemate.bmp"),
