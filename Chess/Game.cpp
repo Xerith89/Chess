@@ -1,6 +1,5 @@
 #include "Game.h"
 
-
 /*
 BUG LIST
 TODO LIST
@@ -13,10 +12,10 @@ TODO LIST
 
 Game::Game(Window & wnd)
 	:
+	gui(),
 	wnd(wnd),
 	gfx(wnd.GetHandle()),
 	brd("./Sprites/board.bmp",30,25),
-	gui(brd),
 	playerwin("./Sprites/checkmatepwin.bmp"),
 	playerlose("./Sprites/checkmateplose.bmp"),
 	stalemate("./Sprites/stalemate.bmp"),
@@ -467,6 +466,14 @@ void Game::Update()
 
 void Game::Render()
 {
+	ImGui_ImplDX11_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+	static bool showdemo = true;
+	if (showdemo)
+	{
+		ImGui::ShowDemoWindow(&showdemo);
+	}
 	switch (programStatus)
 	{
 	case MAINMENU:
@@ -476,7 +483,6 @@ void Game::Render()
 		switch (gameStatus)
 		{
 		case GameState::NORMAL:
-			gui.DrawGUI(gfx,isMultiplayer);
 			brd.DrawBoard(gfx);
 			whitePlayer.DrawPossibleMoves(gfx);
 			if (isClient)
@@ -496,7 +502,7 @@ void Game::Render()
 			{
 				gui.DrawPromotionBlack(gfx);
 			}
-			else if (!isMultiplayer)
+			else if (!isMultiplayer && whitePlayer.GetPromotion())
 			{
 				gui.DrawPromotion(gfx);
 			}
@@ -536,6 +542,8 @@ void Game::Render()
 		client.DrawStates(gfx);
 		break;
 	}
+	
+	
 }
 
 void Game::Run()

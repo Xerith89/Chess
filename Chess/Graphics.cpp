@@ -1,5 +1,7 @@
 #include "Graphics.h"
 #include <assert.h>
+#include "../imgui/imgui_impl_dx11.h"
+#include "../imgui/imgui_impl_win32.h"
 
 Graphics::Graphics(HWND hWnd)
 {
@@ -49,6 +51,9 @@ Graphics::Graphics(HWND hWnd)
 	Viewport.Height = ScreenHeight;
 	Viewport.TopLeftX = 0.0f;
 	Viewport.TopLeftY = 0.0f;
+
+	//Hook in ImGUI
+	ImGui_ImplDX11_Init(pDevice, pDeviceContext);
 	
 	//Set the viewport
 	pDeviceContext->RSSetViewports(1, &Viewport);
@@ -112,12 +117,12 @@ Graphics::Graphics(HWND hWnd)
 	//x,y,z,u,v - 6 verts to make 2 triangles to make 1 quad the size of the screen (These are in NDC)
 	const Vertex vertices[] =
 	{
-		{ -1.0f,1.0f,0.5f,0.0f,0.0f },
-		{ 1.0f,1.0f,0.5f,1.0f,0.0f },
-		{ 1.0f,-1.0f,0.5f,1.0f,1.0f },
-		{ -1.0f,1.0f,0.5f,0.0f,0.0f },
-		{ 1.0f,-1.0f,0.5f,1.0f,1.0f },
-		{ -1.0f,-1.0f,0.5f,0.0f,1.0f },
+		{ -1.0f,1.0f,1.0f,0.0f,0.0f },
+		{ 1.0f,1.0f,1.0f,1.0f,0.0f },
+		{ 1.0f,-1.0f,1.0f,1.0f,1.0f },
+		{ -1.0f,1.0f,1.0f,0.0f,0.0f },
+		{ 1.0f,-1.0f,1.0f,1.0f,1.0f },
+		{ -1.0f,-1.0f,1.0f,0.0f,1.0f },
 	};
 
 	D3D11_BUFFER_DESC BufferDesc;
@@ -178,6 +183,7 @@ Graphics::~Graphics()
 		_aligned_free(pColorBuffer);
 		pColorBuffer = nullptr;
 	}
+	ImGui_ImplDX11_Shutdown();
 	pSwapChain->Release();
 	pDevice->Release();
 	pBackBuffer->Release();
@@ -225,7 +231,8 @@ void Graphics::RenderFrame()
 	pDeviceContext->PSSetShaderResources(0u, 1u, &pSysBufferTextureView);
 	pDeviceContext->PSSetSamplers(0u, 1u, &pSamplerState);
 	pDeviceContext->Draw(6u, 0u);
-
+	ImGui::Render();
+	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 	if (FAILED(hr = pSwapChain->Present(1u, 0u)))
 	{
 		throw std::exception("Swapping buffers" + hr);

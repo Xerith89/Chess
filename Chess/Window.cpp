@@ -1,6 +1,7 @@
 #include "Window.h"
 #include <exception>
 #include "resource.h"
+#include "../imgui/imgui_impl_win32.h"
 
 Window::RegisterWindow Window::RegisterWindow::regWin;
 
@@ -67,10 +68,14 @@ Window::Window(int width, int height, const char* title)
 	if (hWnd == nullptr) { throw std::exception("hWnd is null"); }
 	//Handle to the window is created - some of our static functions from the registration class are utilised
 	ShowWindow(hWnd, SW_SHOW);
+
+	//Feed window handle to imgui
+	ImGui_ImplWin32_Init(hWnd);
 }
 //Destructor follows RAII but cleaning up resources created by the constructor
 Window::~Window()
 {
+	ImGui_ImplWin32_Shutdown();
 	DestroyWindow(hWnd);
 }
 HWND Window::GetHandle() const
@@ -107,6 +112,10 @@ so we cannot directly plug this into the register window class as our Windows Pr
 */
 LRESULT Window::HandleMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	if (ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam))
+	{
+		return true;
+	}
 	switch (uMsg)
 	{
 	case WM_CLOSE:

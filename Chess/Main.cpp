@@ -1,10 +1,11 @@
 #include "Window.h"
 #include "Game.h"
-
+#include "imgui_manager.h"
 int WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR pArgs, INT)
 {
 	try 
 	{
+		imgui_manager imMan;
 		Window wnd(800, 600, "Chess");
 		Game game(wnd);
 		while (wnd.ProcessMessage())
