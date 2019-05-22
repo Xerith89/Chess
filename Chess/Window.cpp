@@ -116,6 +116,9 @@ LRESULT Window::HandleMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 	{
 		return true;
 	}
+
+	const auto& imgio = ImGui::GetIO();
+
 	switch (uMsg)
 	{
 	case WM_CLOSE:
@@ -128,21 +131,36 @@ LRESULT Window::HandleMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 		break;
 	case WM_SYSKEYDOWN:
 	case WM_KEYDOWN:
+		if (imgio.WantCaptureKeyboard)
+		{
+			break;
+		}
 		inpt.OnKeyPress(static_cast<unsigned char>(wParam));
 		break;
 	case WM_SYSKEYUP:
 	case WM_KEYUP:
+		if (imgio.WantCaptureKeyboard)
+		{
+			break;
+		}
 		inpt.OnKeyRelease(static_cast<unsigned char>(wParam));
 		break;
 	case WM_CHAR:
+		if (imgio.WantCaptureKeyboard)
+		{
+			break;
+		}
 		inpt.OnCharPress(static_cast<unsigned char>(wParam));
 		break;
 		//Mouse Messages
 	case WM_MOUSEMOVE:
-		auto points = MAKEPOINTS(lParam);
-		//Check if we're in the window
-		
-		
+
+		if (imgio.WantCaptureMouse)
+		{
+			break;
+		}
+	
+		auto points = MAKEPOINTS(lParam);	
 		//If we're currently set to not in the window then recapture the window handle and set in window to true
 		if (!inpt.InWindow())
 		{
@@ -156,22 +174,42 @@ LRESULT Window::HandleMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 		ReleaseCapture();
 		break;
 	case WM_LBUTTONUP:
+		if (imgio.WantCaptureMouse)
+		{
+			break;
+		}
 		points = MAKEPOINTS(lParam);
 		inpt.OnMseLeftRelease(points.x, points.y);
 		break;
 	case WM_LBUTTONDOWN:
+		if (imgio.WantCaptureMouse)
+		{
+			break;
+		}
 		points = MAKEPOINTS(lParam);
 		inpt.OnMseLeftClick(points.x, points.y);
 		break;
 	case WM_RBUTTONDOWN:
+		if (imgio.WantCaptureMouse)
+		{
+			break;
+		}
 		points = MAKEPOINTS(lParam);
 		inpt.OnMseRightClick(points.x, points.y);
 		break;
 	case WM_RBUTTONUP:
+		if (imgio.WantCaptureMouse)
+		{
+			break;
+		}
 		points = MAKEPOINTS(lParam);
 		inpt.OnMseRightRelease(points.x, points.y);
 		break;
 	case WM_MOUSEWHEEL:
+		if (imgio.WantCaptureMouse)
+		{
+			break;
+		}
 		points = MAKEPOINTS(lParam);
 		const auto wheelDelta = GET_WHEEL_DELTA_WPARAM(wParam);
 		inpt.OnMseWheel(points.x, points.y, wheelDelta);
