@@ -7,7 +7,6 @@ TODO LIST
 .Alpha beta
 .Improved evaluation function
 .Move ordering/null move pruning
-.Hook up to ImGUI
 */
 
 Game::Game(Window & wnd)
@@ -120,11 +119,6 @@ void Game::Update()
 					else if (!whitePlayer.GetChecked() && !checkSound)
 					{
 						checkSound = true;
-					}
-
-					if (wnd.inpt.KbdKeyReleased(VK_SPACE))
-					{
-						whitePlayer.GetBestMove();
 					}
 
 					whitePlayer.DoTurn();
@@ -477,7 +471,19 @@ void Game::Render()
 		menu.DrawMenuScreen(gfx);
 		break;
 	case PLAYING:
+		//Draw our gui
 		gui.DrawGui(isMultiplayer);
+		if (!isMultiplayer && ImGui::Begin("Hint"))
+		{
+			ImGui::SetWindowPos(ImVec2(580, 490));
+			ImGui::SetWindowSize(ImVec2(150, 85));
+			if (ImGui::Button("Hint", ImVec2(128, 50)))
+			{
+				whitePlayer.GetBestMove();
+			}
+		}
+		ImGui::End();
+		//Handle drawing based on game status
 		switch (gameStatus)
 		{
 		case GameState::NORMAL:

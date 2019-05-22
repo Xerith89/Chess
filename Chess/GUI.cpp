@@ -43,17 +43,7 @@ void GUI::DrawGui(bool multiplayer)
 			ImGui::Text(text.str().c_str());
 		}
 	}
-	ImGui::End();
-
-
-	if (!multiplayer && ImGui::Begin("Hint"))
-	{
-		ImGui::SetWindowPos(ImVec2(580, 490));
-		ImGui::SetWindowSize(ImVec2(150, 85));
-		ImGui::Button("Hint", ImVec2(128, 50));
-	}
-	ImGui::End();
-	
+	ImGui::End();	
 }
 
 void GUI::GetAddress()

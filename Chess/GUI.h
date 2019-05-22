@@ -4,6 +4,7 @@
 #include "Board.h"
 #include "imgui/imgui.h"
 #include <sstream>
+#include <functional>
 
 class GUI {
 private:
