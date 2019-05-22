@@ -186,8 +186,10 @@ void Game::Update()
 					//If we're the server constantly check for packets.
 					server.ReceivePacket();
 
+					//Disconnect Message
 					if (server.GetServerStatus() == 3)
 					{
+						MessageBox(wnd.GetHandle(), "Disconnected From Peer", "Disconnected", MB_OK);
 						programStatus = ProgramState::MAINMENU;
 						isMultiplayer = false;
 						isClient = false;
@@ -238,6 +240,7 @@ void Game::Update()
 						}
 					}
 
+					//Send our ready packet, end our turn
 					if (whitePlayer.PacketReady())
 					{
 						whitePlayer.SetPacketNotReady();
@@ -296,6 +299,7 @@ void Game::Update()
 					//If packet contains disconnect message from server
 					if (client.GetStatus() == 3)
 					{
+						MessageBox(wnd.GetHandle(), "Disconnected From Peer", "Disconnected", MB_OK);
 						programStatus = ProgramState::MAINMENU;
 						isMultiplayer = false;
 						isClient = false;
