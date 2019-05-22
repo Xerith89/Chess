@@ -21,7 +21,10 @@ public:
 	bool CheckNewMessage()const;
 	void SetNewMessage(bool status);
 	int GetPromotedType()const;
+	bool GetEnterAddress()const;
+	void SetEnterAddress(bool input);
 private:
+	bool enterAddress = false;
 	int promotedPiece;
 	std::array<Sprite, 3> joinStates = { Sprite("./Sprites/Multiplayer/searching.bmp") , Sprite("./Sprites/Multiplayer/nogames.bmp"),Sprite("./Sprites/Multiplayer/searching.bmp") };
 	Sprite cancel;

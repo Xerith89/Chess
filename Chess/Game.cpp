@@ -413,7 +413,10 @@ void Game::Update()
 		switch(client.GetStatus())
 		{
 			case 0:
-				client.JoinGame();
+				if (client.GetEnterAddress())
+				{
+					client.JoinGame();
+				}
 				break;
 			case 1:
 				break;
@@ -466,20 +469,18 @@ void Game::Update()
 
 void Game::Render()
 {
+	//Setup ImGui for drawing
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
-	static bool showdemo = true;
-	if (showdemo)
-	{
-		ImGui::ShowDemoWindow(&showdemo);
-	}
+
 	switch (programStatus)
 	{
 	case MAINMENU:
 		menu.DrawMenuScreen(gfx);
 		break;
 	case PLAYING:
+		gui.DrawMoves();
 		switch (gameStatus)
 		{
 		case GameState::NORMAL:
@@ -539,11 +540,13 @@ void Game::Render()
 		server.DrawStates(gfx);
 		break;
 	case JOINING:
+		if (!client.GetEnterAddress())
+		{
+			gui.GetAddress();
+		}
 		client.DrawStates(gfx);
 		break;
 	}
-	
-	
 }
 
 void Game::Run()

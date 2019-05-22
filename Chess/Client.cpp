@@ -146,3 +146,13 @@ int Client::GetPromotedType() const
 {
 	return promotedPiece;
 }
+
+bool Client::GetEnterAddress()const
+{
+	return enterAddress;
+}
+
+void Client::SetEnterAddress(bool input)
+{
+	enterAddress = input;
+}

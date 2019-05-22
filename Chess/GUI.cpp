@@ -28,5 +28,28 @@ void GUI::DrawPromotion(Graphics & gfx) const
 	gfx.DrawSprite(promotionX, promotionY, promotionSprite);
 }
 
+void GUI::DrawMoves()
+{
+	if (ImGui::Begin("Played Moves"))
+	{
+
+	}
+	ImGui::End();
+}
+
+void GUI::DrawHint()
+{
+
+}
+
+void GUI::GetAddress()
+{
+	if (ImGui::Begin("Enter Server Address"))
+	{
+		ImGui::InputText("address", buffer, sizeof(buffer));
+	}
+	ImGui::End();
+}
+
 
 

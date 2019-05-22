@@ -17,9 +17,9 @@
 #include "Menu.h"
 #include "irrKlang.h"
 #include "../imgui/imgui.h"
+#include "imgui_manager.h"
 #include "../imgui/imgui_impl_dx11.h"
 #include "../imgui/imgui_impl_win32.h"
-#include "imgui_manager.h"
 
 #pragma comment(lib, "irrKlang.lib")
 

@@ -10,9 +10,12 @@ private:
 	Sprite blackPromotionSprite;
 	const int promotionX = (Graphics::GetScreenWidth()/2) - promotionSprite.GetWidth();
 	const int promotionY = (Graphics::GetScreenHeight()/2) - promotionSprite.GetHeight();
-	
+	char buffer[255];
 public:
 	GUI();
+	void DrawMoves();
+	void DrawHint();
+	void GetAddress();
 	int GetPromoteGraphicX()const;
 	int GetPromoteGraphicY()const;
 	void DrawPromotionBlack(Graphics& gfx)const;
