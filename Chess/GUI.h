@@ -21,8 +21,7 @@ private:
 	};
 public:
 	GUI(Board& brd);
-	void DrawMoves();
-	void DrawHint();
+	void DrawGui(bool multiplayer);
 	void GetAddress();
 	std::string GetBuffer();
 	int GetPromoteGraphicX()const;

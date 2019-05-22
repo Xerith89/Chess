@@ -29,7 +29,7 @@ void GUI::DrawPromotion(Graphics & gfx) const
 	gfx.DrawSprite(promotionX, promotionY, promotionSprite);
 }
 
-void GUI::DrawMoves()
+void GUI::DrawGui(bool multiplayer)
 {
 	if (ImGui::Begin("Played Moves"))
 	{
@@ -44,11 +44,16 @@ void GUI::DrawMoves()
 		}
 	}
 	ImGui::End();
-}
 
-void GUI::DrawHint()
-{
 
+	if (!multiplayer && ImGui::Begin("Hint"))
+	{
+		ImGui::SetWindowPos(ImVec2(580, 490));
+		ImGui::SetWindowSize(ImVec2(150, 85));
+		ImGui::Button("Hint", ImVec2(128, 50));
+	}
+	ImGui::End();
+	
 }
 
 void GUI::GetAddress()

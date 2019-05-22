@@ -477,7 +477,7 @@ void Game::Render()
 		menu.DrawMenuScreen(gfx);
 		break;
 	case PLAYING:
-		gui.DrawMoves();
+		gui.DrawGui(isMultiplayer);
 		switch (gameStatus)
 		{
 		case GameState::NORMAL:
