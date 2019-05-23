@@ -167,7 +167,13 @@ int Pawn::GetScore()
 
 int Pawn::GetBetterScore()
 {
-	return 0;
+	int bestScore = score;
+
+	bestScore += boardPositionValue.at(coords.y * 8 + coords.x);
+
+	//Increase score passed pawns
+
+	return bestScore;
 }
 
 

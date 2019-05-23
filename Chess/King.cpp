@@ -166,7 +166,18 @@ int King::GetScore()
 
 int King::GetBetterScore()
 {
-	return 0;
+	int bestScore = score;
+
+	if (brd.blackPieces.size() > 8)
+	{
+		bestScore += boardPositionValue.at(coords.y * 8 + coords.x);
+	}
+	else
+	{
+		bestScore += endBoardPositionValue.at(coords.y * 8 + coords.x);
+	}
+
+	return bestScore;
 }
 
 

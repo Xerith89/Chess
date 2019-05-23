@@ -373,6 +373,10 @@ int Queen::GetScore()
 
 int Queen::GetBetterScore()
 {
-	return 0;
+	int bestScore = score;
+
+	bestScore += boardPositionValue.at(coords.y * 8 + coords.x);
+
+	return bestScore;
 }
 
