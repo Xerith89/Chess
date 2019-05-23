@@ -169,7 +169,23 @@ int Pawn::GetBetterScore()
 {
 	int bestScore = score;
 
-	bestScore += boardPositionValue.at(coords.y * 8 + coords.x);
+	bool passed = false;
+
+	//Check if there is anything in pawn's way
+	for (int i = coords.y; i < 8; i++)
+	{
+		auto piece = brd.whitePieces.find({ coords.x,i });
+		if (piece != brd.whitePieces.end())
+		{
+			bestScore += boardPositionValue.at(coords.y * 8 + coords.x);
+		}
+		else
+		{
+			//If not, double the value of the position
+			bestScore += (boardPositionValue.at(coords.y * 8 + coords.x)*2);
+		}
+	}
+	
 
 	//Increase score passed pawns
 
