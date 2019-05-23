@@ -168,7 +168,7 @@ int King::GetBetterScore()
 {
 	int bestScore = score;
 
-	if (brd.blackPieces.size() > 8)
+	if (brd.blackPieces.size() > 6)
 	{
 		bestScore += boardPositionValue.at(coords.y * 8 + coords.x);
 	}

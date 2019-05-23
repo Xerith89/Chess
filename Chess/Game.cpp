@@ -3,8 +3,7 @@
 /*
 BUG LIST
 TODO LIST
-.Six depth minimax
-.Alpha beta
+.10 depth minimax with AB and transposition table
 .Improved evaluation function
 .Move ordering/null move pruning
 */
