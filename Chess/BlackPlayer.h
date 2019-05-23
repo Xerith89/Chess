@@ -43,7 +43,7 @@ private:
 	std::random_device rd;
 	std::mt19937 rng;
 	Timer timer;
-	//Minimax variables
+	//Minimax Stuff
 	Map initialState;
 	Map whiteInitialState;
 	std::set<Coords> initialWhitePieceTargets;

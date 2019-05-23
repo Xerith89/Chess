@@ -3,9 +3,8 @@
 /*
 BUG LIST
 TODO LIST
-.10 depth minimax with AB and transposition table
-.Improved evaluation function
-.Move ordering/null move pruning
+.16 depth with transposition table
+.12 depth with Move ordering/null move pruning
 */
 
 Game::Game(Window & wnd)
@@ -479,8 +478,8 @@ void Game::Render()
 		if (!isMultiplayer && ImGui::Begin("Hint"))
 		{
 			ImGui::SetWindowPos(ImVec2(580, 490));
-			ImGui::SetWindowSize(ImVec2(150, 85));
-			if (ImGui::Button("Hint", ImVec2(128, 50)))
+			ImGui::SetWindowSize(ImVec2(150, 70));
+			if (ImGui::Button("Hint", ImVec2(128, 32)))
 			{
 				whitePlayer.GetBestMove();
 			}

@@ -169,8 +169,6 @@ int Pawn::GetBetterScore()
 {
 	int bestScore = score;
 
-	bool passed = false;
-
 	//Check if there is anything in pawn's way
 	for (int i = coords.y; i < 8; i++)
 	{
@@ -186,9 +184,6 @@ int Pawn::GetBetterScore()
 		}
 	}
 	
-
-	//Increase score passed pawns
-
 	return bestScore;
 }
 
