@@ -912,6 +912,20 @@ int BlackPlayer::TestMoveScore() const
 	return score;
 }
 
+int BlackPlayer::BetterTestMoveScore() const
+{
+	int score = 0;
+	for (const auto& p : brd.blackPieces)
+	{
+		score += p.second->GetBetterScore();
+	}
+	for (const auto& p : brd.whitePieces)
+	{
+		score -= p.second->GetBetterScore();
+	}
+	return score;
+}
+
 std::pair<Coords, Coords> BlackPlayer::Minimax(std::vector < std::pair<Coords, Coords>> moves_in)
 {
 	//for evaluating score

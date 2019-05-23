@@ -59,7 +59,10 @@ private:
 	void DoBlackMove(std::pair<Coords, Coords>);
 	void ResetAll();
 	int TestMoveScore()const;
+	int BetterTestMoveScore()const;
 	void DoWhiteMove(const std::pair<Coords, Coords> input);
 	std::pair<Coords, Coords> Minimax(std::vector<std::pair<Coords, Coords>> moves_in);
 	std::pair<Coords, Coords> MinimaxSix(std::vector<std::pair<Coords, Coords>> moves_in);
+	std::pair<Coords, Coords> MinimaxTwelve(std::vector<std::pair<Coords, Coords>> moves_in);
+	std::pair<Coords, Coords> MinimaxSixteen(std::vector<std::pair<Coords, Coords>> moves_in);
 };
