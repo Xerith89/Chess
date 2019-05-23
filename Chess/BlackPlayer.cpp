@@ -40,7 +40,7 @@ void BlackPlayer::DrawChecked(Graphics & gfx) const
 
 void BlackPlayer::Promote(Map * map)
 {
-	std::uniform_int_distribution<int> promotedPiece(0, std::max(0,3));
+	std::uniform_int_distribution<int> promotedPiece(0, std::max(0,10));
 	int piece = promotedPiece(rng);
 	//Bishop
 	switch (piece)
@@ -50,15 +50,22 @@ void BlackPlayer::Promote(Map * map)
 		promotion = false;
 		break;
 	case 1:
-		map->insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Knight>(pawnInstance->GetCoords().x, 7, "./Sprites/knightB.bmp", false, brd));
-		promotion = false;
-		break;
 	case 2:
-		map->insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Queen>(pawnInstance->GetCoords().x, 7, "./Sprites/queenB.bmp", false, brd));
+		map->insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Rook>(pawnInstance->GetCoords().x, 7, "./Sprites/rookB.bmp", false, brd));
 		promotion = false;
 		break;
 	case 3:
-		map->insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Rook>(pawnInstance->GetCoords().x, 7, "./Sprites/rookB.bmp", false, brd));
+	case 4:
+	case 5:
+		map->insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Knight>(pawnInstance->GetCoords().x, 7, "./Sprites/knightB.bmp", false, brd));
+		promotion = false;
+		break;
+	case 6:
+	case 7:
+	case 8:
+	case 9:
+	case 10:
+		map->insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Queen>(pawnInstance->GetCoords().x, 7, "./Sprites/queenB.bmp", false, brd));
 		promotion = false;
 		break;
 	}
