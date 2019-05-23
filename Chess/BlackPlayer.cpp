@@ -731,7 +731,7 @@ void BlackPlayer::MinimaxMoves()
 	initialBlackKingLoc = brd.GetBlackKingLoc();
 	initialWhiteKingLoc = brd.GetWhiteKingLoc();
 
-	auto move = MinimaxSix(movelist);
+	auto move = MinimaxTwelve(movelist);
 
 	//Assign the current position and new position to variables
 	auto newloc = move.second;
@@ -1128,6 +1128,317 @@ std::pair<Coords, Coords> BlackPlayer::MinimaxSix(std::vector<std::pair<Coords, 
 							ResetWhiteStep(whiteThird);
 							
 							//We don't need to explore further for this move
+							if (bestMoveMaxValue > beta)
+								break;
+						}
+						ResetBlackStep(blackThird);
+						if (bestMoveMinValue < alpha)
+							break;
+					}
+					ResetWhiteStep(whiteSecond);
+					if (bestMoveMaxValue > beta)
+						break;
+				}
+				ResetBlackStep(blackSecond);
+				if (bestMoveMinValue < alpha)
+					break;
+			}
+			//Undo any moves
+			ResetAllWhite();
+		}
+		//Undo everything
+		ResetAll();
+	}
+	//Undo everything
+	ResetAll();
+
+	if (bestMoves.size() > 0)
+	{
+		int maximum = bestMoves.size() - 1;
+		std::uniform_int_distribution<int> movepick(0, std::max(0, maximum));
+		int move_roll = movepick(rng);
+		std::set<std::pair<Coords, Coords>>::const_iterator it(bestMoves.begin());
+		advance(it, move_roll);
+		bestMove = *it;
+	}
+
+	return bestMove;
+}
+
+std::pair<Coords, Coords> BlackPlayer::MinimaxTwelve(std::vector<std::pair<Coords, Coords>> moves_in)
+{
+
+	int bestMoveMaxValue = -99999;
+	int bestMoveMinValue = 99999;
+	int alpha = bestMoveMaxValue;
+	int beta = bestMoveMinValue;
+
+	std::vector<std::pair<Coords, Coords>> whiteMovesInitial;
+	std::vector<std::pair<Coords, Coords>> whiteMovesSecond;
+	std::vector<std::pair<Coords, Coords>> whiteMovesThird;
+	std::vector<std::pair<Coords, Coords>> whiteMovesFourth;
+	std::vector<std::pair<Coords, Coords>> whiteMovesFifth;
+	std::vector<std::pair<Coords, Coords>> whiteMovesSixth;
+	std::vector<std::pair<Coords, Coords>> blackMovesSecond;
+	std::vector<std::pair<Coords, Coords>> blackMovesThird;
+	std::vector<std::pair<Coords, Coords>> blackMovesFourth;
+	std::vector<std::pair<Coords, Coords>> blackMovesFifth;
+	std::vector<std::pair<Coords, Coords>> blackMovesSixth;
+	std::set<std::pair<Coords, Coords>> bestMoves;
+	bestMoves.clear();
+
+	//Root 
+	for (const auto& blackInitial : moves_in)
+	{
+		DoBlackMove(blackInitial);
+
+		whiteMovesInitial.clear();
+		whiteMovesSecond.clear();
+		whiteMovesThird.clear();
+		whiteMovesFourth.clear();
+		whiteMovesFifth.clear();
+		whiteMovesSixth.clear();
+		blackMovesSecond.clear();
+		blackMovesThird.clear();
+		blackMovesFourth.clear();
+		blackMovesFifth.clear();
+		blackMovesSixth.clear();
+
+		value = 0;
+		//Generate white moves
+		for (const auto& p : brd.whitePieces)
+		{
+			std::vector<std::pair<Coords, Coords>> temp;
+			temp = p.second->GetMoves();
+			whiteMovesInitial.insert(whiteMovesInitial.end(), temp.begin(), temp.end());
+		}
+
+		for (const auto& whiteInitial : whiteMovesInitial)
+		{
+			//do white move
+			DoWhiteMove(whiteInitial);
+			whiteMovesSecond.clear();
+			whiteMovesThird.clear();
+			whiteMovesFourth.clear();
+			whiteMovesFifth.clear();
+			whiteMovesSixth.clear();
+			blackMovesSecond.clear();
+			blackMovesThird.clear();
+			blackMovesFourth.clear();
+			blackMovesFifth.clear();
+			blackMovesSixth.clear();
+			//Generate black moves
+			for (const auto& l : brd.blackPieces)
+			{
+				std::vector<std::pair<Coords, Coords>> temp;
+				temp = l.second->GetMoves();
+				blackMovesSecond.insert(blackMovesSecond.end(), temp.begin(), temp.end());
+			}
+			//Do Black moves
+			for (const auto& blackSecond : blackMovesSecond)
+			{
+				DoBlackMove(blackSecond);
+
+				whiteMovesSecond.clear();
+				whiteMovesThird.clear();
+				whiteMovesFourth.clear();
+				whiteMovesFifth.clear();
+				whiteMovesSixth.clear();
+				blackMovesThird.clear();
+				blackMovesFourth.clear();
+				blackMovesFifth.clear();
+				blackMovesSixth.clear();
+				//Generate White Moves
+				for (const auto& q : brd.whitePieces)
+				{
+					std::vector<std::pair<Coords, Coords>> temp;
+					temp = q.second->GetMoves();
+					whiteMovesSecond.insert(whiteMovesSecond.end(), temp.begin(), temp.end());
+				}
+
+				for (const auto& whiteSecond : whiteMovesSecond)
+				{
+					DoWhiteMove(whiteSecond);
+
+					whiteMovesThird.clear();
+					whiteMovesFourth.clear();
+					whiteMovesFifth.clear();
+					whiteMovesSixth.clear();
+					blackMovesThird.clear();
+					blackMovesFourth.clear();
+					blackMovesFifth.clear();
+					blackMovesSixth.clear();
+					//Generate Black Moves
+					for (const auto& t : brd.blackPieces)
+					{
+						std::vector<std::pair<Coords, Coords>> temp;
+						temp = t.second->GetMoves();
+						blackMovesThird.insert(blackMovesThird.end(), temp.begin(), temp.end());
+					}
+
+					for (const auto& blackThird : blackMovesThird)
+					{
+						//Do final set of black moves
+						DoBlackMove(blackThird);
+						whiteMovesThird.clear();
+						whiteMovesFourth.clear();
+						whiteMovesFifth.clear();
+						whiteMovesSixth.clear();
+						blackMovesFourth.clear();
+						blackMovesFifth.clear();
+						blackMovesSixth.clear();
+						//Generate White Moves
+						for (const auto& z : brd.whitePieces)
+						{
+							std::vector<std::pair<Coords, Coords>> temp;
+							temp = z.second->GetMoves();
+							whiteMovesThird.insert(whiteMovesThird.end(), temp.begin(), temp.end());
+						}
+
+						for (const auto& whiteThird : whiteMovesThird)
+						{
+							DoWhiteMove(whiteThird);
+
+							whiteMovesFourth.clear();
+							whiteMovesFifth.clear();
+							whiteMovesSixth.clear();
+							blackMovesFourth.clear();
+							blackMovesFifth.clear();
+							blackMovesSixth.clear();
+
+							for (const auto& y : brd.blackPieces)
+							{
+								std::vector<std::pair<Coords, Coords>> temp;
+								temp = y.second->GetMoves();
+								blackMovesFourth.insert(blackMovesFourth.end(), temp.begin(), temp.end());
+							}
+
+							for (const auto& blackFourth : blackMovesFourth)
+							{
+
+								DoBlackMove(blackFourth);
+								
+								whiteMovesFourth.clear();
+								whiteMovesFifth.clear();
+								whiteMovesSixth.clear();
+								blackMovesFifth.clear();
+								blackMovesSixth.clear();
+
+								for (const auto& n : brd.whitePieces)
+								{
+									std::vector<std::pair<Coords, Coords>> temp;
+									temp = n.second->GetMoves();
+									whiteMovesFourth.insert(whiteMovesFourth.end(), temp.begin(), temp.end());
+								}
+
+								for (const auto& whiteFourth : whiteMovesFourth)
+								{
+									DoWhiteMove(whiteFourth);
+
+									whiteMovesFifth.clear();
+									whiteMovesSixth.clear();
+									blackMovesFifth.clear();
+									blackMovesSixth.clear();
+
+									for (const auto& y : brd.blackPieces)
+									{
+										std::vector<std::pair<Coords, Coords>> temp;
+										temp = y.second->GetMoves();
+										blackMovesFifth.insert(blackMovesFifth.end(), temp.begin(), temp.end());
+									}
+
+									for (const auto& blackFifth : blackMovesFifth)
+									{
+
+										DoBlackMove(blackFifth);
+
+										whiteMovesFifth.clear();
+										whiteMovesSixth.clear();
+										blackMovesSixth.clear();
+
+										for (const auto& b : brd.whitePieces)
+										{
+											std::vector<std::pair<Coords, Coords>> temp;
+											temp = b.second->GetMoves();
+											whiteMovesFifth.insert(whiteMovesFifth.end(), temp.begin(), temp.end());
+										}
+
+										for (const auto& whiteFifth : whiteMovesFifth)
+										{
+											DoWhiteMove(whiteFifth);
+
+											whiteMovesSixth.clear();
+											blackMovesSixth.clear();
+
+											for (const auto& e : brd.blackPieces)
+											{
+												std::vector<std::pair<Coords, Coords>> temp;
+												temp = e.second->GetMoves();
+												blackMovesSixth.insert(blackMovesSixth.end(), temp.begin(), temp.end());
+											}
+
+											for (const auto& blackSixth : blackMovesSixth)
+											{
+												DoBlackMove(blackSixth);
+
+												whiteMovesSixth.clear();
+
+												for (const auto& t : brd.whitePieces)
+												{
+													std::vector<std::pair<Coords, Coords>> temp;
+													temp = t.second->GetMoves();
+													whiteMovesSixth.insert(whiteMovesSixth.end(), temp.begin(), temp.end());
+												}
+
+												for (const auto& whiteSixth : whiteMovesSixth)
+												{
+													DoWhiteMove(whiteSixth);
+
+													value += BetterTestMoveScore();
+
+													if (value < bestMoveMinValue)
+													{
+														bestMoveMinValue = value;
+														beta = value;
+													}
+													//The higher the value, the better the move for black
+													else if (value > bestMoveMaxValue)
+													{
+														bestMoveMaxValue = value;
+														bestMove = blackInitial;
+														alpha = value;
+														bestMoves.clear();
+													}
+													else if (value == bestMoveMaxValue)
+													{
+														bestMoves.insert(blackInitial);
+													}
+
+													ResetWhiteStep(whiteSixth);
+													if (bestMoveMaxValue > beta)
+														break;
+												}
+												ResetBlackStep(blackSixth);
+												if (bestMoveMinValue < alpha)
+													break;
+											}
+											ResetWhiteStep(whiteFifth);
+											if (bestMoveMaxValue > beta)
+												break;
+										}
+										ResetBlackStep(blackFifth);
+										if (bestMoveMinValue < alpha)
+											break;
+									}
+									ResetWhiteStep(whiteFourth);
+									if (bestMoveMaxValue > beta)
+										break;
+								}
+								ResetBlackStep(blackFourth);
+								if (bestMoveMinValue < alpha)
+									break;
+							}
+							ResetWhiteStep(whiteThird);
 							if (bestMoveMaxValue > beta)
 								break;
 						}
