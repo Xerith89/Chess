@@ -22,8 +22,8 @@ void WhitePlayer::DoTurn()
 
 			//Translate the mouse position to board coords
 			selectedPiece = brd.TranslateCoords(wnd.inpt.GetMseX(), wnd.inpt.GetMseY());
-			auto piece = brd.whitePieces.find({ selectedPiece.x,selectedPiece.y });
-			if (piece != brd.whitePieces.end())
+			
+			if (auto piece = brd.whitePieces.find({ selectedPiece.x,selectedPiece.y }); piece != brd.whitePieces.end())
 			{
 				if (TestForCheckMate())
 				{
@@ -55,8 +55,7 @@ void WhitePlayer::DoTurn()
 			auto it = (std::find_if(selectedMoves.begin(), selectedMoves.end(), [&](const std::pair<Coords, Coords>& rhs) {
 			return selectedTarget == rhs.second;}));
 
-			auto piece = brd.whitePieces.find({ selectedPiece.x,selectedPiece.y });
-			if (piece != brd.whitePieces.end() && it != selectedMoves.end() )
+			if (auto piece = brd.whitePieces.find({ selectedPiece.x,selectedPiece.y }); piece != brd.whitePieces.end() && it != selectedMoves.end() )
 			{
 				//Insert at new position and delete old one
 				piece->second.get()->MoveTo({ selectedTarget.x, selectedTarget.y });
@@ -101,8 +100,7 @@ void WhitePlayer::DoTurn()
 				}
 
 				//Check if we're moving a pawn so we can check for promotion
-				pawnInstance = dynamic_cast<Pawn*>(brd.whitePieces.find({ selectedTarget.x, selectedTarget.y })->second.get());
-				if (pawnInstance != nullptr && selectedPiece.y == 1 && selectedTarget.y == 0)
+				if (pawnInstance = dynamic_cast<Pawn*>(brd.whitePieces.find({ selectedTarget.x, selectedTarget.y })->second.get()); pawnInstance != nullptr && selectedPiece.y == 1 && selectedTarget.y == 0)
 				{
 					promotion = true;
 				}
@@ -158,8 +156,7 @@ void WhitePlayer::DoTurn()
 void WhitePlayer::DoMPlayUpdate(const std::pair<Coords, Coords> input, const int promoteType)
 {
 	selectedPiece = input.first;
-	auto piece = brd.whitePieces.find({ selectedPiece.x,selectedPiece.y });
-	if (piece != brd.whitePieces.end())
+	if (auto piece = brd.whitePieces.find({ selectedPiece.x,selectedPiece.y }); piece != brd.whitePieces.end())
 	{
 		if (TestForCheckMate())
 		{
@@ -189,7 +186,6 @@ void WhitePlayer::DoMPlayUpdate(const std::pair<Coords, Coords> input, const int
 		auto it = (std::find_if(selectedMoves.begin(), selectedMoves.end(), [&](const std::pair<Coords, Coords> & rhs) {
 			return selectedTarget == rhs.second; }));
 
-		auto piece = brd.whitePieces.find({ selectedPiece.x,selectedPiece.y });
 		if (piece != brd.whitePieces.end() && it != selectedMoves.end())
 		{
 			//Insert at new position and delete old one
@@ -204,8 +200,7 @@ void WhitePlayer::DoMPlayUpdate(const std::pair<Coords, Coords> input, const int
 				//Left castling
 				if (selectedTarget.x == 1 && !hasCastled)
 				{
-					auto rook = brd.whitePieces.find({ 0,7 });
-					if (rook != brd.whitePieces.end())
+					if (auto rook = brd.whitePieces.find({ 0,7 }); rook != brd.whitePieces.end())
 					{
 						rook->second.get()->MoveTo({ 2, 7 });
 						brd.whitePieces.insert_or_assign({ 2, 7 }, std::move(rook->second));
@@ -218,8 +213,7 @@ void WhitePlayer::DoMPlayUpdate(const std::pair<Coords, Coords> input, const int
 				//right castling
 				if (selectedTarget.x == 5 && !hasCastled)
 				{
-					auto rook = brd.whitePieces.find({ 7,7 });
-					if (rook != brd.whitePieces.end())
+					if (auto rook = brd.whitePieces.find({ 7,7 }); rook != brd.whitePieces.end())
 					{
 						rook->second.get()->MoveTo({ 4, 7 });
 						brd.whitePieces.insert_or_assign({ 4, 7 }, std::move(rook->second));
@@ -234,10 +228,8 @@ void WhitePlayer::DoMPlayUpdate(const std::pair<Coords, Coords> input, const int
 				hasCastled = true;
 			}
 
-			//Check if we're moving a pawn so we can check for promotion
-			pawnInstance = dynamic_cast<Pawn*>(brd.whitePieces.find({ selectedTarget.x, selectedTarget.y })->second.get());
-			
-			if (pawnInstance != nullptr && selectedPiece.y == 1 && selectedTarget.y == 0)
+			//Check if we're moving a pawn so we can check for promotion			
+			if (pawnInstance = dynamic_cast<Pawn*>(brd.whitePieces.find({ selectedTarget.x, selectedTarget.y })->second.get()); pawnInstance != nullptr && selectedPiece.y == 1 && selectedTarget.y == 0)
 			{
 				switch (promoteType)
 				{
@@ -304,8 +296,8 @@ void WhitePlayer::DoMPlayUpdate(const std::pair<Coords, Coords> input, const int
 
 void WhitePlayer::DrawPossibleMoves(Graphics& gfx)
 {
-	const auto moves = brd.whitePieces.find({ selectedPiece.x, selectedPiece.y });
-	if (moves != brd.whitePieces.end())
+	
+	if (const auto moves = brd.whitePieces.find({ selectedPiece.x, selectedPiece.y }); moves != brd.whitePieces.end())
 	{
 		for (const auto& m : selectedMoves)
 		{
@@ -404,8 +396,8 @@ void WhitePlayer::SetPlayerTurn(bool myTurn)
 void WhitePlayer::TestForCheck()
 {
 	//Go through the possible targets of the black pieces and see if we're checked.
-	const auto p = std::find(brd.blackPieceTargets.begin(), brd.blackPieceTargets.end(), brd.GetWhiteKingLoc());
-	if (p != brd.blackPieceTargets.end())
+	
+	if (const auto p = std::find(brd.blackPieceTargets.begin(), brd.blackPieceTargets.end(), brd.GetWhiteKingLoc()); p != brd.blackPieceTargets.end())
 	{
 		checked = true;
 		return;
@@ -466,18 +458,10 @@ void WhitePlayer::DoBlackMove(std::pair<Coords, Coords> input)
 	//Assign the current position and new position to variables
 	auto newloc = input.second;
 	auto currentloc = input.first;
-	//find the piece in the map based on the current position
-	auto piece = brd.blackPieces.find({ currentloc.x,currentloc.y });
-
-	//As long as we found the piece
-	if (piece != brd.blackPieces.end())
+	
+	if (auto piece = brd.blackPieces.find({ currentloc.x,currentloc.y }); piece != brd.blackPieces.end())
 	{
-
-		//Check if we're moving our king, if so then update the king's position
-		kingInstance = dynamic_cast<King*>(piece->second.get());
-		//TestForCastling();
-
-		if (kingInstance)
+		if (kingInstance = dynamic_cast<King*>(piece->second.get()); kingInstance)
 		{
 			brd.UpdateBlackKingLoc(newloc);
 
@@ -538,8 +522,8 @@ int WhitePlayer::TestMoveScore() const
 
 void WhitePlayer::DoWhiteMove(const std::pair<Coords, Coords> input)
 {
-	auto piece = brd.whitePieces.find({ input.first.x,input.first.y });
-	if (piece != brd.whitePieces.end())
+	
+	if (auto piece = brd.whitePieces.find({ input.first.x,input.first.y }); piece != brd.whitePieces.end())
 	{
 		kingInstance = dynamic_cast<King*>(piece->second.get());
 		pawnInstance = dynamic_cast<Pawn*>(piece->second.get());
@@ -590,14 +574,7 @@ std::pair<Coords, Coords> WhitePlayer::MinimaxAB(std::vector<std::pair<Coords, C
 	std::vector<std::pair<Coords, Coords>> blackMoves;
 	std::vector<std::pair<Coords, Coords>> temp;
 	std::set<std::pair<Coords, Coords>> bestMoves;
-	//for every move in the input moves list
-	//We want to do that move
-	//We then want to go through the white piece moves based off of that move
-	//for each one we want to do each move
-	//If it is greater than the current total (starting at -99999) then we want to save the move
-	//We then reset the white pieces and continue til the loop ends
-	//We then reset the black pieces and continue to the loop ends
-	//We then reset the all maps and targets and return the best move
+	
 	bestMoves.clear();
 	for (const auto& m : moves_in)
 	{

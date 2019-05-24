@@ -106,11 +106,7 @@ bool Board::CheckValidMove(const Coords from, const Coords to,const bool whitePi
 		myKing = blackKingLoc;
 	}
 
-	//look up the piece with the from coords
-	auto piece = myPieces.find({ from.x,from.y });
-	
-	//If we find it
-	if (piece != myPieces.end())
+	if (auto piece = myPieces.find({ from.x,from.y }); piece != myPieces.end())
 	{
 		//Add the new position
 		myPieces.insert_or_assign({ to.x, to.y }, std::move(piece->second));

@@ -5,9 +5,7 @@ GUI::GUI(Board& brd)
 	promotionSprite("./Sprites/promoteW.bmp"),
 	blackPromotionSprite("./Sprites/promoteB.bmp"),
 	brd(brd)
-{
-	
-}
+{}
 
 int GUI::GetPromoteGraphicX() const
 {

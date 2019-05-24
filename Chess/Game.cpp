@@ -3,7 +3,6 @@
 /*
 BUG LIST
 .AI is making worse moves with the better eval function.
-TODO LIST
 */
 
 Game::Game(Window & wnd)

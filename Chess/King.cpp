@@ -137,10 +137,6 @@ std::vector<std::pair<Coords, Coords>> King::GetMoves()
 		}
 	}
 
-	//Castling - if king is selected and its the first move, its going sideways,
-	//no pieces in the way of the rook, not in check, rook hasn't moved then add two steps left or right
-	//set castling to true
-
 	if (whitePiece)
 	{
 		brd.whitePieceTargets.insert(myTargetList.begin(), myTargetList.end());
