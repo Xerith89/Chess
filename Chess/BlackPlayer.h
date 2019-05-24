@@ -60,6 +60,7 @@ private:
 	void ResetAll();
 	int TestMoveScore()const;
 	int BetterTestMoveScore()const;
+	const int iterationLimit = 500000;
 	void DoWhiteMove(const std::pair<Coords, Coords> input);
 	std::pair<Coords, Coords> Minimax(std::vector<std::pair<Coords, Coords>> moves_in);
 	std::pair<Coords, Coords> MinimaxSix(std::vector<std::pair<Coords, Coords>> moves_in);

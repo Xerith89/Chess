@@ -1,7 +1,5 @@
 #include "BlackPlayer.h"
 
-
-
 BlackPlayer::BlackPlayer(Window& wnd,Board & brd, GUI& gui)
 	:
 	Actor(wnd,brd),
@@ -42,7 +40,7 @@ void BlackPlayer::Promote(Map * map)
 {
 	std::uniform_int_distribution<int> promotedPiece(0, std::max(0,10));
 	int piece = promotedPiece(rng);
-	//Bishop
+
 	switch (piece)
 	{
 	case 0:
@@ -240,7 +238,6 @@ void BlackPlayer::mPromote(Map* map)
 		y = wnd.inpt.GetMseY();
 	}
 
-	//Bishop
 	if (x >= gui.GetPromoteGraphicX() + 25 && x <= gui.GetPromoteGraphicX() + 85 && y >= gui.GetPromoteGraphicY() + 75 && y <= gui.GetPromoteGraphicY() + 130)
 	{
 		map->insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Bishop>(pawnInstance->GetCoords().x, 7, "./Sprites/bishopB.bmp", false, brd));
@@ -249,7 +246,7 @@ void BlackPlayer::mPromote(Map* map)
 		promotedPiece = 1;
 		packetReady = true;
 	}
-	//Knight
+	
 	if (x >= gui.GetPromoteGraphicX() + 155 && x <= gui.GetPromoteGraphicX() + 215 && y >= gui.GetPromoteGraphicY() + 75 && y <= gui.GetPromoteGraphicY() + 130)
 	{
 		map->insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Knight>(pawnInstance->GetCoords().x, 7, "./Sprites/knightB.bmp", false, brd));
@@ -258,7 +255,7 @@ void BlackPlayer::mPromote(Map* map)
 		promotedPiece = 2;
 		packetReady = true;
 	}
-	//Rook
+	
 	if (x >= gui.GetPromoteGraphicX() + 25 && x <= gui.GetPromoteGraphicX() + 85 && y >= gui.GetPromoteGraphicY() + 155 && y <= gui.GetPromoteGraphicY() + 210)
 	{
 		map->insert_or_assign({ pawnInstance->GetCoords().x, pawnInstance->GetCoords().y }, std::make_shared<Rook>(pawnInstance->GetCoords().x, 7, "./Sprites/rookB.bmp", false, brd));
@@ -267,7 +264,6 @@ void BlackPlayer::mPromote(Map* map)
 		promotedPiece = 3;
 		packetReady = true;
 	}
-	//Queen
 	
 	if (x >= gui.GetPromoteGraphicX() + 155 && x <= gui.GetPromoteGraphicX() + 215 && y >= gui.GetPromoteGraphicY() + 155 && y <= gui.GetPromoteGraphicY() + 210)
 	{
@@ -881,7 +877,6 @@ void BlackPlayer::DoBlackMove(std::pair<Coords, Coords> move)
 		{
 			p.second->GetTargets(&brd.whitePieces);
 		}
-
 		//We can only get moves that result in not being checked so we can safely assume we're not checked now
 		checked = false;
 	}
@@ -935,8 +930,6 @@ int BlackPlayer::BetterTestMoveScore() const
 
 std::pair<Coords, Coords> BlackPlayer::Minimax(std::vector < std::pair<Coords, Coords>> moves_in)
 {
-	//for evaluating score
-
 	int bestMoveValue = -99999;
 	int bestMoveWhiteValue = 99999;
 	std::vector<std::pair<Coords, Coords>> whiteMoves;
@@ -1172,6 +1165,7 @@ std::pair<Coords, Coords> BlackPlayer::MinimaxTwelve(std::vector<std::pair<Coord
 	int bestMoveMinValue = 99999;
 	int alpha = bestMoveMaxValue;
 	int beta = bestMoveMinValue;
+	int iterations = 0;
 
 	std::vector<std::pair<Coords, Coords>> whiteMovesInitial;
 	std::vector<std::pair<Coords, Coords>> whiteMovesSecond;
@@ -1400,6 +1394,7 @@ std::pair<Coords, Coords> BlackPlayer::MinimaxTwelve(std::vector<std::pair<Coord
 													{
 														bestMoveMinValue = value;
 														beta = value;
+														iterations++;
 													}
 													//The higher the value, the better the move for black
 													else if (value > bestMoveMaxValue)
@@ -1408,49 +1403,81 @@ std::pair<Coords, Coords> BlackPlayer::MinimaxTwelve(std::vector<std::pair<Coord
 														bestMove = blackInitial;
 														alpha = value;
 														bestMoves.clear();
+														iterations++;
 													}
 													else if (value == bestMoveMaxValue)
 													{
+														iterations++;
 														bestMoves.insert(blackInitial);
 													}
-
+													
 													ResetWhiteStep(whiteSixth);
+													if (iterations >= iterationLimit)
+														break;
+													
 													if (bestMoveMaxValue > beta)
 														break;
 												}
 												ResetBlackStep(blackSixth);
+												if (iterations >= iterationLimit)
+													break;
+
 												if (bestMoveMinValue < alpha)
 													break;
 											}
 											ResetWhiteStep(whiteFifth);
+											if (iterations >= iterationLimit)
+												break;
+
 											if (bestMoveMaxValue > beta)
 												break;
 										}
 										ResetBlackStep(blackFifth);
+										if (iterations >= iterationLimit)
+											break;
+
 										if (bestMoveMinValue < alpha)
 											break;
 									}
 									ResetWhiteStep(whiteFourth);
+									if (iterations >= iterationLimit)
+										break;
+
 									if (bestMoveMaxValue > beta)
 										break;
 								}
 								ResetBlackStep(blackFourth);
+								if (iterations >= iterationLimit)
+									break;
+
 								if (bestMoveMinValue < alpha)
 									break;
 							}
 							ResetWhiteStep(whiteThird);
+							if (iterations >= iterationLimit)
+								break;
+
 							if (bestMoveMaxValue > beta)
 								break;
 						}
 						ResetBlackStep(blackThird);
+						if (iterations >= iterationLimit)
+							break;
+
 						if (bestMoveMinValue < alpha)
 							break;
 					}
 					ResetWhiteStep(whiteSecond);
+					if (iterations >= iterationLimit)
+						break;
+
 					if (bestMoveMaxValue > beta)
 						break;
 				}
 				ResetBlackStep(blackSecond);
+				if (iterations >= iterationLimit)
+					break;
+
 				if (bestMoveMinValue < alpha)
 					break;
 			}
@@ -1472,7 +1499,6 @@ std::pair<Coords, Coords> BlackPlayer::MinimaxTwelve(std::vector<std::pair<Coord
 		advance(it, move_roll);
 		bestMove = *it;
 	}
-
 	return bestMove;
 }
 
@@ -1510,8 +1536,6 @@ void BlackPlayer::ResetWhiteStep(std::pair<Coords, Coords> move)
 			brd.UpdateWhiteKingLoc(move.first);
 		}
 	}
-
-
 }
 
 void BlackPlayer::ResetAllWhite()

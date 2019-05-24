@@ -4,7 +4,7 @@
 BUG LIST
 TODO LIST
 .16 depth with transposition table
-.12 depth with Move ordering/null move pruning
+.12 depth with move ordering/null move pruning
 */
 
 Game::Game(Window & wnd)
