@@ -914,6 +914,7 @@ int BlackPlayer::TestMoveScore() const
 	return score;
 }
 
+
 int BlackPlayer::BetterTestMoveScore() const
 {
 	int score = 0;
@@ -926,6 +927,21 @@ int BlackPlayer::BetterTestMoveScore() const
 		score -= p.second->GetBetterScore();
 	}
 	return score;
+}
+
+void BlackPlayer::SortMoves(std::vector<std::pair<Coords, Coords>>& inputVec)
+{
+	std::sort(inputVec.begin(), inputVec.end(), [this,&inputVec](auto lhs, auto rhs) -> bool {
+		if (auto search = minimaxCache.find(*inputVec.begin()); search != minimaxCache.end())
+		{
+			if (auto searchTwo = minimaxCache.find(rhs); search != minimaxCache.end())
+			{
+				return search->second == searchTwo->second;
+			}
+		}
+		return false;
+	});
+
 }
 
 std::pair<Coords, Coords> BlackPlayer::Minimax(std::vector < std::pair<Coords, Coords>> moves_in)
@@ -1181,6 +1197,8 @@ std::pair<Coords, Coords> BlackPlayer::MinimaxTwelve(std::vector<std::pair<Coord
 	std::set<std::pair<Coords, Coords>> bestMoves;
 	bestMoves.clear();
 
+	SortMoves(moves_in);
+
 	//Root 
 	for (const auto& blackInitial : moves_in)
 	{
@@ -1207,6 +1225,8 @@ std::pair<Coords, Coords> BlackPlayer::MinimaxTwelve(std::vector<std::pair<Coord
 			whiteMovesInitial.insert(whiteMovesInitial.end(), temp.begin(), temp.end());
 		}
 
+		SortMoves(whiteMovesInitial);
+		
 		for (const auto& whiteInitial : whiteMovesInitial)
 		{
 			//do white move
@@ -1389,6 +1409,16 @@ std::pair<Coords, Coords> BlackPlayer::MinimaxTwelve(std::vector<std::pair<Coord
 													DoWhiteMove(whiteSixth);
 
 													value += TestMoveScore();
+
+													
+													if (auto it = minimaxCache.find(blackInitial); it != minimaxCache.end())
+													{
+														it->second = value;
+													}
+													else
+													{
+														minimaxCache.emplace(blackInitial, value);
+													}
 
 													if (value < bestMoveMinValue)
 													{

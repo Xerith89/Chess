@@ -43,7 +43,7 @@ private:
 	std::random_device rd;
 	std::mt19937 rng;
 	Timer timer;
-	//Minimax Stuff
+	//Minimax
 	Map initialState;
 	Map whiteInitialState;
 	std::set<Coords> initialWhitePieceTargets;
@@ -60,6 +60,8 @@ private:
 	void ResetAll();
 	int TestMoveScore()const;
 	int BetterTestMoveScore()const;
+	void SortMoves(std::vector<std::pair<Coords, Coords>>& inputVec);
+	std::map<std::pair<Coords, Coords>, int> minimaxCache;
 	const int iterationLimit = 500000;
 	void DoWhiteMove(const std::pair<Coords, Coords> input);
 	std::pair<Coords, Coords> Minimax(std::vector<std::pair<Coords, Coords>> moves_in);

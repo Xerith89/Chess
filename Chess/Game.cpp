@@ -4,7 +4,6 @@
 BUG LIST
 .AI is making worse moves with the better eval function.
 TODO LIST
-.transposition table and move sorting.
 */
 
 Game::Game(Window & wnd)
