@@ -1388,7 +1388,7 @@ std::pair<Coords, Coords> BlackPlayer::MinimaxTwelve(std::vector<std::pair<Coord
 												{
 													DoWhiteMove(whiteSixth);
 
-													value += BetterTestMoveScore();
+													value += TestMoveScore();
 
 													if (value < bestMoveMinValue)
 													{

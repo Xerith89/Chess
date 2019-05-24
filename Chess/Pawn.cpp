@@ -34,6 +34,10 @@ std::vector<std::pair<Coords, Coords>> Pawn::GetMoves()
 	{ 
 		firstMove = false; 
 	}
+	else
+	{
+		firstMove = true;
+	}
 	
 	//If we haven't moved then we want to check if the place is free up to two times
 	if (firstMove)

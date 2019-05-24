@@ -2,9 +2,9 @@
 
 /*
 BUG LIST
+.AI is making worse moves with the better eval function.
 TODO LIST
-.16 depth with transposition table
-.12 depth with move ordering/null move pruning
+.transposition table and move sorting.
 */
 
 Game::Game(Window & wnd)
