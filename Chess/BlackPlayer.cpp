@@ -11,11 +11,11 @@ BlackPlayer::BlackPlayer(Window& wnd,Board & brd, GUI& gui)
 
 void BlackPlayer::DoTurn()
 {
-	//timer.Start();
+	timer.Start();
 	//RandomMoves();
 	MinimaxMoves();
-	//std::string time("AI executed in : " + std::to_string(timer.Mark()) + " milliseconds.");
-	//MessageBox(wnd.GetHandle(), time.c_str(), "Speed", MB_OK);
+	std::string time("AI executed in : " + std::to_string(timer.Mark()) + " milliseconds.");
+	MessageBox(wnd.GetHandle(), time.c_str(), "Speed", MB_OK);
 }
 
 void BlackPlayer::DrawPieces(Graphics & gfx) const
@@ -928,6 +928,20 @@ void BlackPlayer::SortMoves(std::vector<std::pair<Coords, Coords>>& inputVec)
 
 }
 
+void BlackPlayer::SortMovesMin(std::vector<std::pair<Coords, Coords>>& inputVec)
+{
+	std::sort(inputVec.begin(), inputVec.end(), [this, &inputVec](auto lhs, auto rhs) -> bool {
+		if (auto search = minimaxCache.find(*inputVec.begin()); search != minimaxCache.end())
+		{
+			if (auto searchTwo = minimaxCache.find(rhs); search != minimaxCache.end())
+			{
+				return search->second < searchTwo->second;
+			}
+		}
+		return false;
+		});
+}
+
 std::pair<Coords, Coords> BlackPlayer::Minimax(std::vector < std::pair<Coords, Coords>> moves_in)
 {
 	int bestMoveValue = -99999;
@@ -1098,7 +1112,7 @@ std::pair<Coords, Coords> BlackPlayer::MinimaxSix(std::vector<std::pair<Coords, 
 						{
 							DoWhiteMove(whiteThird);
 
-							value += TestMoveScore();
+							value += BetterTestMoveScore();
 
 							if (value < bestMoveMinValue)
 							{
@@ -1208,9 +1222,8 @@ std::pair<Coords, Coords> BlackPlayer::MinimaxTwelve(std::vector<std::pair<Coord
 			temp = p.second->GetMoves();
 			whiteMovesInitial.insert(whiteMovesInitial.end(), temp.begin(), temp.end());
 		}
-
-		SortMoves(whiteMovesInitial);
 		
+		SortMovesMin(whiteMovesInitial);
 		for (const auto& whiteInitial : whiteMovesInitial)
 		{
 			//do white move
@@ -1232,6 +1245,7 @@ std::pair<Coords, Coords> BlackPlayer::MinimaxTwelve(std::vector<std::pair<Coord
 				temp = l.second->GetMoves();
 				blackMovesSecond.insert(blackMovesSecond.end(), temp.begin(), temp.end());
 			}
+			SortMoves(blackMovesSecond);
 			//Do Black moves
 			for (const auto& blackSecond : blackMovesSecond)
 			{
@@ -1253,7 +1267,7 @@ std::pair<Coords, Coords> BlackPlayer::MinimaxTwelve(std::vector<std::pair<Coord
 					temp = q.second->GetMoves();
 					whiteMovesSecond.insert(whiteMovesSecond.end(), temp.begin(), temp.end());
 				}
-
+				SortMovesMin(whiteMovesSecond);
 				for (const auto& whiteSecond : whiteMovesSecond)
 				{
 					DoWhiteMove(whiteSecond);
@@ -1273,7 +1287,7 @@ std::pair<Coords, Coords> BlackPlayer::MinimaxTwelve(std::vector<std::pair<Coord
 						temp = t.second->GetMoves();
 						blackMovesThird.insert(blackMovesThird.end(), temp.begin(), temp.end());
 					}
-
+					SortMoves(blackMovesThird);
 					for (const auto& blackThird : blackMovesThird)
 					{
 						//Do final set of black moves
@@ -1392,8 +1406,8 @@ std::pair<Coords, Coords> BlackPlayer::MinimaxTwelve(std::vector<std::pair<Coord
 												{
 													DoWhiteMove(whiteSixth);
 
-													value += TestMoveScore();
-
+													value += BetterTestMoveScore();
+													
 													
 													if (auto it = minimaxCache.find(blackInitial); it != minimaxCache.end())
 													{

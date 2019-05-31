@@ -78,6 +78,7 @@ private:
 	Server server;
 	std::string data;
 	Client client;
+	Timer timer;
 public:
 	Game(Window& wnd);
 	~Game() = default;

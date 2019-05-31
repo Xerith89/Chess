@@ -61,6 +61,7 @@ private:
 	int TestMoveScore()const;
 	int BetterTestMoveScore()const;
 	void SortMoves(std::vector<std::pair<Coords, Coords>>& inputVec);
+	void SortMovesMin(std::vector<std::pair<Coords, Coords>>& inputVec);
 	std::map<std::pair<Coords, Coords>, int> minimaxCache;
 	const int iterationLimit = 500000;
 	void DoWhiteMove(const std::pair<Coords, Coords> input);

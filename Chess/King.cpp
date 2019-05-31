@@ -32,7 +32,8 @@ std::vector<std::pair<Coords, Coords>> King::GetMoves()
 	int new_y = 1;
 	//Check pieces left up - we don't want to go past our white pieces or the end of the board
 	if (myPieces->count({ coords.x - new_x,coords.y - new_y }) == 0 && (coords.x - new_x) >= minCoord.x
-		&& (coords.y - new_y) >= minCoord.y && Coords{ coords.x - new_x,coords.y - new_y } != opponentKingPos)
+		&& (coords.y - new_y) >= minCoord.y && Coords{ coords.x - new_x,coords.y - new_y } != opponentKingPos
+		&& coords.y - new_y != (opponentKingPos.y+new_y || opponentKingPos.y || opponentKingPos.y-new_y) && coords.x - new_x != (opponentKingPos.x|| opponentKingPos.x-new_x ||opponentKingPos.x+new_x))
 	{
 		if (std::none_of(opponentTargetList.begin(), opponentTargetList.end(), [&](const Coords rhs) {
 			return rhs == Coords{ coords.x - new_x,coords.y - new_y }; }))
@@ -45,7 +46,8 @@ std::vector<std::pair<Coords, Coords>> King::GetMoves()
 	
 	//Check pieces right up - we don't want to go past our white pieces or the end of the board
 	if (myPieces->count({ coords.x + new_x,coords.y - new_y }) == 0 && (coords.x + new_x) <= maxCoord.x
-		&& (coords.y - new_y) >= minCoord.y && Coords{ coords.x + new_x,coords.y - new_y } != opponentKingPos)
+		&& (coords.y - new_y) >= minCoord.y && Coords{ coords.x + new_x,coords.y - new_y } != opponentKingPos
+		&& coords.y - new_y != (opponentKingPos.y + new_y || opponentKingPos.y || opponentKingPos.y - new_y) && coords.x - new_x != (opponentKingPos.x || opponentKingPos.x - new_x || opponentKingPos.x + new_x))
 	{
 		if (std::none_of(opponentTargetList.begin(), opponentTargetList.end(), [&](const Coords rhs) {
 			return rhs == Coords{ coords.x + new_x,coords.y - new_y }; }))
@@ -57,7 +59,8 @@ std::vector<std::pair<Coords, Coords>> King::GetMoves()
 
 	//Check pieces right down - we don't want to go past our white pieces or the end of the board
 	if (myPieces->count({ coords.x + new_x,coords.y + new_y }) == 0 && (coords.x + new_x) <= maxCoord.x
-		&& (coords.y + new_y) <= maxCoord.y && Coords{ coords.x + new_x,coords.y + new_y } != opponentKingPos)
+		&& (coords.y + new_y) <= maxCoord.y && Coords{ coords.x + new_x,coords.y + new_y } != opponentKingPos
+		&& coords.y - new_y != (opponentKingPos.y + new_y || opponentKingPos.y || opponentKingPos.y - new_y) && coords.x - new_x != (opponentKingPos.x || opponentKingPos.x - new_x || opponentKingPos.x + new_x))
 	{
 		if (std::none_of(opponentTargetList.begin(), opponentTargetList.end(), [&](const Coords rhs) {
 		return rhs == Coords{ coords.x + new_x,coords.y + new_y }; }))
@@ -70,7 +73,8 @@ std::vector<std::pair<Coords, Coords>> King::GetMoves()
 
 	//Check pieces left down - we don't want to go past our white pieces or the end of the board
 	if (myPieces->count({ coords.x - new_x,coords.y + new_y }) == 0 && (coords.x - new_x) >= minCoord.x
-		&& (coords.y + new_y) <= maxCoord.y && Coords{ coords.x - new_x,coords.y + new_y } != opponentKingPos)
+		&& (coords.y + new_y) <= maxCoord.y && Coords{ coords.x - new_x,coords.y + new_y } != opponentKingPos
+		&& coords.y - new_y != (opponentKingPos.y + new_y || opponentKingPos.y || opponentKingPos.y - new_y) && coords.x - new_x != (opponentKingPos.x || opponentKingPos.x - new_x || opponentKingPos.x + new_x))
 	{
 		if (std::none_of(opponentTargetList.begin(), opponentTargetList.end(), [&](const Coords rhs) {
 			return rhs == Coords{ coords.x - new_x,coords.y + new_y }; }))
@@ -81,7 +85,8 @@ std::vector<std::pair<Coords, Coords>> King::GetMoves()
 	}
 
 	//check left
-	if (myPieces->count({ coords.x - new_x,coords.y }) == 0 && (coords.x - new_x) >= minCoord.x && Coords{ coords.x - new_x,coords.y } != opponentKingPos)
+	if (myPieces->count({ coords.x - new_x,coords.y }) == 0 && (coords.x - new_x) >= minCoord.x && Coords{ coords.x - new_x,coords.y } != opponentKingPos
+		&& coords.y - new_y != (opponentKingPos.y + new_y || opponentKingPos.y || opponentKingPos.y - new_y) && coords.x - new_x != (opponentKingPos.x || opponentKingPos.x - new_x || opponentKingPos.x + new_x))
 	{
 		if (std::none_of(opponentTargetList.begin(), opponentTargetList.end(), [&](const Coords rhs) {
 			return rhs == Coords{ coords.x - new_x,coords.y }; }))
@@ -102,7 +107,8 @@ std::vector<std::pair<Coords, Coords>> King::GetMoves()
 		myTargetList.insert(Coords{ coords.x + 2,coords.y });
 	}
 	//check right
-	if (myPieces->count({ coords.x + new_x,coords.y }) == 0 && (coords.x + new_x) <= maxCoord.x && Coords{ coords.x + new_x,coords.y } != opponentKingPos)
+	if (myPieces->count({ coords.x + new_x,coords.y }) == 0 && (coords.x + new_x) <= maxCoord.x && Coords{ coords.x + new_x,coords.y } != opponentKingPos
+		&& coords.y - new_y != (opponentKingPos.y + new_y || opponentKingPos.y || opponentKingPos.y - new_y) && coords.x - new_x != (opponentKingPos.x || opponentKingPos.x - new_x || opponentKingPos.x + new_x))
 	{
 		if (std::none_of(opponentTargetList.begin(), opponentTargetList.end(), [&](const Coords rhs) {
 		return rhs == Coords{ coords.x + new_x,coords.y }; }))
@@ -114,7 +120,8 @@ std::vector<std::pair<Coords, Coords>> King::GetMoves()
 	}
 
 	//check up
-	if (myPieces->count({ coords.x,coords.y - new_y }) == 0 && (coords.y - new_y) >= minCoord.y && Coords{ coords.x,coords.y - new_y } != opponentKingPos)
+	if (myPieces->count({ coords.x,coords.y - new_y }) == 0 && (coords.y - new_y) >= minCoord.y && Coords{ coords.x,coords.y - new_y } != opponentKingPos
+		&& coords.y - new_y != (opponentKingPos.y + new_y || opponentKingPos.y || opponentKingPos.y - new_y) && coords.x - new_x != (opponentKingPos.x || opponentKingPos.x - new_x || opponentKingPos.x + new_x))
 	{
 		
 		if (std::none_of(opponentTargetList.begin(), opponentTargetList.end(), [&](const Coords rhs) {
@@ -127,7 +134,8 @@ std::vector<std::pair<Coords, Coords>> King::GetMoves()
 	}
 	
 	//Check down
-	if (myPieces->count({ coords.x,coords.y + new_y }) == 0 && (coords.y + new_y) <= maxCoord.y && Coords{ coords.x,coords.y + new_y} != opponentKingPos)
+	if (myPieces->count({ coords.x,coords.y + new_y }) == 0 && (coords.y + new_y) <= maxCoord.y && Coords{ coords.x,coords.y + new_y} != opponentKingPos
+		&& coords.y - new_y != (opponentKingPos.y + new_y || opponentKingPos.y || opponentKingPos.y - new_y) && coords.x - new_x != (opponentKingPos.x || opponentKingPos.x - new_x || opponentKingPos.x + new_x))
 	{
 		if (std::none_of(opponentTargetList.begin(), opponentTargetList.end(), [&](const Coords rhs) {
 			return rhs == Coords{coords.x, coords.y + new_y}; }))

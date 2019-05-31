@@ -479,7 +479,10 @@ void Game::Render()
 			ImGui::SetWindowSize(ImVec2(150, 70));
 			if (ImGui::Button("Hint", ImVec2(128, 32)))
 			{
+				//timer.Start();
 				whitePlayer.GetBestMove();
+				//std::string time("AI executed in : " + std::to_string(timer.Mark()) + " milliseconds.");
+				//MessageBox(wnd.GetHandle(), time.c_str(), "Speed", MB_OK);
 			}
 		}
 		ImGui::End();
