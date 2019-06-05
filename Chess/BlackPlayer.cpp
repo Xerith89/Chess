@@ -1306,7 +1306,7 @@ std::pair<Coords, Coords> BlackPlayer::MinimaxTwelve(std::vector<std::pair<Coord
 							temp = z.second->GetMoves();
 							whiteMovesThird.insert(whiteMovesThird.end(), temp.begin(), temp.end());
 						}
-
+						SortMovesMin(whiteMovesThird);
 						for (const auto& whiteThird : whiteMovesThird)
 						{
 							DoWhiteMove(whiteThird);
@@ -1324,7 +1324,7 @@ std::pair<Coords, Coords> BlackPlayer::MinimaxTwelve(std::vector<std::pair<Coord
 								temp = y.second->GetMoves();
 								blackMovesFourth.insert(blackMovesFourth.end(), temp.begin(), temp.end());
 							}
-
+							SortMoves(blackMovesFourth);
 							for (const auto& blackFourth : blackMovesFourth)
 							{
 
@@ -1342,7 +1342,7 @@ std::pair<Coords, Coords> BlackPlayer::MinimaxTwelve(std::vector<std::pair<Coord
 									temp = n.second->GetMoves();
 									whiteMovesFourth.insert(whiteMovesFourth.end(), temp.begin(), temp.end());
 								}
-
+								SortMovesMin(whiteMovesFourth);
 								for (const auto& whiteFourth : whiteMovesFourth)
 								{
 									DoWhiteMove(whiteFourth);
@@ -1358,7 +1358,7 @@ std::pair<Coords, Coords> BlackPlayer::MinimaxTwelve(std::vector<std::pair<Coord
 										temp = y.second->GetMoves();
 										blackMovesFifth.insert(blackMovesFifth.end(), temp.begin(), temp.end());
 									}
-
+									SortMoves(blackMovesFifth);
 									for (const auto& blackFifth : blackMovesFifth)
 									{
 
@@ -1374,7 +1374,7 @@ std::pair<Coords, Coords> BlackPlayer::MinimaxTwelve(std::vector<std::pair<Coord
 											temp = b.second->GetMoves();
 											whiteMovesFifth.insert(whiteMovesFifth.end(), temp.begin(), temp.end());
 										}
-
+										SortMovesMin(whiteMovesFifth);
 										for (const auto& whiteFifth : whiteMovesFifth)
 										{
 											DoWhiteMove(whiteFifth);
@@ -1388,7 +1388,7 @@ std::pair<Coords, Coords> BlackPlayer::MinimaxTwelve(std::vector<std::pair<Coord
 												temp = e.second->GetMoves();
 												blackMovesSixth.insert(blackMovesSixth.end(), temp.begin(), temp.end());
 											}
-
+											SortMoves(blackMovesSixth);
 											for (const auto& blackSixth : blackMovesSixth)
 											{
 												DoBlackMove(blackSixth);
@@ -1401,7 +1401,7 @@ std::pair<Coords, Coords> BlackPlayer::MinimaxTwelve(std::vector<std::pair<Coord
 													temp = t.second->GetMoves();
 													whiteMovesSixth.insert(whiteMovesSixth.end(), temp.begin(), temp.end());
 												}
-
+												SortMovesMin(whiteMovesSixth);
 												for (const auto& whiteSixth : whiteMovesSixth)
 												{
 													DoWhiteMove(whiteSixth);
