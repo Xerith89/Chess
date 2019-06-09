@@ -770,7 +770,7 @@ void WhitePlayer::TestForCastling()
 			//Make sure there are no pieces in the way
 			if (brd.whitePieces.count({ 5, 7 }) == 0 && brd.whitePieces.count({ 6, 7 }) == 0 &&
 				brd.blackPieces.count({ 5, 7 }) == 0 && brd.blackPieces.count({ 6, 7 }) == 0
-				&& brd.blackPieceTargets.count({ 5, 7 }) == 0 && brd.blackPieceTargets.count({ 6, 7 }) == 0 && brd.blackPieceTargets.count({ 4, 7 }) == 0))
+				&& brd.blackPieceTargets.count({ 5, 7 }) == 0 && brd.blackPieceTargets.count({ 6, 7 }) == 0 && brd.blackPieceTargets.count({ 4, 7 }) == 0)
 			{
 				brd.SetRightCastling(true);
 			}
