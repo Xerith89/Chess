@@ -11,11 +11,11 @@ BlackPlayer::BlackPlayer(Window& wnd,Board & brd, GUI& gui)
 
 void BlackPlayer::DoTurn()
 {
-	timer.Start();
+	//timer.Start();
 	//RandomMoves();
 	MinimaxMoves();
-	std::string time("AI executed in : " + std::to_string(timer.Mark()) + " milliseconds.");
-	MessageBox(wnd.GetHandle(), time.c_str(), "Speed", MB_OK);
+	//std::string time("AI executed in : " + std::to_string(timer.Mark()) + " milliseconds.");
+	//MessageBox(wnd.GetHandle(), time.c_str(), "Speed", MB_OK);
 }
 
 void BlackPlayer::DrawPieces(Graphics & gfx) const
@@ -157,8 +157,8 @@ void BlackPlayer::mDoTurn()
 						auto rook = brd.blackPieces.find({ 7,0 });
 						if (rook != brd.blackPieces.end())
 						{
-							rook->second.get()->MoveTo({ 4, 0 });
-							brd.blackPieces.insert_or_assign({ 4, 0 }, std::move(rook->second));
+							rook->second.get()->MoveTo({ 5, 0 });
+							brd.blackPieces.insert_or_assign({ 5, 0 }, std::move(rook->second));
 							brd.blackPieces.erase({ 7,0 });
 							brd.SetLeftCastling(false);
 							brd.SetRightCastling(false);
@@ -338,13 +338,13 @@ void BlackPlayer::DoMPlayUpdate(const std::pair<Coords, Coords> input, const int
 			{
 				brd.UpdateBlackKingLoc({ selectedTarget.x,selectedTarget.y });
 				//Left castling
-				if (selectedTarget.x == 1 && !hasCastled)
+				if (selectedTarget.x == 2 && !hasCastled)
 				{
 					auto rook = brd.blackPieces.find({ 0,0 });
 					if (rook != brd.blackPieces.end())
 					{
-						rook->second.get()->MoveTo({ 2, 0 });
-						brd.blackPieces.insert_or_assign({ 2, 0 }, std::move(rook->second));
+						rook->second.get()->MoveTo({ 3, 0 });
+						brd.blackPieces.insert_or_assign({ 3, 0 }, std::move(rook->second));
 						brd.blackPieces.erase(std::make_pair(0, 0));
 						brd.SetLeftCastling(false);
 						brd.SetRightCastling(false);
@@ -352,13 +352,13 @@ void BlackPlayer::DoMPlayUpdate(const std::pair<Coords, Coords> input, const int
 					}
 				}
 				//right castling
-				if (selectedTarget.x == 5 && !hasCastled)
+				if (selectedTarget.x == 6 && !hasCastled)
 				{
 					auto rook = brd.blackPieces.find({ 7,0 });
 					if (rook != brd.blackPieces.end())
 					{
-						rook->second.get()->MoveTo({ 4, 0 });
-						brd.blackPieces.insert_or_assign({ 4, 0 }, std::move(rook->second));
+						rook->second.get()->MoveTo({ 5, 0 });
+						brd.blackPieces.insert_or_assign({ 5, 0 }, std::move(rook->second));
 						brd.blackPieces.erase({ 7,0 });
 						brd.SetLeftCastling(false);
 						brd.SetRightCastling(false);
@@ -549,8 +549,8 @@ void BlackPlayer::TestForCastling()
 		if (leftRookMoved == brd.playedMoves.end())
 		{
 			//Make sure there are no pieces in the way and that the squares we're moving through aren't under attack
-			if (brd.blackPieces.count({ 1, 0 }) == 0 && brd.blackPieces.count({ 2, 0 }) == 0 &&
-				brd.whitePieces.count({ 1, 0 }) == 0 && brd.whitePieces.count({ 2, 0 }) == 0 &&
+			if (brd.blackPieces.count({ 1, 0 }) == 0 && brd.blackPieces.count({ 2, 0 }) == 0 && brd.blackPieces.count({ 3, 0 })
+				&& brd.whitePieces.count({ 1, 0 }) == 0 && brd.whitePieces.count({ 2, 0 }) == 0 &&
 				brd.whitePieces.count({ 3, 0 }) == 0 && brd.whitePieceTargets.count({ 2,0 }) == 0)
 			{
 				brd.SetLeftCastling(true);
@@ -560,7 +560,7 @@ void BlackPlayer::TestForCastling()
 		if (rightRookMoved == brd.playedMoves.end())
 		{
 			//Make sure there are no pieces in the way
-			if (brd.blackPieces.count({ 5, 0 }) == 0 && brd.blackPieces.count({ 6, 0 }) == 0 && brd.blackPieces.count({ 4, 0 }) == 0 &&
+			if (brd.blackPieces.count({ 5, 0 }) == 0 && brd.blackPieces.count({ 6, 0 }) == 0 &&
 				brd.whitePieces.count({ 5, 0 }) == 0 && brd.whitePieces.count({ 6, 0 }) == 0 &&
 				brd.whitePieceTargets.count({ 4, 0 }) == 0 && brd.whitePieceTargets.count({ 5, 0 }) == 0 && brd.whitePieceTargets.count({ 6, 0 }) == 0)
 			{
@@ -632,8 +632,8 @@ void BlackPlayer::RandomMoves()
 				auto rook = brd.blackPieces.find({ 7,0 });
 				if (rook != brd.blackPieces.end())
 				{
-					rook->second.get()->MoveTo({ 4, 0 });
-					brd.blackPieces.insert_or_assign({ 4, 0 }, std::move(rook->second));
+					rook->second.get()->MoveTo({ 5, 0 });
+					brd.blackPieces.insert_or_assign({ 5, 0 }, std::move(rook->second));
 					brd.blackPieces.erase({ 7,0 });
 					brd.SetLeftCastling(false);
 					brd.SetRightCastling(false);
@@ -743,8 +743,8 @@ void BlackPlayer::MinimaxMoves()
 				auto rook = brd.blackPieces.find({ 0,0 });
 				if (rook != brd.blackPieces.end())
 				{
-					rook->second.get()->MoveTo({ 2, 0 });
-					brd.blackPieces.insert_or_assign({ 2, 0 }, std::move(rook->second));
+					rook->second.get()->MoveTo({ 3, 0 });
+					brd.blackPieces.insert_or_assign({ 3, 0 }, std::move(rook->second));
 					brd.blackPieces.erase(std::make_pair(0, 0));
 					brd.SetLeftCastling(false);
 					brd.SetRightCastling(false);

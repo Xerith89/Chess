@@ -67,13 +67,13 @@ void WhitePlayer::DoTurn()
 				{
 					brd.UpdateWhiteKingLoc({ selectedTarget.x,selectedTarget.y });
 					//Left castling
-					if (selectedTarget.x == 1 && !hasCastled)
+					if (selectedTarget.x == 2 && !hasCastled)
 					{
 						auto rook = brd.whitePieces.find({ 0,7 });
 						if (rook != brd.whitePieces.end())
 						{
-							rook->second.get()->MoveTo({ 2, 7 });
-							brd.whitePieces.insert_or_assign({ 2, 7 }, std::move(rook->second));
+							rook->second.get()->MoveTo({ 3, 7 });
+							brd.whitePieces.insert_or_assign({ 3, 7 }, std::move(rook->second));
 							brd.whitePieces.erase({ 0,7 });
 							brd.SetLeftCastling(false);
 							brd.SetRightCastling(false);
@@ -81,13 +81,13 @@ void WhitePlayer::DoTurn()
 						}
 					}
 					//right castling
-					if (selectedTarget.x == 5 && !hasCastled)
+					if (selectedTarget.x == 6 && !hasCastled)
 					{
 						auto rook = brd.whitePieces.find({ 7,7 });
 						if (rook != brd.whitePieces.end())
 						{
-							rook->second.get()->MoveTo({ 4, 7 });
-							brd.whitePieces.insert_or_assign({ 4, 7 }, std::move(rook->second));
+							rook->second.get()->MoveTo({ 5, 7 });
+							brd.whitePieces.insert_or_assign({ 5, 7 }, std::move(rook->second));
 							brd.whitePieces.erase({ 7,7 });
 							brd.SetLeftCastling(false);
 							brd.SetRightCastling(false);
@@ -198,12 +198,12 @@ void WhitePlayer::DoMPlayUpdate(const std::pair<Coords, Coords> input, const int
 			{
 				brd.UpdateWhiteKingLoc({ selectedTarget.x,selectedTarget.y });
 				//Left castling
-				if (selectedTarget.x == 1 && !hasCastled)
+				if (selectedTarget.x == 2 && !hasCastled)
 				{
 					if (auto rook = brd.whitePieces.find({ 0,7 }); rook != brd.whitePieces.end())
 					{
-						rook->second.get()->MoveTo({ 2, 7 });
-						brd.whitePieces.insert_or_assign({ 2, 7 }, std::move(rook->second));
+						rook->second.get()->MoveTo({ 3, 7 });
+						brd.whitePieces.insert_or_assign({ 3, 7 }, std::move(rook->second));
 						brd.whitePieces.erase({ 0,7 });
 						brd.SetLeftCastling(false);
 						brd.SetRightCastling(false);
@@ -211,12 +211,12 @@ void WhitePlayer::DoMPlayUpdate(const std::pair<Coords, Coords> input, const int
 					}
 				}
 				//right castling
-				if (selectedTarget.x == 5 && !hasCastled)
+				if (selectedTarget.x == 6 && !hasCastled)
 				{
 					if (auto rook = brd.whitePieces.find({ 7,7 }); rook != brd.whitePieces.end())
 					{
-						rook->second.get()->MoveTo({ 4, 7 });
-						brd.whitePieces.insert_or_assign({ 4, 7 }, std::move(rook->second));
+						rook->second.get()->MoveTo({ 5, 7 });
+						brd.whitePieces.insert_or_assign({ 5, 7 }, std::move(rook->second));
 						brd.whitePieces.erase({ 7,7 });
 						brd.SetLeftCastling(false);
 						brd.SetRightCastling(false);
@@ -757,7 +757,7 @@ void WhitePlayer::TestForCastling()
 		if (leftRookMoved == brd.playedMoves.end())
 		{
 			//Make sure there are no pieces in the way and that the squares we're moving through aren't under attack
-			if (brd.whitePieces.count({ 1, 7 }) == 0 && brd.whitePieces.count({ 2, 7 }) == 0 
+			if (brd.whitePieces.count({ 1, 7 }) == 0 && brd.whitePieces.count({ 2, 7 }) == 0 && brd.whitePieces.count({ 3, 7 }) == 0
 				&& brd.blackPieces.count({ 1, 7 }) == 0 && brd.blackPieces.count({ 2, 7 }) == 0 &&
 				brd.blackPieces.count({ 3, 7 }) == 0 && brd.blackPieceTargets.count({ 2,7 }) == 0 && brd.blackPieceTargets.count({ 3,7 }) == 0)
 			{
@@ -769,7 +769,7 @@ void WhitePlayer::TestForCastling()
 		{
 			//Make sure there are no pieces in the way
 			if (brd.whitePieces.count({ 5, 7 }) == 0 && brd.whitePieces.count({ 6, 7 }) == 0 &&
-				brd.blackPieces.count({ 5, 7 }) == 0 && brd.blackPieces.count({ 6, 7 }) == 0 && brd.blackPieces.count({ 4, 7 }) == 0 && (brd.whitePieces.count({ 4, 7 }) == 0
+				brd.blackPieces.count({ 5, 7 }) == 0 && brd.blackPieces.count({ 6, 7 }) == 0
 				&& brd.blackPieceTargets.count({ 5, 7 }) == 0 && brd.blackPieceTargets.count({ 6, 7 }) == 0 && brd.blackPieceTargets.count({ 4, 7 }) == 0))
 			{
 				brd.SetRightCastling(true);
